@@ -32,8 +32,7 @@ allprojects { project ->
             url 'https://oss.sonatype.org/content/repositories/releases/'
         }
     }
-    
-    createReleaseTag.dependsOn uploadArchives
+
 }
 
 
@@ -54,7 +53,8 @@ subprojects {
             //password = '***' // Or set Java prop 'github.password' or system env 'GITHUB_PASS'
             repo = 'clap'
         }
- 
+
+        createReleaseTag.dependsOn uploadArchives
 
         configurations {
             compile.transitive = true
