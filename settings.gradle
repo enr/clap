@@ -1,0 +1,15 @@
+include 'modules:core'
+        
+rootProject.name = 'clap'
+
+def setBuildFile(project) {
+	project.buildFileName = "${project.name}.gradle"
+	project.children.each {
+		setBuildFile(it)
+	}
+}
+
+rootProject.children.each {
+	setBuildFile(it)
+}
+

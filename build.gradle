@@ -1,0 +1,119 @@
+
+// --- release plugin
+// see: http://tellurianring.com/wiki/gradle/release
+apply from: "https://launchpad.net/gradle-release/trunk/latest/+download/apply.groovy"
+
+apply from:'http://smokejumperit.com/all-jars.gradle'
+
+apply from:'http://smokejumperit.com/github-dev.gradle'
+
+// --- about plugin
+// see: http://evgeny-goldin.com/wiki/Gradle-about-plugin
+
+
+buildscript {
+    repositories { mavenRepo url: 'http://evgenyg.artifactoryonline.com/evgenyg/repo/' }
+    dependencies { classpath "com.github.goldin.plugins:gradle:0.1.3" }
+}
+
+
+ext {
+    groovyVersion = '2.0.0'
+    javaModules = [
+        ':modules:core'
+    ]
+}
+
+allprojects { project ->
+    group = 'com.github.enr'
+    
+    repositories {
+        mavenLocal()
+        mavenCentral()    
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/releases/'
+        }
+    }
+    
+    createReleaseTag.dependsOn uploadArchives
+
+}
+
+
+subprojects {
+
+    if (project.path in javaModules) {
+        apply plugin: 'groovy'
+        apply plugin: 'eclipse'
+        //apply plugin: 'about'
+        apply plugin: 'maven'
+        
+        apply from:'http://smokejumperit.com/github-dev.gradle'
+
+        //   gradle uploadArchives -Dgithub.password=***
+        //   gradle ghUpload -Dgithub.password=***
+        ghUpload {
+            username = 'enr' // If the code guesses the username wrong: see source for defaults
+            //password = '***' // Or set Java prop 'github.password' or system env 'GITHUB_PASS'
+            repo = 'clap'
+        }
+ 
+
+        configurations {
+            compile.transitive = true
+            testCompile.transitive = true
+        }
+
+        dependencies {
+
+            groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
+
+            compile "org.codehaus.groovy:groovy-all:$groovyVersion",
+                    'com.google.inject:guice:3.0'
+            testCompile 'org.testng:testng:6.5.2',
+                        'org.easytesting:fest-assert-core:2.0M6'
+        }
+
+        test {
+            useTestNG()
+            /*
+            beforeTest { descriptor ->
+                logger.lifecycle("-------    Running test: " + descriptor)
+            }
+            onOutput { descriptor, event ->
+                logger.lifecycle(event.message )
+            }
+            */
+        }
+        
+        archivesBaseName = "clap-${project.name}"
+        
+        buildDir = 'target'
+
+        sourceCompatibility = 1.6
+        targetCompatibility = 1.6
+
+        jar {
+            manifest {
+                attributes( "Implementation-Title": "Clap",
+                            "Implementation-Version": version,
+                            "Project":project.name)
+            }
+        }
+        
+        //about { dumpDependencies = true   }
+        
+        eclipse {
+            project {
+                name = "clap-${project.name}"
+            }
+            classpath {
+                defaultOutputDir = new File("${project.buildDir}/eclipse/classes");
+                downloadJavadoc = true
+            }
+        }
+    }
+
+}
+
+
