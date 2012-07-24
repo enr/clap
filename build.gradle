@@ -35,7 +35,7 @@ allprojects { project ->
         }
     }
     
-    createReleaseTag.dependsOn uploadArchives
+    //createReleaseTag.dependsOn uploadArchives
 
 }
 
