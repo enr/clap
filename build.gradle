@@ -5,8 +5,6 @@ apply from: "https://launchpad.net/gradle-release/trunk/latest/+download/apply.g
 
 apply from:'http://smokejumperit.com/all-jars.gradle'
 
-apply from:'http://smokejumperit.com/github-dev.gradle'
-
 // --- about plugin
 // see: http://evgeny-goldin.com/wiki/Gradle-about-plugin
 
@@ -35,8 +33,7 @@ allprojects { project ->
         }
     }
     
-    //createReleaseTag.dependsOn uploadArchives
-
+    createReleaseTag.dependsOn uploadArchives
 }
 
 
