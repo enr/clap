@@ -3,7 +3,7 @@
 // see: http://tellurianring.com/wiki/gradle/release
 apply from: "https://launchpad.net/gradle-release/trunk/latest/+download/apply.groovy"
 
-apply from:'http://smokejumperit.com/all-jars.gradle'
+apply from:'http://gradle.smokejumperit.com/all-jars.gradle'
 
 // --- about plugin
 // see: http://evgeny-goldin.com/wiki/Gradle-about-plugin
@@ -44,7 +44,7 @@ subprojects {
         //apply plugin: 'about'
         apply plugin: 'maven'
         
-        apply from:'http://smokejumperit.com/github-dev.gradle'
+        apply from:'http://gradle.smokejumperit.com/github-dev.gradle'
 
         //   gradle uploadArchives -Dgithub.password=***
         //   gradle ghUpload -Dgithub.password=***
