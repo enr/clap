@@ -20,6 +20,8 @@ ext {
     javaModules = [
         ':modules:core'
     ]
+    javaVersion = System.getProperty('java.version')
+    java7 = javaVersion.startsWith('1.7')
 }
 
 allprojects { project ->
@@ -44,14 +46,16 @@ subprojects {
         //apply plugin: 'about'
         apply plugin: 'maven'
         
-        apply from:'http://gradle.smokejumperit.com/github-dev.gradle'
+        if (java7) {
+            apply from:'http://gradle.smokejumperit.com/github-dev.gradle'
 
-        //   gradle uploadArchives -Dgithub.password=***
-        //   gradle ghUpload -Dgithub.password=***
-        ghUpload {
-            username = 'enr' // If the code guesses the username wrong: see source for defaults
-            //password = '***' // Or set Java prop 'github.password' or system env 'GITHUB_PASS'
-            repo = 'clap'
+            //   gradle uploadArchives -Dgithub.password=***
+            //   gradle ghUpload -Dgithub.password=***
+            ghUpload {
+                username = 'enr' // If the code guesses the username wrong: see source for defaults
+                //password = '***' // Or set Java prop 'github.password' or system env 'GITHUB_PASS'
+                repo = 'clap'
+            }
         }
 
         createReleaseTag.dependsOn uploadArchives
