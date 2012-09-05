@@ -15,7 +15,18 @@ Declare dependency:
     compile 'com.github.enr:clap-core:0.1'
 
 
-Create your commands, implementing com.github.enr.clap.api.Command, and command parameters (class annotated with com.beust.jcommander.Parameters):
+To automatically download Clap, declare a repository:
+
+
+```javascript
+    add(new org.apache.ivy.plugins.resolver.URLResolver()) {
+        name = 'GitHub/Clap'
+        addArtifactPattern 'http://cloud.github.com/downloads/enr/clap/[module]-[revision].[ext]'
+        addIvyPattern 'http://cloud.github.com/downloads/enr/clap/[module]-[revision].pom'
+    }
+```
+
+Create your commands, implementing `com.github.enr.clap.api.Command`, and command parameters (class annotated with `com.beust.jcommander.Parameters`):
 
 
 ```java
@@ -25,7 +36,7 @@ Create your commands, implementing com.github.enr.clap.api.Command, and command 
     }
 ```
 
-Create an app metadata class (implementing com.github.enr.clap.api.AppMeta):
+Create an app metadata class (implementing `com.github.enr.clap.api.AppMeta`):
 
 
 ```java
