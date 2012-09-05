@@ -108,7 +108,7 @@ public class GroovierConfigurationReader implements ConfigurationReader {
         return flatten;
     }
 
-    /**
+    /*
      * A utility method to load and cast to the given type a configuration data.
      * 
      * @param <T>
@@ -137,7 +137,6 @@ public class GroovierConfigurationReader implements ConfigurationReader {
      * Returns a javized reference for the passed object, for some common cases
      * where we don't want the groovy gdk class (ie GStringImpl)
      * 
-     * @param <T>
      * @param reference
      * 
      */
