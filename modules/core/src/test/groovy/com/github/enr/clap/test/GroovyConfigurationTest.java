@@ -14,27 +14,23 @@ import com.github.enr.clap.api.ConfigurationReader;
 import com.github.enr.clap.impl.GroovierConfigurationReader;
 import com.google.common.io.Resources;
 
-@Test(suiteName="Configuration")
-public class GroovyConfigurationTest
-{
-    
+@Test(suiteName = "Configuration")
+public class GroovyConfigurationTest {
+
     ConfigurationReader configuration;
-    
+
     @BeforeMethod
-    public void initConfiguration()
-    {
+    public void initConfiguration() {
         configuration = new GroovierConfigurationReader();
     }
-    
+
     @AfterMethod
-    public void resetConfiguration()
-    {
+    public void resetConfiguration() {
         configuration.reset();
     }
 
     @Test
-    public void testConfigurationBuilding()
-    {
+    public void testConfigurationBuilding() {
         URL firstConfig = Resources.getResource(GroovyConfigurationTest.class, "/groovy-config-1.groovy");
         assertThat(firstConfig).as("configuration url").isNotNull();
         configuration.addConfiguration(firstConfig);
@@ -48,8 +44,7 @@ public class GroovyConfigurationTest
     }
 
     @Test
-    public void testBinding()
-    {
+    public void testBinding() {
         URL firstConfig = Resources.getResource(GroovyConfigurationTest.class, "/groovy-config-1.groovy");
         assertThat(firstConfig).as("configuration url").isNotNull();
         configuration.addConfiguration(firstConfig);
@@ -60,8 +55,7 @@ public class GroovyConfigurationTest
     }
 
     @Test
-    public void testGroovyString()
-    {
+    public void testGroovyString() {
         URL firstConfig = Resources.getResource(GroovyConfigurationTest.class, "/groovy-config-1.groovy");
         assertThat(firstConfig).as("configuration url").isNotNull();
         configuration.addConfiguration(firstConfig);
@@ -72,8 +66,7 @@ public class GroovyConfigurationTest
     }
 
     @Test
-    public void testConfigurationMerging()
-    {
+    public void testConfigurationMerging() {
         String enviroment = "production";
         URL firstConfig = Resources.getResource(GroovyConfigurationTest.class, "/first-config.groovy");
         assertThat(firstConfig).as("first configuration url").isNotNull();
@@ -87,7 +80,6 @@ public class GroovyConfigurationTest
         assertConfigurationStringEqualsTo("server.URL", "http://prod/url", "server url");
         assertConfigurationStringEqualsTo("app.version", "2.0", "app version");
     }
-    
 
     @Test
     public void testBulk() {
@@ -101,26 +93,24 @@ public class GroovyConfigurationTest
         boolean buildSuccess = configuration.build();
         assertThat(buildSuccess).as("configuration.build()").isTrue();
         Map<String, Object> bulk = configuration.getBulk("my.bulk");
-        String[] keys = {"a.a", "a.b","a.c","b.a","c.a","c.b","c.c","c.d"};
+        String[] keys = { "a.a", "a.b", "a.c", "b.a", "c.a", "c.b", "c.c", "c.d" };
         MapAssert<String, Object> vut = assertThat(bulk);
         vut.as("my bulk").isNotNull().isNotEmpty().hasSize(8);
         for (String key : keys) {
-			vut.containsKey(key);
-			String configurationKey = "my.bulk."+key;
-			assertConfigurationStringEqualsTo(configurationKey, key.replace(".", "_"), "bulk value "+key);
-		}
+            vut.containsKey(key);
+            String configurationKey = "my.bulk." + key;
+            assertConfigurationStringEqualsTo(configurationKey, key.replace(".", "_"), "bulk value " + key);
+        }
     }
-    
+
     private void assertConfigurationStringEqualsTo(String configurationKey, String expectedValue, String description) {
         String groovier = configuration.get(configurationKey);
-		assertThat(groovier).as(description).isEqualTo(expectedValue);
+        assertThat(groovier).as(description).isEqualTo(expectedValue);
     }
-   
+
     /*
-    @Test
-    public void testDefaultValue() {
-        assertNull(configuration.get("no.such.key"));
-        assertEquals(configuration.get("no.such.key", "A value!"), "A value!");
-    }
-    */
+     * @Test public void testDefaultValue() {
+     * assertNull(configuration.get("no.such.key"));
+     * assertEquals(configuration.get("no.such.key", "A value!"), "A value!"); }
+     */
 }

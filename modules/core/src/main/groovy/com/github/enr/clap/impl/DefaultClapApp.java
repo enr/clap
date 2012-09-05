@@ -18,52 +18,53 @@ import com.github.enr.clap.util.Casts;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 
-
 public class DefaultClapApp implements ClapApp {
-	
-	private List<Command> commands;
-    
-	//private Configuration configuration;
+
+    private List<Command> commands;
+
+    // private Configuration configuration;
     private Reporter reporter;
     private EnvironmentHolder environment;
     private AppMeta meta;
-    
+
     /*
-     * The command executed if no command id is given.
-     * Ususlly it contains --help, --version, --noop args management.
+     * The command executed if no command id is given. Ususlly it contains
+     * --help, --version, --noop args management.
      */
-    @Inject @Named(Constants.MAIN_COMMAND_BIND_NAME)  private Command mainCommand;
-    
+    @Inject
+    @Named(Constants.MAIN_COMMAND_BIND_NAME)
+    private Command mainCommand;
+
     @Inject
     public DefaultClapApp(AppMeta meta, EnvironmentHolder environment, Reporter reporter) {
-    	this.meta = meta;
-    	this.environment = environment;
+        this.meta = meta;
+        this.environment = environment;
         this.reporter = reporter;
     }
-    
+
     @Override
     public void run(String[] args) {
-    	
-    	MainCommandArgs mainArgs = Casts.cast(mainCommand.getParametersContainer());
-		JCommander jc = new JCommander(mainArgs);
-		jc.setProgramName(meta.name());
-        
-        for (Command command: commands) {
-        	if (!Constants.MAIN_COMMAND_ID.equals(command.getId())) {
-        		jc.addCommand(command.getId(), command.getParametersContainer());
-        	}
+
+        MainCommandArgs mainArgs = Casts.cast(mainCommand.getParametersContainer());
+        JCommander jc = new JCommander(mainArgs);
+        jc.setProgramName(meta.name());
+
+        for (Command command : commands) {
+            if (!Constants.MAIN_COMMAND_ID.equals(command.getId())) {
+                jc.addCommand(command.getId(), command.getParametersContainer());
+            }
         }
         jc.parse(args);
-        
+
         setReportingLevel(reporter, mainArgs);
-        
+
         String commandId = jc.getParsedCommand();
         reporter.debug("commandId %s", commandId);
 
         reporter.debug("starting %s with home %s", meta.name(), environment.applicationHome());
-        
+
         if ((args.length == 0) || (mainArgs.isHelp())) {
-        	usageForCommand(jc, commandId);
+            usageForCommand(jc, commandId);
             systemExit(0);
         }
 
@@ -78,31 +79,31 @@ public class DefaultClapApp implements ClapApp {
             reporter.warn("something went wrong. catched %s", cause.getClass().getName());
             reporter.warn(cause.getMessage());
             if (mainArgs.isStacktrace()) {
-            	reporter.warn(Throwables.getStackTraceAsString(throwable));
+                reporter.warn(Throwables.getStackTraceAsString(throwable));
             }
-        	usageForCommand(jc, commandId);
+            usageForCommand(jc, commandId);
             systemExit(1);
         }
     }
-    
+
     private void manageFailure(CommandResult result) {
         if (result.isFailure()) {
-        	reporter.warn("command failure");
-        	if (result.getFailureMessage() != null) {
-        		reporter.warn("> %s", result.getFailureMessage());
-        	}
+            reporter.warn("command failure");
+            if (result.getFailureMessage() != null) {
+                reporter.warn("> %s", result.getFailureMessage());
+            }
         }
     }
-    
+
     private void setReportingLevel(Reporter reporter, MainCommandArgs mainArgs) {
         if (mainArgs.isInfo()) {
             reporter.setLevel(Level.INFO);
-        }       
+        }
         if (mainArgs.isDebug()) {
             reporter.setLevel(Level.DEBUG);
         }
     }
-    
+
     private void usageForCommand(JCommander jc, String commandId) {
         if (commandId == null) {
             jc.usage();
@@ -110,49 +111,49 @@ public class DefaultClapApp implements ClapApp {
             jc.usage(commandId);
         }
     }
-    
+
     /*
-     * system exit, but only if environment allowed.
-     * probably, this is true in the actual running and false in the acceptance test phase.
+     * system exit, but only if environment allowed. probably, this is true in
+     * the actual running and false in the acceptance test phase.
      */
     private void systemExit(int value) {
-    	if (environment.canExit()) { 
-    		System.exit(value);
-    	}
+        if (environment.canExit()) {
+            System.exit(value);
+        }
     }
-    
+
     private CommandResult executeCommand(String commandId) {
         reporter.debug("command       %s", commandId);
         Command command = null;
         if (commandId == null) {
-        	command = mainCommand;
+            command = mainCommand;
         } else {
-        	command = commandFromId(commandId);
+            command = commandFromId(commandId);
         }
         if (command == null) {
-        	return resultForCommandNotFound();
+            return resultForCommandNotFound();
         }
         return command.execute();
 
     }
 
-	private CommandResult resultForCommandNotFound() {
-		CommandResult result = new CommandResult();
-		return result;
-	}
+    private CommandResult resultForCommandNotFound() {
+        CommandResult result = new CommandResult();
+        return result;
+    }
 
-	@Override
-	public void setAvailableCommands(List<Command> commands) {
-		this.commands = commands;
-	}
-	
-	private Command commandFromId(String commandId) {
-		for (Command command : commands) {
-			if (commandId.equals(command.getId())) {
-				return command;
-			}
-		}
-		return null;
-	}
+    @Override
+    public void setAvailableCommands(List<Command> commands) {
+        this.commands = commands;
+    }
+
+    private Command commandFromId(String commandId) {
+        for (Command command : commands) {
+            if (commandId.equals(command.getId())) {
+                return command;
+            }
+        }
+        return null;
+    }
 
 }

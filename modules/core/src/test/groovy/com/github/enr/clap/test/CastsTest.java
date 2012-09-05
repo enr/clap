@@ -11,35 +11,29 @@ import org.testng.annotations.Test;
 import com.github.enr.clap.util.Casts;
 import com.google.common.collect.Maps;
 
+@Test(suiteName = "Util package")
+public class CastsTest {
 
-@Test(suiteName="Util package")
-public class CastsTest
-{
+    Map<String, Object> objects = Maps.newHashMap();
 
-	Map<String, Object> objects = Maps.newHashMap();
-	
     @BeforeClass
-    public void initData()
-    {
-    	objects.put("pojo", new PojoImpl());
+    public void initData() {
+        objects.put("pojo", new PojoImpl());
     }
 
     @Test
-    public void automaticCast()
-    {
-    	Pojo pojo = Casts.cast(objects.get("pojo"));
+    public void automaticCast() {
+        Pojo pojo = Casts.cast(objects.get("pojo"));
         assertThat(pojo).as("pojo").isNotNull().isInstanceOf(PojoImpl.class);
     }
-    
+
     @Test(expectedExceptions = { ClassCastException.class })
-    public void automaticCastFailing()
-    {
+    public void automaticCastFailing() {
         String pojo = Casts.cast(objects.get("pojo"));
     }
-    
+
     @Test
-    public void objectCastingTest()
-    {
+    public void objectCastingTest() {
         Object original = objects.get("pojo");
         assertThat(original).as("original pojo").isNotNull().isInstanceOf(PojoImpl.class);
         Pojo pojo1 = Casts.castOrFail(objects.get("pojo"), Pojo.class);
@@ -49,21 +43,18 @@ public class CastsTest
     }
 
     @Test(expectedExceptions = { ClassCastException.class })
-    public void objectCastFailingWithExceptionTest()
-    {
+    public void objectCastFailingWithExceptionTest() {
         Casts.castOrFail(objects.get("pojo"), Date.class);
     }
 
     @Test
-    public void objectCastFailingWithNull()
-    {
+    public void objectCastFailingWithNull() {
         Date pojo = Casts.castOrNull(objects.get("pojo"), Date.class);
         assertThat(pojo).as("pojo as date").isNull();
     }
 
     @Test
-    public void nullReferenceCasting()
-    {
+    public void nullReferenceCasting() {
         Date pojo = Casts.castOrNull(null, Date.class);
         assertThat(pojo).as("null casting").isNull();
     }

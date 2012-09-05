@@ -5,7 +5,9 @@ package com.github.enr.clap.api;
  */
 public interface AppMeta {
 
-	String name();
-	String version();
-	String displayName();
+    String name();
+
+    String version();
+
+    String displayName();
 }

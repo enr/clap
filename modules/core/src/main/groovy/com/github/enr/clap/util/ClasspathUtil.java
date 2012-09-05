@@ -29,17 +29,15 @@ public class ClasspathUtil {
         }
         return new File(location.getPath());
     }
-    
 
     /**
      * Returns a list of jars urls to include in Please classpath.
      * 
      * @return a list of jars urls to include in Please classpath.
-     *
-    public static List<URL> getPlease_ClasspathUrls() {
-        return getPleaseClasspathUrls(getPleaseHome());
-    }
-    */
+     * 
+     *         public static List<URL> getPlease_ClasspathUrls() { return
+     *         getPleaseClasspathUrls(getPleaseHome()); }
+     */
 
     /**
      * Returns a list of jars urls to include in the app classpath, using the
@@ -56,20 +54,14 @@ public class ClasspathUtil {
     }
 
     /*
-    private static File getPleaseHome() {
-        File codeSource = ClasspathUtil.getClasspathForClass(ProcessBootstrap.class);
-        File pleaseHome = null;
-        if (codeSource.isFile()) {
-            // Loaded from a JAR - assume we're running from the distribution
-            pleaseHome = codeSource.getParentFile().getParentFile();
-        } else {
-            // Loaded from a classes dir - assume we're running from the ide or
-            // tests
-            pleaseHome = null;
-        }
-        return pleaseHome;
-    }
-    */
+     * private static File getPleaseHome() { File codeSource =
+     * ClasspathUtil.getClasspathForClass(ProcessBootstrap.class); File
+     * pleaseHome = null; if (codeSource.isFile()) { // Loaded from a JAR -
+     * assume we're running from the distribution pleaseHome =
+     * codeSource.getParentFile().getParentFile(); } else { // Loaded from a
+     * classes dir - assume we're running from the ide or // tests pleaseHome =
+     * null; } return pleaseHome; }
+     */
 
     private static List<URL> jarsInSubDirectory(File parent, String dirName) {
         parent = Preconditions.checkNotNull(parent, "asking jars, parent directory cannot be null");
