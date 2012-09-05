@@ -93,6 +93,16 @@ subprojects {
 
         sourceCompatibility = 1.6
         targetCompatibility = 1.6
+        
+        task sourceJar(type: Jar) {
+            from sourceSets.main.allSource
+            classifier = 'sources'
+        }
+
+        task javadocJar(type: Jar, dependsOn: 'javadoc') {
+            from javadoc.destinationDir
+            classifier = 'javadoc'
+        }
 
         jar {
             manifest {
@@ -101,7 +111,9 @@ subprojects {
                             "Project":project.name)
             }
         }
-        
+        artifacts {
+            archives sourceJar, javadocJar
+        }
         //about { dumpDependencies = true   }
         
         eclipse {
