@@ -27,7 +27,7 @@ public class DefaultEnvironmentHolder implements EnvironmentHolder {
     public DefaultEnvironmentHolder(AppMeta meta, Reporter reporter) {
         this.meta = meta;
         this.reporter = reporter;
-        File location = ClasspathUtil.getClasspathForClass(DefaultEnvironmentHolder.class);
+        File location = ClasspathUtil.getClasspathForClass(meta.getClass()); //DefaultEnvironmentHolder.class);
         if (home == null) {
             home = location.getParentFile().getParentFile();
         }
@@ -77,6 +77,11 @@ public class DefaultEnvironmentHolder implements EnvironmentHolder {
     @Override
     public boolean canExit() {
         return true;
+    }
+
+    @Override
+    public void forceApplicationHome(File home) {
+        this.home = home;
     }
 
 }

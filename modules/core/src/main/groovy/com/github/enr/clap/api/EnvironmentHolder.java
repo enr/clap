@@ -5,6 +5,11 @@ import java.io.File;
 public interface EnvironmentHolder {
 
     File applicationHome();
+    
+    /*
+     * sometimes we need to force the application home to a given dir
+     */
+    void forceApplicationHome(File home);
 
     /*
      * directory containing configuration files in the installation ie the
