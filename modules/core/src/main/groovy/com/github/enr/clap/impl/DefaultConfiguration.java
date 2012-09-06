@@ -124,7 +124,7 @@ public class DefaultConfiguration implements Configuration {
         // Preconditions.checkArgument(configurationFile.exists(),
         // "configuration %s not found", path);
         if (!configurationFile.exists()) {
-            reporter.out("configuration %s not found", path);
+            reporter.info("configuration %s not found", path);
             return false;
         }
         try {
