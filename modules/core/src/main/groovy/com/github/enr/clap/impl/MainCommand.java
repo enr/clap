@@ -45,6 +45,8 @@ public class MainCommand implements Command {
             for (Map.Entry<String, Boolean> entry : configuration.getPaths().entrySet()) {
                 reporter.out("- %s (%s)", entry.getKey(), entry.getValue());
             }
+        } else {
+            reporter.out("do nothing, as requested");
         }
         return result;
     }
