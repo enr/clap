@@ -29,6 +29,7 @@ public class CastsTest {
 
     @Test(expectedExceptions = { ClassCastException.class })
     public void automaticCastFailing() {
+        @SuppressWarnings("unused")
         String pojo = Casts.cast(objects.get("pojo"));
     }
 
