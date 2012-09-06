@@ -11,7 +11,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.github.enr.clap.api.ConfigurationReader;
-import com.github.enr.clap.impl.GroovierConfigurationReader;
+import com.github.enr.clap.impl.GroovierFlattenConfigurationReader;
 import com.google.common.io.Resources;
 
 @Test(suiteName = "Configuration")
@@ -21,7 +21,7 @@ public class GroovyConfigurationTest {
 
     @BeforeMethod
     public void initConfiguration() {
-        configuration = new GroovierConfigurationReader();
+        configuration = new GroovierFlattenConfigurationReader();
     }
 
     @AfterMethod
@@ -102,6 +102,20 @@ public class GroovyConfigurationTest {
             assertConfigurationStringEqualsTo(configurationKey, key.replace(".", "_"), "bulk value " + key);
         }
     }
+
+    /*
+    @Test
+    public void testDedicatedInstance() {
+        URL firstConfig = Resources.getResource(GroovyConfigurationTest.class, "/third-config.groovy");
+        assertThat(firstConfig).as("configuration url").isNotNull();
+        configuration.addConfiguration(firstConfig);
+        //configuration.addBinding("binded", "B");
+        boolean buildSuccess = configuration.build();
+        assertThat(buildSuccess).as("configuration.build()").isTrue();
+        Object datasets = configuration.get("datasets");
+        System.out.println (datasets);
+    }
+    */
 
     private void assertConfigurationStringEqualsTo(String configurationKey, String expectedValue, String description) {
         String groovier = configuration.get(configurationKey);

@@ -25,4 +25,3 @@ environments {
         e = 'e-production'
     }
 }
-

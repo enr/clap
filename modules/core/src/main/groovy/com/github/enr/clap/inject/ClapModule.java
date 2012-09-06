@@ -12,7 +12,7 @@ import com.github.enr.clap.impl.DefaultAppMeta;
 import com.github.enr.clap.impl.DefaultClapApp;
 import com.github.enr.clap.impl.DefaultConfiguration;
 import com.github.enr.clap.impl.DefaultEnvironmentHolder;
-import com.github.enr.clap.impl.GroovierConfigurationReader;
+import com.github.enr.clap.impl.GroovierFlattenConfigurationReader;
 import com.github.enr.clap.impl.MainCommand;
 import com.github.enr.clap.impl.ConsoleReporter;
 import com.google.inject.AbstractModule;
@@ -37,7 +37,7 @@ public class ClapModule extends AbstractModule {
         bind(AppMeta.class).to(DefaultAppMeta.class);
         bind(EnvironmentHolder.class).to(DefaultEnvironmentHolder.class).in(Singleton.class);
         bind(Configuration.class).to(DefaultConfiguration.class).in(Singleton.class);
-        bind(ConfigurationReader.class).to(GroovierConfigurationReader.class);
+        bind(ConfigurationReader.class).to(GroovierFlattenConfigurationReader.class);
 
         // components
         bind(Reporter.class).to(ConsoleReporter.class).in(Singleton.class);

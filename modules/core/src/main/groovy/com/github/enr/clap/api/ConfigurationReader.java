@@ -74,5 +74,11 @@ public interface ConfigurationReader {
     // void parseAppConfiguration(String appConfigurationPath);
 
     // void parseDatasetConfiguration(String datasetConfigurationPath);
+    
+    /**
+     * 
+     * @return a brand new instance
+     */
+    ConfigurationReader getDedicatedInstance();
 
 }

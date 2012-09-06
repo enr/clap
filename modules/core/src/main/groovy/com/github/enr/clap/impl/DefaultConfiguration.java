@@ -12,6 +12,7 @@ import com.github.enr.clap.api.ConfigurationReader;
 import com.github.enr.clap.api.EnvironmentHolder;
 import com.github.enr.clap.api.Reporter;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 
@@ -40,6 +41,28 @@ public class DefaultConfiguration implements Configuration {
         init();
     }
 
+    /*
+     * For programmatic (no injected) usage.
+     * Used for dedicated instance creations and maybe tests...
+     */
+    private DefaultConfiguration(AppMeta meta, EnvironmentHolder environment, ConfigurationReader configurationReader,
+            Reporter reporter, String configurationPath) {
+        this.meta = meta;
+        this.configurationReader = configurationReader;
+        this.reporter = reporter;
+        this.environment = environment;
+        this.reporter.info("configurationReader = %s", this.configurationReader);
+        if (Strings.isNullOrEmpty(configurationPath)) {
+            init();
+        } else {
+            load(configurationPath);
+            this.configurationReader.build();
+        }
+    }
+
+    /*
+     * Load configuration from the default locations.
+     */
     private void init() {
         String installationConfigurationPath = installationConfigurationPath();
         String systemConfigurationPath = systemConfigurationPath();
@@ -51,7 +74,7 @@ public class DefaultConfiguration implements Configuration {
         boolean systemConfigurationLoaded = load(systemConfigurationPath);
         boolean userConfigurationLoaded = load(userConfigurationPath);
         if (!installationConfigurationLoaded && !systemConfigurationLoaded && !userConfigurationLoaded) {
-            reporter.warn("No configuration file loaded...");
+            reporter.info("No configuration file loaded...");
         }
         configurationReader.build();
     }
@@ -143,6 +166,16 @@ public class DefaultConfiguration implements Configuration {
     @Override
     public Map<String, Object> getBulk(String prefix) {
         return configurationReader.getBulk(prefix);
+    }
+
+    /**
+     * Sometimes we need a brand new instance, dedicated to a given configuration file.
+     */
+    @Override
+    public Configuration getDedicatedInstance(String configurationPath) {
+        ConfigurationReader confReader = configurationReader.getDedicatedInstance();
+        Configuration configuration = new DefaultConfiguration(meta, environment, confReader, reporter, configurationPath);
+        return configuration;
     }
 
     /*

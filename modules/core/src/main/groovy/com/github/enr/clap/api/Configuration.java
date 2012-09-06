@@ -25,4 +25,6 @@ public interface Configuration {
     Map<String, Object> getAllProperties();
 
     Map<String, Object> getBulk(String prefix);
+    
+    Configuration getDedicatedInstance(String configurationPath);
 }
