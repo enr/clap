@@ -28,7 +28,7 @@ public class DefaultConfiguration implements Configuration {
      * A map with keys configuration files paths and value a boolean indicating
      * if the file has been loaded, which configuration has attemped to load
      */
-    Map<String, Boolean> paths = Maps.newHashMap();
+    Map<String, Boolean> paths = Maps.newLinkedHashMap();
 
     @Inject
     public DefaultConfiguration(AppMeta meta, EnvironmentHolder environment, ConfigurationReader configurationReader,

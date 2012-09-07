@@ -1,12 +1,12 @@
 package com.github.enr.clap.impl;
 
-import com.github.enr.clap.api.Reporter;
+import com.github.enr.clap.api.OutputAwareReporter;
 
 /*
  * A Reporter implementation retaining the output.
  * Useful in testing, to verify the actual commands output.
  */
-public class OutputRetainingReporter implements Reporter {
+public class OutputRetainingReporter implements OutputAwareReporter {
 
     Level level = Level.WARN;
     
@@ -22,7 +22,7 @@ public class OutputRetainingReporter implements Reporter {
         output.append(EOL);
     }
     
-    // toString() ?
+    @Override
     public String getOutput() {
         return output.toString();
     }

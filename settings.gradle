@@ -1,9 +1,10 @@
-include 'modules:core'
+include 'modules:core',
+        'modules:uat'
         
 rootProject.name = 'clap'
 
 def setBuildFile(project) {
-	project.buildFileName = "${project.name}.gradle"
+	project.buildFileName = "clap-${project.name}.gradle"
 	project.children.each {
 		setBuildFile(it)
 	}

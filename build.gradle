@@ -18,7 +18,8 @@ buildscript {
 ext {
     groovyVersion = '2.0.0'
     javaModules = [
-        ':modules:core'
+        ':modules:core',
+        ':modules:uat'
     ]
     javaVersion = System.getProperty('java.version')
     java7 = javaVersion.startsWith('1.7')
@@ -71,22 +72,8 @@ subprojects {
 
             compile "org.codehaus.groovy:groovy-all:$groovyVersion",
                     'com.google.inject:guice:3.0'
-            testCompile 'org.testng:testng:6.5.2',
-                        'org.easytesting:fest-assert-core:2.0M6'
         }
 
-        test {
-            useTestNG()
-            /*
-            beforeTest { descriptor ->
-                logger.lifecycle("-------    Running test: " + descriptor)
-            }
-            onOutput { descriptor, event ->
-                logger.lifecycle(event.message )
-            }
-            */
-        }
-        
         archivesBaseName = "clap-${project.name}"
         
         buildDir = 'target'
@@ -123,6 +110,7 @@ subprojects {
             classpath {
                 defaultOutputDir = new File("${project.buildDir}/eclipse/classes");
                 downloadJavadoc = true
+                downloadSources = true
             }
         }
     }

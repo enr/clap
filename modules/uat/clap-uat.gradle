@@ -1,0 +1,24 @@
+
+    import groovy.json.JsonSlurper
+    
+dependencies {
+
+    compile     project(':modules:core')
+    
+    testCompile 'info.cukes:cucumber-java:1.0.14',
+                'info.cukes:cucumber-junit:1.0.14',
+                'junit:junit:4.10',
+                'org.hamcrest:hamcrest-core:1.1',
+                'org.hamcrest:hamcrest-library:1.1'
+}
+
+test.doLast {
+    def cukeJson = new File(buildDir, 'cucumber-report.json')
+    println "cuke json "+cukeJson
+    
+
+//Attention: you have to use double quotes inside the json string
+def jsonObj = new JsonSlurper().parseText( cukeJson.text )
+
+println jsonObj
+}
