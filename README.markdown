@@ -6,13 +6,13 @@ Java library to easily create command-line apps.
 Based on Guice and JCommander.
 
 
-Usage
------
+Add Clap to your project
+------------------------
 
 Declare dependency:
 
 
-    compile 'com.github.enr:clap-core:0.1'
+    compile 'com.github.enr:clap-core:0.3-SNAPSHOT'
 
 
 To automatically download Clap, declare a repository:
@@ -26,37 +26,82 @@ To automatically download Clap, declare a repository:
     }
 ```
 
-Create your commands, implementing `com.github.enr.clap.api.Command`, and command parameters (class annotated with `com.beust.jcommander.Parameters`):
+Usage
+-----
+
+Code shown here is taken from the actual Clap tests.
+
+
+Create your commands, implementing `com.github.enr.clap.api.Command`:
 
 
 ```java
-    @Parameters(commandDescription = "List available and configured datasets")
-    public class ListCommandArgs {
+public class EchoCommand implements Command {
 
-    }
+	private static final String COMMAND_ID = "echo";
+	
+	private Reporter reporter;
+
+	private EchoCommandArgs args = new EchoCommandArgs();
+	
+	@Inject
+	public EchoCommand(Reporter reporter) {
+		this.reporter = reporter;
+	}
+
+	@Override
+	public CommandResult execute() {
+		reporter.out(args.message);
+		return new CommandResult();
+	}
+
+	@Override
+	public String getId() {
+		return COMMAND_ID;
+	}
+
+	@Override
+	public Object getParametersContainer() {
+		return args;
+	}
+
+}
 ```
+
+
+Create command parameters (class annotated with `com.beust.jcommander.Parameters`):
+
+
+```java
+@Parameters(commandDescription = "Echo messages")
+public class EchoCommandArgs {
+    @Parameter(names = { "-m", "--message" }, description = "The message to echo")
+    public String message;
+}
+```
+
 
 Create an app metadata class (implementing `com.github.enr.clap.api.AppMeta`):
 
 
 ```java
-    public class MyAppMeta implements AppMeta {
+public class HelloMeta implements AppMeta {
 
-        @Override
-        public String name() {
-            return "appname";
-        }
+	@Override
+	public String name() {
+		return "hello";
+	}
 
-        @Override
-        public String version() {
-            return "0.1-SNAPSHOT";
-        }
-        
-        @Override
-        public String displayName() {
-            return "App Name";
-        }
-    }
+	@Override
+	public String version() {
+		return "0.1-SNAPSHOT";
+	}
+	
+	@Override
+	public String displayName() {
+		return "Hello";
+	}
+}
 ```
 
 
@@ -64,9 +109,22 @@ Create your Guice module, adding your commands and your metadata:
 
 
 ```java
-    bind( AppMeta.class ).to( MyAppMeta.class );
-    bind( Command.class ).annotatedWith(Names.named("command.import")).to( ImportCommand.class );
-    bind( Command.class ).annotatedWith(Names.named("command.list")).to( ListCommand.class );
+public class MyAppModule extends AbstractModule
+{
+    @Override
+    protected void configure ()
+    {
+        // configuration
+        bind( AppMeta.class ).to( HelloMeta.class );
+        bind( EnvironmentHolder.class ).to( NoExitEnvironmentHolder.class ).in( Singleton.class );
+        
+        // components
+        bind( Reporter.class ).to( OutputRetainingReporter.class ).in( Singleton.class );
+        
+        // commands
+        bind( Command.class ).annotatedWith(Names.named("command.echo")).to( EchoCommand.class );
+    }
+}
 ```
 
 
@@ -74,21 +132,14 @@ Create a main class:
 
 
 ```java
-    import com.github.enr.clap.api.ClapApp;
-    import com.github.enr.clap.inject.Bindings;
-    import com.github.enr.clap.inject.ClapModule;
-    import com.google.inject.Guice;
-    import com.google.inject.Injector;
-    import com.google.inject.util.Modules;
-
-    public class Main {
-        public static void main(String[] args) throws Exception {
-            Injector injector = Guice.createInjector(Modules.override(new ClapModule()).with(new MyAppModule()));
-            ClapApp app = injector.getInstance(ClapApp.class);
-            app.setAvailableCommands(Bindings.getAllCommands(injector));
-            app.run(args);
-        }
+public class Main {
+    public static void main(String[] args) throws Exception {
+        Injector injector = Guice.createInjector(Modules.override(new ClapModule()).with(new MyAppModule()));
+        ClapApp app = injector.getInstance(ClapApp.class);
+        app.setAvailableCommands(Bindings.getAllCommands(injector));
+        app.run(args);
     }
+}
 ```
 
 
