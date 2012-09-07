@@ -6,8 +6,24 @@ Java library to easily create command-line apps.
 Based on Guice and JCommander.
 
 
+What you get using Clap
+-----------------------
+
+A ready structure for a command line app using options and command (such as `app run --port 9090`).
+
+Some common fuctionality such as `app --help`, `app --version`, `app --configurations` (shows all configuration files loaded).
+
+A built-in configuration object reading groovy files in a system dir (based on os), user home dir and installation dir.
+
+A built-in Guice based dependency injection.
+
+
 Add Clap to your project
 ------------------------
+
+At the moment, the best way to add Clap, is clone this repo.
+
+By the way, note for the future...
 
 Declare dependency:
 
@@ -19,17 +35,17 @@ To automatically download Clap, declare a repository:
 
 
 ```javascript
-    add(new org.apache.ivy.plugins.resolver.URLResolver()) {
-        name = 'GitHub/Clap'
-        addArtifactPattern 'http://cloud.github.com/downloads/enr/clap/[module]-[revision].[ext]'
-        addIvyPattern 'http://cloud.github.com/downloads/enr/clap/[module]-[revision].pom'
-    }
+add(new org.apache.ivy.plugins.resolver.URLResolver()) {
+    name = 'GitHub/Clap'
+    addArtifactPattern 'http://cloud.github.com/downloads/enr/clap/[module]-[revision].[ext]'
+    addIvyPattern 'http://cloud.github.com/downloads/enr/clap/[module]-[revision].pom'
+}
 ```
 
 Usage
 -----
 
-Code shown here is taken from the actual Clap tests.
+Code shown here is largely taken from the actual Clap tests.
 
 
 Create your commands, implementing `com.github.enr.clap.api.Command`:
@@ -64,7 +80,6 @@ public class EchoCommand implements Command {
 	public Object getParametersContainer() {
 		return args;
 	}
-
 }
 ```
 
