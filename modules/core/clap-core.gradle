@@ -9,12 +9,4 @@ dependencies {
 
 test {
     useTestNG()
-    /*
-    beforeTest { descriptor ->
-        logger.lifecycle("-------    Running test: " + descriptor)
-    }
-    onOutput { descriptor, event ->
-        logger.lifecycle(event.message )
-    }
-    */
 }
