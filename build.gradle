@@ -16,7 +16,7 @@ buildscript {
 
 
 ext {
-    groovyVersion = '2.0.0'
+    groovyVersion = '2.0.1'
     javaModules = [
         ':modules:core',
         ':modules:uat'
