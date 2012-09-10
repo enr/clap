@@ -11,11 +11,15 @@ What you get using Clap
 
 A ready structure for a command line app using options and command (such as `app run --port 9090`).
 
-Some common fuctionality such as `app --help`, `app --version`, `app --configurations` (shows all configuration files loaded).
+Some common fuctionality such as `app --help` and `app --version`.
 
-A built-in configuration object reading groovy files in a system dir (based on os), user home dir and installation dir.
+Configuration management:
+  * built-in configuration object reading groovy files in a system dir (based on os), user home dir and installation dir.
+  * configuration command `app config --files` `app config --list` `app config --get <key>` 
 
 A built-in Guice based dependency injection.
+
+Testability, using Clap components.
 
 
 Add Clap to your project
@@ -129,18 +133,22 @@ public class MyAppModule extends AbstractModule
     @Override
     protected void configure ()
     {
-        // configuration
+
         bind( AppMeta.class ).to( HelloMeta.class );
-        bind( EnvironmentHolder.class ).to( NoExitEnvironmentHolder.class ).in( Singleton.class );
-        
-        // components
-        bind( Reporter.class ).to( OutputRetainingReporter.class ).in( Singleton.class );
-        
-        // commands
+
         bind( Command.class ).annotatedWith(Names.named("command.echo")).to( EchoCommand.class );
     }
 }
 ```
+
+Of course, you can overwrite the default components.
+
+They are implementations of:
+
+  * `com.github.enr.clap.api.EnvironmentHolder`
+  * `com.github.enr.clap.api.Reporter`
+  * `com.github.enr.clap.api.Configuration`
+  * `com.github.enr.clap.api.ConfigurationReader`
 
 
 Create a main class:
@@ -158,9 +166,107 @@ public class Main {
 ```
 
 
+Now, you can run your app:
+
+
+    $>pick --help
+    Usage: pick [options] [command] [command options]
+      Options:
+        -d, --debug        Set output level to debug
+                           Default: false
+        -h, --help         Print help
+                           Default: false
+        -i, --info         Set output level to info
+                           Default: false
+        -s, --stacktrace   Show stacktrace if an exception is thrown
+                           Default: false
+        -v, --version      Print version
+                           Default: false
+      Commands:
+        import      Import dataset
+          Usage: import [options] The dataset id to fetch
+        list      List available and configured datasets
+          Usage: list [options]
+        elasticsearch      Start Elasticsearch instance
+          Usage: elasticsearch [options]
+            Options:
+              -p, --port   Port
+                           Default: 9206
+
+        config      Informations about configuration
+          Usage: config [options]
+            Options:
+              -f, --files   List all configuration files
+                            Default: false
+              -g, --get     Get the value for a given key
+              -l, --list    List all variables set in config files
+                            Default: false
+
+
+    $>pick --version
+    Pick version 0.1-SNAPSHOT
+    $>pick config --files
+    Configuration files:
+    - /path/to/install/pick/conf/pick.groovy (true)
+    - /opt/pick/0.1-SNAPSHOT/pick.groovy (false)
+    - /home/enr/.pick/0.1-SNAPSHOT/pick.groovy (false)
+    $>pick config --list
+    elasticsearch.host=http://localhost
+    elasticsearch.port=9206
+    $>pick config --get elasticsearch.port
+    9206
+
+
 Enjoy.
 
 
+Test your app
+-------------
+
+Clap helps you in acceptance tests.
+
+Write a dedicated Guice module, using the same components of your real app, but overriding `Reporter` and `EnvironmentHolder` with other built-in components: `OutputRetainingReporter` and `NoExitEnvironmentHolder`:
+
+```java
+public class AcceptanceTestsModule extends AbstractModule
+{
+    @Override
+    protected void configure ()
+    {
+        // configuration
+        bind( AppMeta.class ).to( HelloMeta.class );
+        bind( EnvironmentHolder.class ).to( NoExitEnvironmentHolder.class ).in( Singleton.class );
+        
+        // components
+        bind( Reporter.class ).to( OutputRetainingReporter.class ).in( Singleton.class );
+        
+        // commands
+        bind( Command.class ).annotatedWith(Names.named("command.echo")).to( EchoCommand.class );
+    }
+}
+```java
+
+Then, run the app programmatically using something like:
+
+
+```java
+Injector injector = Guice.createInjector(Modules.override(new ClapModule()).with(new AcceptanceTestsModule()));
+EnvironmentHolder environment = injector.getInstance(EnvironmentHolder.class);
+environment.forceApplicationHome(this.sutHome);
+Reporter reporter = injector.getInstance(Reporter.class);
+ClapApp app = injector.getInstance(ClapApp.class);
+app.setAvailableCommands(Bindings.getAllCommands(injector));
+app.run(argsAsString.split("\\s"));
+if (reporter instanceof OutputAwareReporter) {
+    this.sutOutput = ((OutputAwareReporter) reporter).getOutput().trim();
+} else {
+    this.sutOutput = null;
+}
+```
+
+Now you can check the app behaviour or this output (in the snippet `this.sutOutput`).
+
+        
 Licensing
 ---------
 
