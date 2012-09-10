@@ -1,5 +1,5 @@
 
-    import groovy.json.JsonSlurper
+import groovy.json.JsonSlurper
     
 dependencies {
 
@@ -12,10 +12,22 @@ dependencies {
                 'org.hamcrest:hamcrest-library:1.1'
 }
 
-
+// minimal work around to fail the build if cucumber tests fail.
 test.doLast {
     def cukeJson = new File(buildDir, 'cucumber-report.json')
-    println "cuke json "+cukeJson
     def jsonObj = new JsonSlurper().parseText( cukeJson.text )
-    println jsonObj
+    def elements = jsonObj.elements[0]
+    for (scenario in elements) {
+        def scenarioId = scenario.id
+        def steps = scenario.steps
+        for (step in steps) {
+            def res = step.result
+            def name = step.name
+            if (res) {
+                if (res.status != 'passed' ) {
+                    throw new TaskExecutionException(test, new RuntimeException("scenario ${scenarioId} fail".toString()))
+                }
+            }
+        }
+    }
 }
