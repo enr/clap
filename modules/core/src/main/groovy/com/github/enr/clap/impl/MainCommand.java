@@ -40,11 +40,11 @@ public class MainCommand implements Command {
         if (args.isVersion()) {
             reporter.out("%s version %s", meta.displayName(), meta.version());
             result.setExitValue(0);
-        } else if (args.isConfigurations()) {
-            reporter.out("Configuration files:");
-            for (Map.Entry<String, Boolean> entry : configuration.getPaths().entrySet()) {
-                reporter.out("- %s (%s)", entry.getKey(), entry.getValue());
-            }
+//        } else if (args.isConfigurations()) {
+//            reporter.out("Configuration files:");
+//            for (Map.Entry<String, Boolean> entry : configuration.getPaths().entrySet()) {
+//                reporter.out("- %s (%s)", entry.getKey(), entry.getValue());
+//            }
         } else {
             reporter.out("do nothing, as requested");
         }

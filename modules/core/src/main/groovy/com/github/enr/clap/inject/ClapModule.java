@@ -9,6 +9,7 @@ import com.github.enr.clap.api.ConfigurationReader;
 import com.github.enr.clap.api.Constants;
 import com.github.enr.clap.api.EnvironmentHolder;
 import com.github.enr.clap.api.Reporter;
+import com.github.enr.clap.impl.ConfigurationCommand;
 import com.github.enr.clap.impl.ConsoleReporter;
 import com.github.enr.clap.impl.DefaultAppMeta;
 import com.github.enr.clap.impl.DefaultClapApp;
@@ -48,6 +49,7 @@ public class ClapModule extends AbstractModule {
         
         // commands
         bind(Command.class).annotatedWith(Names.named(Constants.MAIN_COMMAND_BIND_NAME)).to(MainCommand.class);
+        bind(Command.class).annotatedWith(Names.named(Constants.CONFIG_COMMAND_BIND_NAME)).to(ConfigurationCommand.class);
         
     }
 }

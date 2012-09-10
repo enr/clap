@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
 import com.github.enr.clap.api.AppMeta;
 import com.github.enr.clap.api.ClapApp;
 import com.github.enr.clap.api.Command;
@@ -54,7 +55,14 @@ public class DefaultClapApp implements ClapApp {
                 jc.addCommand(command.getId(), command.getParametersContainer());
             }
         }
-        jc.parse(args);
+        try {
+            jc.parse(args);
+        } catch (ParameterException throwable) {
+            Throwable cause = Throwables.getRootCause(throwable);
+            reporter.warn("something went wrong. catched %s", cause.getClass().getName());
+            reporter.warn(cause.getMessage().trim());
+            systemExit(1);
+        }
 
         setReportingLevel(reporter, mainArgs);
 

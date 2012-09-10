@@ -66,13 +66,21 @@ public class AppStepdefs {
      * used to test output if it is expected to show a path in os specific format.
      * warn: it replace every "/" char in expected output with the current os separator char.
      */
-    @Then("^output line '([^\"]*)' should show os path '([^\"]*)'$")
+    @Then("^output line '([^\"]*)' should contain os path '([^\"]*)'$")
     public void output_line_should_show_os_path(int lineIndex, String expectedLineContent) {
-        output_line_should_show(lineIndex, expectedLineContent.replace('/', File.separatorChar));
+        output_line_should_contain(lineIndex, expectedLineContent.replace('/', File.separatorChar));
     }
     
-    @Then("^output line '([^\"]*)' should show '([^\"]*)'$")
-    public void output_line_should_show(int lineIndex, String expectedLineContent) {
+    @Then("^output line '([^\"]*)' should contain '([^\"]*)'$")
+    public void output_line_should_contain(int lineIndex, String expectedLineContent) {
+        String[] lines = this.sutOutput.split("\n");
+        String actualLine = lines[lineIndex];
+        //assertEquals(expectedLineContent, actualLine);
+        assertTrue(actualLine.contains(expectedLineContent));
+    }
+    
+    @Then("^output line '([^\"]*)' should be equal to '([^\"]*)'$")
+    public void output_line_should_be_equal_to(int lineIndex, String expectedLineContent) {
         String[] lines = this.sutOutput.split("\n");
         String actualLine = lines[lineIndex];
         //assertEquals(expectedLineContent, actualLine);

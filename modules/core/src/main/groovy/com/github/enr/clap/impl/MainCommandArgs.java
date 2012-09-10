@@ -24,8 +24,8 @@ public class MainCommandArgs implements CommonArgsAware {
      * "Set output level to info") private boolean info = false;
      */
 
-    @Parameter(names = { "-c", "--configurations" }, description = "Print out configuration files")
-    private boolean configurations = false;
+    //@Parameter(names = { "-c", "--configurations" }, description = "Print out configuration files")
+    //private boolean configurations = false;
 
     @ParametersDelegate
     public CommonArgs common = new CommonArgs();
@@ -34,9 +34,11 @@ public class MainCommandArgs implements CommonArgsAware {
         return version;
     }
 
+    /*
     public boolean isConfigurations() {
         return configurations;
     }
+    */
 
     @Override
     public boolean isHelp() {

@@ -8,4 +8,7 @@ public interface Constants {
 
     public static final String MAIN_COMMAND_BIND_NAME = "command.main";
     public static final String MAIN_COMMAND_ID = "main";
+    
+    public static final String CONFIG_COMMAND_BIND_NAME = "command.config";
+    public static final String CONFIG_COMMAND_ID = "config";
 }
