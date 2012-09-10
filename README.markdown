@@ -166,7 +166,7 @@ public class Main {
 ```
 
 
-Now, you can run your app:
+Now, you can run your app, and see somthing similar to:
 
 
     $>pick --help
@@ -244,7 +244,7 @@ public class AcceptanceTestsModule extends AbstractModule
         bind( Command.class ).annotatedWith(Names.named("command.echo")).to( EchoCommand.class );
     }
 }
-```java
+```
 
 Then, run the app programmatically using something like:
 
