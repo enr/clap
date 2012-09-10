@@ -2,7 +2,7 @@ package com.github.enr.clap.api;
 
 import javax.inject.Inject;
 
-/*
+/**
  * Temporary work-around to get Guice components in static methods.
  */
 public class ComponentsRegistry {

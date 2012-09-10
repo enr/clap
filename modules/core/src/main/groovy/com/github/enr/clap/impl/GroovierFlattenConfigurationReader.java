@@ -14,8 +14,9 @@ import org.codehaus.groovy.runtime.GStringImpl;
 import com.github.enr.clap.api.ConfigurationReader;
 import com.google.common.base.Preconditions;
 
-/*
- * read configurations in groovy files, using internally a ConfigSlurper
+/**
+ * Default configuration reader component.
+ * It reads configurations in groovy files (using internally a ConfigSlurper) and store them in a flat map.
  */
 public class GroovierFlattenConfigurationReader implements ConfigurationReader {
 
@@ -35,7 +36,7 @@ public class GroovierFlattenConfigurationReader implements ConfigurationReader {
     private List<URL> configurations = new ArrayList<URL>();
 
     /**
-     * ogni file aggiunto sovrascrive le proprieta' gia' presenti
+     * Every file added overrides the stored configuration.
      */
     @Override
     public void addConfiguration(URL configuration) {

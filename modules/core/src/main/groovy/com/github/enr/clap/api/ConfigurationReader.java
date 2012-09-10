@@ -3,6 +3,9 @@ package com.github.enr.clap.api;
 import java.net.URL;
 import java.util.Map;
 
+/**
+ * Interface for configuration reader.
+ */
 public interface ConfigurationReader {
 
     /**

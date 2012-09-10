@@ -1,13 +1,10 @@
 package com.github.enr.clap.impl;
 
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import com.github.enr.clap.api.AppMeta;
 import com.github.enr.clap.api.Command;
 import com.github.enr.clap.api.CommandResult;
-import com.github.enr.clap.api.Configuration;
 import com.github.enr.clap.api.Constants;
 import com.github.enr.clap.api.Reporter;
 
@@ -22,13 +19,10 @@ public class MainCommand implements Command {
 
     private AppMeta meta;
 
-    private Configuration configuration;
-
     private MainCommandArgs args = new MainCommandArgs();
 
     @Inject
-    public MainCommand(Configuration configuration, AppMeta meta, Reporter reporter) {
-        this.configuration = configuration;
+    public MainCommand(AppMeta meta, Reporter reporter) {
         this.meta = meta;
         this.reporter = reporter;
     }
@@ -40,11 +34,6 @@ public class MainCommand implements Command {
         if (args.isVersion()) {
             reporter.out("%s version %s", meta.displayName(), meta.version());
             result.setExitValue(0);
-//        } else if (args.isConfigurations()) {
-//            reporter.out("Configuration files:");
-//            for (Map.Entry<String, Boolean> entry : configuration.getPaths().entrySet()) {
-//                reporter.out("- %s (%s)", entry.getKey(), entry.getValue());
-//            }
         } else {
             reporter.out("do nothing, as requested");
         }

@@ -12,13 +12,14 @@ public interface EnvironmentHolder {
     void forceApplicationHome(File home);
 
     /*
-     * directory containing configuration files in the installation ie the
-     * config/ dir into application home.
+     * directory containing configuration files in the installation (ie the
+     * config/ dir into application home).
      */
     File installationConfigurationDirectory();
 
     /*
-     * directory containing configuration files in the current system
+     * directory containing configuration files in the current system.
+     * the actual path depends from the os.
      */
     File systemConfigurationDirectory();
 
@@ -33,7 +34,4 @@ public interface EnvironmentHolder {
      */
     boolean canExit();
 
-    // String getApplicationName();
-
-    // public String getApplicationVersion();
 }

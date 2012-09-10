@@ -1,5 +1,9 @@
 package com.github.enr.clap.api;
 
+/**
+ * Container for some default value.
+ *
+ */
 public interface Constants {
 
     public static final String DEFAULT_META_NAME = "clap";

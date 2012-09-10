@@ -225,6 +225,10 @@ Test your app
 
 Clap helps you in acceptance tests.
 
+You can look at [user acceptance test module](https://github.com/enr/clap/tree/master/modules/uat) to see the actual tests for Clap (using Cucumber JVM).
+
+By the way, to write your own test using the framework you prefer:
+
 Write a dedicated Guice module, using the same components of your real app, but overriding `Reporter` and `EnvironmentHolder` with other built-in components: `OutputRetainingReporter` and `NoExitEnvironmentHolder`:
 
 ```java
@@ -238,7 +242,7 @@ public class AcceptanceTestsModule extends AbstractModule
         bind( EnvironmentHolder.class ).to( NoExitEnvironmentHolder.class ).in( Singleton.class );
         
         // components
-        bind( Reporter.class ).to( OutputRetainingReporter.class ).in( Singleton.class );
+        bind( Reporter.class ).to( DefaultOutputRetainingReporter.class ).in( Singleton.class );
         
         // commands
         bind( Command.class ).annotatedWith(Names.named("command.echo")).to( EchoCommand.class );
@@ -257,8 +261,8 @@ Reporter reporter = injector.getInstance(Reporter.class);
 ClapApp app = injector.getInstance(ClapApp.class);
 app.setAvailableCommands(Bindings.getAllCommands(injector));
 app.run(argsAsString.split("\\s"));
-if (reporter instanceof OutputAwareReporter) {
-    this.sutOutput = ((OutputAwareReporter) reporter).getOutput().trim();
+if (reporter instanceof OutputRetainingReporter) {
+    this.sutOutput = ((OutputRetainingReporter) reporter).getOutput().trim();
 } else {
     this.sutOutput = null;
 }

@@ -1,7 +1,7 @@
 package com.github.enr.clap.api;
 
-/*
- * container for the result of the executed command.
+/**
+ * Container for the result of the executed command.
  */
 public class CommandResult {
 

@@ -8,7 +8,7 @@ import clap.uat.app.hello.AcceptanceTestsModule;
 
 import com.github.enr.clap.api.ClapApp;
 import com.github.enr.clap.api.EnvironmentHolder;
-import com.github.enr.clap.api.OutputAwareReporter;
+import com.github.enr.clap.api.OutputRetainingReporter;
 import com.github.enr.clap.api.Reporter;
 import com.github.enr.clap.inject.Bindings;
 import com.github.enr.clap.inject.ClapModule;
@@ -50,8 +50,8 @@ public class AppStepdefs {
         // method
         app.setAvailableCommands(Bindings.getAllCommands(injector));
         app.run(argsAsString.split("\\s"));
-        if (reporter instanceof OutputAwareReporter) {
-            this.sutOutput = ((OutputAwareReporter) reporter).getOutput().trim();
+        if (reporter instanceof OutputRetainingReporter) {
+            this.sutOutput = ((OutputRetainingReporter) reporter).getOutput().trim();
         } else {
             this.sutOutput = null;
         }
