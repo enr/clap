@@ -25,7 +25,7 @@ Testability, using Clap components.
 Add Clap to your project
 ------------------------
 
-At the moment, the best way to add Clap, is clone this repo.
+#### At the moment, the best way to add Clap, is clone this repo.
 
 By the way, note for the future...
 
@@ -105,17 +105,14 @@ Create an app metadata class (implementing `com.github.enr.clap.api.AppMeta`):
 
 ```java
 public class HelloMeta implements AppMeta {
-
 	@Override
 	public String name() {
 		return "hello";
 	}
-
 	@Override
 	public String version() {
 		return "0.1-SNAPSHOT";
 	}
-	
 	@Override
 	public String displayName() {
 		return "Hello";
@@ -133,9 +130,7 @@ public class MyAppModule extends AbstractModule
     @Override
     protected void configure ()
     {
-
         bind( AppMeta.class ).to( HelloMeta.class );
-
         bind( Command.class ).annotatedWith(Names.named("command.echo")).to( EchoCommand.class );
     }
 }
@@ -166,7 +161,7 @@ public class Main {
 ```
 
 
-Now, you can run your app, and see somthing similar to:
+Now, you can run your app, and see something similar to:
 
 
     $>pick --help
@@ -229,7 +224,7 @@ You can look at [user acceptance test module](https://github.com/enr/clap/tree/m
 
 By the way, to write your own test using the framework you prefer:
 
-Write a dedicated Guice module, using the same components of your real app, but overriding `Reporter` and `EnvironmentHolder` with other built-in components: `OutputRetainingReporter` and `NoExitEnvironmentHolder`:
+Write a dedicated Guice module, using the same components of your real app, but overriding `Reporter` and `EnvironmentHolder` with other built-in components: `DefaultOutputRetainingReporter` and `NoExitEnvironmentHolder`:
 
 ```java
 public class AcceptanceTestsModule extends AbstractModule
@@ -240,10 +235,8 @@ public class AcceptanceTestsModule extends AbstractModule
         // configuration
         bind( AppMeta.class ).to( HelloMeta.class );
         bind( EnvironmentHolder.class ).to( NoExitEnvironmentHolder.class ).in( Singleton.class );
-        
         // components
         bind( Reporter.class ).to( DefaultOutputRetainingReporter.class ).in( Singleton.class );
-        
         // commands
         bind( Command.class ).annotatedWith(Names.named("command.echo")).to( EchoCommand.class );
     }
@@ -268,9 +261,88 @@ if (reporter instanceof OutputRetainingReporter) {
 }
 ```
 
-Now you can check the app behaviour or this output (in the snippet `this.sutOutput`).
+Now you can check the app behaviour or its output (in the snippet `this.sutOutput`).
 
-        
+
+Override default args
+---------------------
+
+You can see at [OverApp](https://github.com/enr/clap/tree/master/modules/uat/src/test/groovy/clap/uat/app/over) to see working code overriding defaults.
+
+To replicate, you need to:
+
+Write a Parameter class implementing `CommonArgsAware` and setting the args keys (well, you could hardcode the reporting levels)
+
+```java
+@Parameters
+public class OverMainCommandArgs implements CommonArgsAware {
+    @Parameter(names = { "-w", "--wersion" }, description = "Print version")
+    private boolean version;
+    @Parameter(names = { "-e", "--elp" }, description = "Print help")
+    public boolean help = false;
+    @Parameter(names = { "-v", "--verbose" }, description = "Set output level to verbose (debug)")
+    public boolean debug = false;
+    @Parameter(names = { "-h", "--hinfo" }, description = "Set output level to info")
+    public boolean info = false;
+    @Parameter(names = { "-z", "--ztacktrace" }, description = "Show stacktrace if an exception is thrown")
+    public boolean stacktrace = false;
+    public boolean isVersion() {
+        return version;
+    }
+    @Override
+    public boolean isHelp() {
+        return help;
+    }
+    @Override
+    public boolean isInfo() {
+        return info;
+    }
+    @Override
+    public boolean isDebug() {
+        return debug;
+    }
+    @Override
+    public boolean isStacktrace() {
+        return stacktrace;
+    }
+}
+```
+
+Write a main command (ie a class implementing `CommandV and using your Parameter class)
+
+
+```java
+public class OverMainCommand implements Command {
+    private Reporter reporter;
+    private AppMeta meta;
+    private OverMainCommandArgs args = new OverMainCommandArgs();
+    @Inject
+    public OverMainCommand(AppMeta meta, Reporter reporter) {
+        this.meta = meta;
+        this.reporter = reporter;
+    }
+    @Override
+    public CommandResult execute() {
+        // do things...
+    }
+    @Override
+    public String getId() {
+        return Constants.MAIN_COMMAND_ID;
+    }
+    @Override
+    public Object getParametersContainer() {
+        return args;
+    }
+}
+```
+
+Bind your command class to `Constants.MAIN_COMMAND_BIND_NAME` in your Guice module:
+
+```java
+    bind(Command.class).annotatedWith(Names.named(Constants.MAIN_COMMAND_BIND_NAME)).to(OverMainCommand.class);
+```
+
+
 Licensing
 ---------
 

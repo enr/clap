@@ -6,17 +6,17 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.beust.jcommander.JCommander;
-import com.github.enr.clap.impl.MainCommandArgs;
+import com.github.enr.clap.impl.DefaultMainCommandArgs;
 
 @Test(suiteName = "Command Line Arguments")
 public class CliArgumentsTest {
 
     JCommander jc;
-    MainCommandArgs cm;
+    DefaultMainCommandArgs cm;
 
     @BeforeMethod
     public void setupJcommander() {
-        cm = new MainCommandArgs();
+        cm = new DefaultMainCommandArgs();
         jc = new JCommander(cm);
     }
 

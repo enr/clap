@@ -29,7 +29,7 @@ public class DefaultClapApp implements ClapApp {
     private AppMeta meta;
 
     /*
-     * The command executed if no command id is given. Ususlly it contains
+     * The command executed if no command id is given. Usually it contains
      * --help, --version, --noop args management.
      */
     @Inject
@@ -46,7 +46,7 @@ public class DefaultClapApp implements ClapApp {
     @Override
     public void run(String[] args) {
 
-        MainCommandArgs mainArgs = Casts.cast(mainCommand.getParametersContainer());
+        CommonArgsAware mainArgs = Casts.cast(mainCommand.getParametersContainer());
         JCommander jc = new JCommander(mainArgs);
         jc.setProgramName(meta.name());
 
@@ -103,7 +103,7 @@ public class DefaultClapApp implements ClapApp {
         }
     }
 
-    private void setReportingLevel(Reporter reporter, MainCommandArgs mainArgs) {
+    private void setReportingLevel(Reporter reporter, CommonArgsAware mainArgs) {
         if (mainArgs.isInfo()) {
             reporter.setLevel(Level.INFO);
         }

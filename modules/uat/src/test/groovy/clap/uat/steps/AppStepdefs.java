@@ -1,6 +1,7 @@
 package clap.uat.steps;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
@@ -16,6 +17,7 @@ import com.github.enr.clap.util.ClasspathUtil;
 import com.google.common.base.Joiner;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import com.google.inject.util.Modules;
 
 import cucumber.annotation.en.Given;
@@ -40,9 +42,10 @@ public class AppStepdefs {
     }
 
     @When("^I run app with \"([^\"]*)\" args$")
-    public void I_run_app_with(String argsAsString) {
+    public void I_run_app_with(String argsAsString) throws Exception {
         // setup
-        Injector injector = Guice.createInjector(Modules.override(new ClapModule()).with(new AcceptanceTestsModule()));
+        Module testModule = (Module) Class.forName("clap.uat.app."+this.sutName+".AcceptanceTestsModule").newInstance();
+        Injector injector = Guice.createInjector(Modules.override(new ClapModule()).with(testModule));
         EnvironmentHolder environment = injector.getInstance(EnvironmentHolder.class);
         environment.forceApplicationHome(this.sutHome);
         Reporter reporter = injector.getInstance(Reporter.class);
@@ -75,7 +78,6 @@ public class AppStepdefs {
     public void output_line_should_contain(int lineIndex, String expectedLineContent) {
         String[] lines = this.sutOutput.split("\n");
         String actualLine = lines[lineIndex];
-        //assertEquals(expectedLineContent, actualLine);
         assertTrue(actualLine.contains(expectedLineContent));
     }
     
@@ -83,7 +85,6 @@ public class AppStepdefs {
     public void output_line_should_be_equal_to(int lineIndex, String expectedLineContent) {
         String[] lines = this.sutOutput.split("\n");
         String actualLine = lines[lineIndex];
-        //assertEquals(expectedLineContent, actualLine);
-        assertTrue(actualLine.contains(expectedLineContent));
+        assertEquals(expectedLineContent, actualLine);
     }
 }

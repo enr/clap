@@ -19,7 +19,7 @@ public class MainCommand implements Command {
 
     private AppMeta meta;
 
-    private MainCommandArgs args = new MainCommandArgs();
+    private DefaultMainCommandArgs args = new DefaultMainCommandArgs();
 
     @Inject
     public MainCommand(AppMeta meta, Reporter reporter) {
