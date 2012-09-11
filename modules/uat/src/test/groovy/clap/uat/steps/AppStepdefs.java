@@ -5,8 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import clap.uat.app.hello.AcceptanceTestsModule;
-
 import com.github.enr.clap.api.ClapApp;
 import com.github.enr.clap.api.EnvironmentHolder;
 import com.github.enr.clap.api.OutputRetainingReporter;

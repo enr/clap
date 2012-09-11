@@ -343,6 +343,25 @@ Bind your command class to `Constants.MAIN_COMMAND_BIND_NAME` in your Guice modu
 ```
 
 
+Noop switch
+-----------
+
+If you need a no-operation switch:
+
+Add to your Parameter class the option (named as you want, in this case `-n | --noop`):
+
+
+```java
+    @Parameter(names = { "-n", "--noop" }, description = "Set noop")
+    public boolean noop;
+```
+
+
+Create your command extending `AbstractNoopAwareCommand`
+
+Now, if you command is ran using noop switch, it will outputs the string returned from its method `explain()`
+
+
 Licensing
 ---------
 
