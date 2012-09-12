@@ -27,6 +27,10 @@ public class DefaultClapApp implements ClapApp {
     private Reporter reporter;
     private EnvironmentHolder environment;
     private AppMeta meta;
+    
+    private boolean exited;
+    
+    private int exitValue;
 
     /*
      * The command executed if no command id is given. Usually it contains
@@ -62,6 +66,9 @@ public class DefaultClapApp implements ClapApp {
             reporter.warn("something went wrong. catched %s", cause.getClass().getName());
             reporter.warn(cause.getMessage().trim());
             systemExit(1);
+            if (exited) {
+                return;
+            }
         }
 
         setReportingLevel(reporter, mainArgs);
@@ -74,6 +81,9 @@ public class DefaultClapApp implements ClapApp {
         if ((args.length == 0) || (mainArgs.isHelp())) {
             usageForCommand(jc, commandId);
             systemExit(0);
+            if (exited) {
+                return;
+            }
         }
 
         try {
@@ -125,6 +135,8 @@ public class DefaultClapApp implements ClapApp {
      * the actual running and false in the acceptance test phase.
      */
     private void systemExit(int value) {
+        setExitValue(value);
+        exited = true;
         if (environment.canExit()) {
             System.exit(value);
         }
@@ -162,6 +174,14 @@ public class DefaultClapApp implements ClapApp {
             }
         }
         return null;
+    }
+
+    public int getExitValue() {
+        return exitValue;
+    }
+
+    private void setExitValue(int exitValue) {
+        this.exitValue = exitValue;
     }
 
 }

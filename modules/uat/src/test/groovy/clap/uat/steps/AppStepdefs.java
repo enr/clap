@@ -29,6 +29,8 @@ public class AppStepdefs {
     private File sutHome;
     
     private String sutOutput;
+    
+    private int sutExitValue;
 
     @Given("^I am the user of app '([^\"]*)'$")
     public void I_am_the_user_of_app(String appName) {
@@ -51,11 +53,17 @@ public class AppStepdefs {
         // method
         app.setAvailableCommands(Bindings.getAllCommands(injector));
         app.run(argsAsString.split("\\s"));
+        this.sutExitValue = app.getExitValue();
         if (reporter instanceof OutputRetainingReporter) {
             this.sutOutput = ((OutputRetainingReporter) reporter).getOutput().trim();
         } else {
             this.sutOutput = null;
         }
+    }
+
+    @Then("^it should exit with value \"([^\"]*)\"$")
+    public void it_should_exit_with_value(int expectedExitValue) {
+        assertEquals(expectedExitValue, this.sutExitValue);
     }
 
     @Then("^it should show \"([^\"]*)\"$")

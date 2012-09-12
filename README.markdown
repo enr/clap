@@ -254,6 +254,7 @@ Reporter reporter = injector.getInstance(Reporter.class);
 ClapApp app = injector.getInstance(ClapApp.class);
 app.setAvailableCommands(Bindings.getAllCommands(injector));
 app.run(argsAsString.split("\\s"));
+this.sutExitValue = app.getExitValue();
 if (reporter instanceof OutputRetainingReporter) {
     this.sutOutput = ((OutputRetainingReporter) reporter).getOutput().trim();
 } else {
@@ -261,7 +262,7 @@ if (reporter instanceof OutputRetainingReporter) {
 }
 ```
 
-Now you can check the app behaviour or its output (in the snippet `this.sutOutput`).
+Now you can check the app behaviour, its output (in the snippet `this.sutOutput`) and its exit value (`this.sutExitValue`).
 
 
 Override default args

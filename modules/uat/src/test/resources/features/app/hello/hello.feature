@@ -31,3 +31,7 @@ Feature: Default functionalities
     Then output line '0' should contain 'com.beust.jcommander.ParameterException'
     And output line '1' should be equal to 'Expected a value after parameter --get'
 
+  Scenario: Run a not valid command
+    Given I am the user of app 'hello'
+    When I run app with "no-such-command" args
+    Then it should exit with value "1"
