@@ -31,12 +31,11 @@ By the way, note for the future...
 
 Declare dependency:
 
-
+```javascript
     compile 'com.github.enr:clap-core:0.3-SNAPSHOT'
-
+```
 
 To automatically download Clap, declare a repository:
-
 
 ```javascript
 add(new org.apache.ivy.plugins.resolver.URLResolver()) {
@@ -46,14 +45,13 @@ add(new org.apache.ivy.plugins.resolver.URLResolver()) {
 }
 ```
 
+
 Usage
 -----
 
 Code shown here is largely taken from the actual Clap tests.
 
-
 Create your commands, implementing `com.github.enr.clap.api.Command`:
-
 
 ```java
 public class EchoCommand implements Command {
@@ -87,9 +85,7 @@ public class EchoCommand implements Command {
 }
 ```
 
-
 Create command parameters (class annotated with `com.beust.jcommander.Parameters`):
-
 
 ```java
 @Parameters(commandDescription = "Echo messages")
@@ -99,9 +95,7 @@ public class EchoCommandArgs {
 }
 ```
 
-
 Create an app metadata class (implementing `com.github.enr.clap.api.AppMeta`):
-
 
 ```java
 public class HelloMeta implements AppMeta {
@@ -120,9 +114,7 @@ public class HelloMeta implements AppMeta {
 }
 ```
 
-
 Create your Guice module, adding your commands and your metadata:
-
 
 ```java
 public class MyAppModule extends AbstractModule
@@ -145,9 +137,7 @@ They are implementations of:
   * `com.github.enr.clap.api.Configuration`
   * `com.github.enr.clap.api.ConfigurationReader`
 
-
 Create a main class:
-
 
 ```java
 public class Main {
@@ -160,9 +150,7 @@ public class Main {
 }
 ```
 
-
 Now, you can run your app, and see something similar to:
-
 
     $>pick --help
     Usage: pick [options] [command] [command options]
@@ -197,7 +185,6 @@ Now, you can run your app, and see something similar to:
               -l, --list    List all variables set in config files
                             Default: false
 
-
     $>pick --version
     Pick version 0.1-SNAPSHOT
     $>pick config --files
@@ -210,7 +197,6 @@ Now, you can run your app, and see something similar to:
     elasticsearch.port=9206
     $>pick config --get elasticsearch.port
     9206
-
 
 Enjoy.
 
@@ -244,7 +230,6 @@ public class AcceptanceTestsModule extends AbstractModule
 ```
 
 Then, run the app programmatically using something like:
-
 
 ```java
 Injector injector = Guice.createInjector(Modules.override(new ClapModule()).with(new AcceptanceTestsModule()));
@@ -309,8 +294,7 @@ public class OverMainCommandArgs implements CommonArgsAware {
 }
 ```
 
-Write a main command (ie a class implementing `CommandV and using your Parameter class)
-
+Write a main command (ie a class implementing `Command` and using your `Parameter` class)
 
 ```java
 public class OverMainCommand implements Command {
@@ -351,12 +335,10 @@ If you need a no-operation switch:
 
 Add to your Parameter class the option (named as you want, in this case `-n | --noop`):
 
-
 ```java
     @Parameter(names = { "-n", "--noop" }, description = "Set noop")
     public boolean noop;
 ```
-
 
 Create your command extending `AbstractNoopAwareCommand`
 
@@ -373,7 +355,7 @@ you may not use this file except in compliance with the License.
 
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0)
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
