@@ -20,10 +20,10 @@ public class AcceptanceTestsModule extends AbstractModule
     {
         // configuration
         bind( AppMeta.class ).to( HelloMeta.class );
-        bind( EnvironmentHolder.class ).to( NoExitEnvironmentHolder.class ).in( Singleton.class );
+        //bind( EnvironmentHolder.class ).to( NoExitEnvironmentHolder.class ).in( Singleton.class );
         
         // components
-        bind( Reporter.class ).to( DefaultOutputRetainingReporter.class ).in( Singleton.class );
+        //bind( Reporter.class ).to( DefaultOutputRetainingReporter.class ).in( Singleton.class );
         
         // commands
         bind( Command.class ).annotatedWith(Names.named("command.echo")).to( EchoCommand.class );

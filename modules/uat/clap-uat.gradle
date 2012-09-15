@@ -12,6 +12,10 @@ dependencies {
                 'org.hamcrest:hamcrest-library:1.1'
 }
 
+test {
+    testLogging.showStandardStreams = true
+}
+
 // minimal work around to fail the build if cucumber tests fail.
 test.doLast {
     def cukeJson = new File(buildDir, 'cucumber-report.json')

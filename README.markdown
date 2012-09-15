@@ -137,7 +137,18 @@ They are implementations of:
   * `com.github.enr.clap.api.Configuration`
   * `com.github.enr.clap.api.ConfigurationReader`
 
-Create a main class:
+
+Create a main class using the utility method:
+
+```java
+public class Main {
+    public static void main(String[] args) throws Exception {
+        Clap.runConventionalApp(args, new MyAppModule())
+    }
+}
+```
+
+or, if you need some customization, something like:
 
 ```java
 public class Main {
@@ -209,6 +220,17 @@ Clap helps you in acceptance tests.
 You can look at [user acceptance test module](https://github.com/enr/clap/tree/master/modules/uat) to see the actual tests for Clap (using Cucumber JVM).
 
 By the way, to write your own test using the framework you prefer:
+
+You can run your app using the utility method:
+
+
+```java
+    RunResult result = Clap.runReviewableApp(args, this.sutHome, testModule);
+    this.sutExitValue = result.getExitValue();
+    this.sutOutput = result.getOutput();
+```
+
+Or, if you need some customization:
 
 Write a dedicated Guice module, using the same components of your real app, but overriding `Reporter` and `EnvironmentHolder` with other built-in components: `DefaultOutputRetainingReporter` and `NoExitEnvironmentHolder`:
 

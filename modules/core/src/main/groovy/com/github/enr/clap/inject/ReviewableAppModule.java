@@ -10,13 +10,13 @@ import com.github.enr.clap.api.Constants;
 import com.github.enr.clap.api.EnvironmentHolder;
 import com.github.enr.clap.api.Reporter;
 import com.github.enr.clap.impl.ConfigurationCommand;
-import com.github.enr.clap.impl.ConsoleReporter;
 import com.github.enr.clap.impl.DefaultAppMeta;
 import com.github.enr.clap.impl.DefaultClapApp;
 import com.github.enr.clap.impl.DefaultConfiguration;
-import com.github.enr.clap.impl.DefaultEnvironmentHolder;
+import com.github.enr.clap.impl.DefaultOutputRetainingReporter;
 import com.github.enr.clap.impl.GroovierFlattenConfigurationReader;
 import com.github.enr.clap.impl.MainCommand;
+import com.github.enr.clap.impl.NoExitEnvironmentHolder;
 import com.google.inject.AbstractModule;
 import com.google.inject.Singleton;
 import com.google.inject.name.Names;
@@ -27,7 +27,7 @@ import com.google.inject.name.Names;
  * It contains bindings for all components used in Clap.
  * You can use them or override them, and of course add your own components.
  */
-public class ClapModule extends AbstractModule {
+public class ReviewableAppModule extends AbstractModule {
 
     @Override
     protected void configure() {
@@ -40,12 +40,12 @@ public class ClapModule extends AbstractModule {
 
         // configuration
         bind(AppMeta.class).to(DefaultAppMeta.class);
-        bind(EnvironmentHolder.class).to(DefaultEnvironmentHolder.class).in(Singleton.class);
+        bind(EnvironmentHolder.class).to(NoExitEnvironmentHolder.class).in(Singleton.class);
         bind(Configuration.class).to(DefaultConfiguration.class).in(Singleton.class);
         bind(ConfigurationReader.class).to(GroovierFlattenConfigurationReader.class);
 
         // components
-        bind(Reporter.class).to(ConsoleReporter.class).in(Singleton.class);
+        bind(Reporter.class).to(DefaultOutputRetainingReporter.class).in(Singleton.class);
         
         // commands
         bind(Command.class).annotatedWith(Names.named(Constants.MAIN_COMMAND_BIND_NAME)).to(MainCommand.class);
