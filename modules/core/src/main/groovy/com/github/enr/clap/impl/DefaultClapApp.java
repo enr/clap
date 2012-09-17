@@ -123,11 +123,13 @@ public class DefaultClapApp implements ClapApp {
     }
 
     private void usageForCommand(JCommander jc, String commandId) {
+    	StringBuilder sb = new StringBuilder();
         if (commandId == null) {
-            jc.usage();
+            jc.usage(sb);
         } else {
-            jc.usage(commandId);
+            jc.usage(commandId, sb);
         }
+        reporter.out(sb.toString());
     }
 
     /*

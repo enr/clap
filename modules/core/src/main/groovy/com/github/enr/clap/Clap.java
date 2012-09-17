@@ -14,6 +14,9 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
 
+/**
+ * Utility class with static methods to start Clap apps.
+ */
 public class Clap {
     
     public static class RunResult {
@@ -33,6 +36,12 @@ public class Clap {
         }
     }
 
+    /**
+     * Run a Clap app with settings following conventions.
+     * 
+     * @param args user args
+     * @param module Guice module defining the app custom components
+     */
     public static void runConventionalApp(String[] args, Module module) {
         Injector injector = Guice.createInjector(Modules.override(new ConventionalAppModule()).with(module));
         ClapApp app = injector.getInstance(ClapApp.class);
@@ -40,6 +49,16 @@ public class Clap {
         app.run(args);
     }
     
+    /**
+     * Run a Clap app which doen't call System.exit, keep the exit value and the output 
+     * for a later check, force app home to a given directory.
+     * Useful for testing (see uat module for example of an actual usage).
+     * 
+     * @param args user args
+     * @param appHome app home directory
+     * @param module module Guice module defining the app custom components
+     * @return an object containing the exit value and the output
+     */
     public static RunResult runReviewableApp(String[] args, File appHome, Module module) {
         RunResult result = new RunResult();        
         Injector injector = Guice.createInjector(Modules.override(new ReviewableAppModule()).with(module));

@@ -2,12 +2,7 @@ package clap.uat.app.hello;
 
 import com.github.enr.clap.api.AppMeta;
 import com.github.enr.clap.api.Command;
-import com.github.enr.clap.api.EnvironmentHolder;
-import com.github.enr.clap.api.Reporter;
-import com.github.enr.clap.impl.NoExitEnvironmentHolder;
-import com.github.enr.clap.impl.DefaultOutputRetainingReporter;
 import com.google.inject.AbstractModule;
-import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 
 /*

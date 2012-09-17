@@ -1,18 +1,18 @@
 package com.github.enr.clap.api;
 
-/*
- * interface for classes used to log messages and send output to the user.
- * messages intended to be logged are written based on a level such as logging libraries.
- * messages to the user are always sent to system output (standard or error).
+/**
+ * Interface for classes used to log messages and send output to the user.
+ * Messages intended to be logged are written based on a level such as logging libraries.
+ * Messages to the user are always sent to system output (standard or error).
  */
 public interface Reporter {
 
     public enum Level {
-        DEBUG, INFO, WARN
+        DEBUG, INFO, WARN, ERROR
     }
 
-    /*
-     * sets the minimum level for messages
+    /**
+     * Set the minimum level for messages
      */
     void setLevel(Reporter.Level level);
 
@@ -28,17 +28,23 @@ public interface Reporter {
 
     void warn(String template, Object... args);
 
-    /*
-     * report without level, intended to be used to write to the standard out
+    /**
+     * Report without level, intended to be used to write to the standard out
      */
     void out(String message);
 
+    /**
+     * Report without level, intended to be used to write to the standard out
+     */
     void out(String template, Object... args);
 
-    /*
-     * report without level, intended to be used to write to the standard err
+    /**
+     * Report without level, intended to be used to write to the standard err
      */
     void err(String message);
 
+    /**
+     * Report without level, intended to be used to write to the standard err
+     */
     void err(String template, Object... args);
 }

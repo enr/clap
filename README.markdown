@@ -32,7 +32,7 @@ By the way, note for the future...
 Declare dependency:
 
 ```javascript
-    compile 'com.github.enr:clap-core:0.3-SNAPSHOT'
+    compile 'com.github.enr:clap-core:0.3.0-SNAPSHOT'
 ```
 
 To automatically download Clap, declare a repository:
@@ -130,7 +130,7 @@ public class MyAppModule extends AbstractModule
 
 Of course, you can overwrite the default components.
 
-They are implementations of:
+The minimal requirement for a Clap app are components implementing:
 
   * `com.github.enr.clap.api.EnvironmentHolder`
   * `com.github.enr.clap.api.Reporter`
@@ -209,13 +209,12 @@ Now, you can run your app, and see something similar to:
     $>pick config --get elasticsearch.port
     9206
 
-Enjoy.
 
 
 Test your app
 -------------
 
-Clap helps you in acceptance tests.
+Clap try to help you in developing acceptance tests.
 
 You can look at [user acceptance test module](https://github.com/enr/clap/tree/master/modules/uat) to see the actual tests for Clap (using Cucumber JVM).
 
@@ -240,12 +239,9 @@ public class AcceptanceTestsModule extends AbstractModule
     @Override
     protected void configure ()
     {
-        // configuration
         bind( AppMeta.class ).to( HelloMeta.class );
         bind( EnvironmentHolder.class ).to( NoExitEnvironmentHolder.class ).in( Singleton.class );
-        // components
         bind( Reporter.class ).to( DefaultOutputRetainingReporter.class ).in( Singleton.class );
-        // commands
         bind( Command.class ).annotatedWith(Names.named("command.echo")).to( EchoCommand.class );
     }
 }

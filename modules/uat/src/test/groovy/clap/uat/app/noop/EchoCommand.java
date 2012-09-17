@@ -39,7 +39,7 @@ public class EchoCommand extends AbstractNoopAwareCommand {
 
     @Override
     protected String explain() {
-        return "echo_explain";
+        return "Explanation for command echo";
     }
 
     @Override

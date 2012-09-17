@@ -6,6 +6,22 @@ Feature: Default functionalities
   Scenario: Run --version
     When I run app with "--version" args
     Then it should show "Hello version 0.1-SNAPSHOT"
+  
+  Scenario: Run --help
+    When I run app with "--help" args
+    Then it should at least show "-d, --debug"
+    And it should at least show "-h, --help"
+    And it should at least show "-i, --info"
+    And it should at least show "-s, --stacktrace"
+    And it should at least show "-v, --version"
+    And it should at least show "echo      Echo messages"
+    And it should at least show "Usage: echo [options]"
+    And it should at least show "-m, --message   The message to echo"
+    And it should at least show "config      Informations about configuration"
+    And it should at least show "Usage: config [options]"
+    And it should at least show "-f, --files"
+    And it should at least show "-g, --get"
+    And it should at least show "-l, --list"
 
   Scenario: Run config --files
     When I run app with "config --files" args
@@ -18,7 +34,7 @@ Feature: Default functionalities
   Scenario: Run config --list
     When I run app with "config --list" args
     Then output line "0" should be equal to "server.host=http://localhost"
-    Then output line "1" should be equal to "server.port=8081"
+    And output line "1" should be equal to "server.port=8081"
 
   Scenario: Run config --get server.port
     When I run app with "config --get server.port" args

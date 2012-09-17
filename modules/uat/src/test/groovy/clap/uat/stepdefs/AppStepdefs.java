@@ -1,7 +1,9 @@
-package clap.uat.steps;
+package clap.uat.stepdefs;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 import java.io.File;
 
@@ -51,6 +53,11 @@ public class AppStepdefs {
     @Then("^it should show \"([^\"]*)\"$")
     public void it_should_show(String expectedOutput) {
         assertEquals(expectedOutput, this.sutOutput);
+    }
+
+    @Then("^it should at least show \"([^\"]*)\"$")
+    public void it_should_at_least_show(String expectedPieceOfOutput) {
+        assertThat(this.sutOutput, containsString(expectedPieceOfOutput));
     }
 
     /*

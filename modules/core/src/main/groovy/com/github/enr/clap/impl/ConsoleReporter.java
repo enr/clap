@@ -2,7 +2,7 @@ package com.github.enr.clap.impl;
 
 import com.github.enr.clap.api.Reporter;
 
-/*
+/**
  * Basic reporter implementation, writing to stdout and stderr.
  */
 public class ConsoleReporter implements Reporter {
@@ -78,7 +78,7 @@ public class ConsoleReporter implements Reporter {
     private boolean isInfoEnabled() {
         return ((level.equals(Level.DEBUG)) || (level.equals(Level.INFO)));
     }
-
+    
     @Override
     public void setLevel(Level level) {
         this.level = level;

@@ -9,4 +9,4 @@ Feature: Command allowing noop switch
 
   Scenario: Run echo --noop --message hellonoop
     When I run app with "echo --noop --message hellonoop" args
-    Then output line "0" should be equal to "echo_explain"
+    Then output line "0" should be equal to "Explanation for command echo"
