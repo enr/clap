@@ -5,7 +5,7 @@ Java library to easily create command-line apps.
 
 Based on Guice and JCommander.
 
-(https://secure.travis-ci.org/enr/clap.png?branch=master)](http://travis-ci.org/enr/clap)
+[![Build Status](https://secure.travis-ci.org/enr/clap.png?branch=master)](http://travis-ci.org/enr/clap)
 
 
 What you get using Clap
