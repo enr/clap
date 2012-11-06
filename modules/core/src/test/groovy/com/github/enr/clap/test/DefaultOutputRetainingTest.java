@@ -9,7 +9,7 @@ import com.github.enr.clap.api.Reporter.Level;
 import com.github.enr.clap.impl.DefaultOutputRetainingReporter;
 
 
-@Test(suiteName = "Core cmponents")
+@Test(suiteName = "Core components")
 public class DefaultOutputRetainingTest {
 
 	@Test
