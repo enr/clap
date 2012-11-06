@@ -27,35 +27,40 @@ public class ConfigurationCommand implements Command {
 	@Override
 	public CommandResult execute() {
 		if (args.files) {
-		    executeFiles();
-		}
-        if (args.list) {
-            executeList();
+		    return executeFiles();
+		} else if (args.list) {
+            return executeList();
+        } else if (!Strings.isNullOrEmpty(args.get)) {
+            return executeGet();
+        } else {
+            reporter.out("Not a valid call. Try with --files, --get, --list");
+            CommandResult result = new CommandResult();
+            result.setExitValue(1);
+            return result;                
         }
-        if (!Strings.isNullOrEmpty(args.get)) {
-            executeGet();
-        }
-		return new CommandResult();
 	}
 	
-    private void executeFiles() {
+    private CommandResult executeFiles() {
         reporter.out("Configuration files:");
         for (Map.Entry<String, Boolean> entry : configuration.getPaths().entrySet()) {
             reporter.out("- %s (%s)", entry.getKey(), entry.getValue());
         }
+        return new CommandResult();
     }
     
-	private void executeList() {
+	private CommandResult executeList() {
         for (Map.Entry<String, Object> entry : configuration.getAllProperties().entrySet()) {
             reporter.out("%s=%s", entry.getKey(), String.valueOf(entry.getValue()));
         }
+        return new CommandResult();
     }
     
-    private void executeGet() {
+    private CommandResult executeGet() {
         Object val = configuration.get(args.get);
         if (val != null) {
             reporter.out(String.valueOf(val));
         }
+        return new CommandResult();
     }
 
     @Override
