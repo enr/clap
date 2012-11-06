@@ -16,6 +16,9 @@ ext {
         ':modules:core',
         ':modules:uat'
     ]
+    uploadableModules = [
+        ':modules:core'
+    ]
     javaVersion = System.getProperty('java.version')
     java7 = javaVersion.startsWith('1.7')
 }
@@ -39,20 +42,6 @@ subprojects {
         apply plugin: 'groovy'
         apply plugin: 'eclipse'
         apply plugin: 'maven'
-        
-        if (java7) {
-            apply from:'http://gradle.smokejumperit.com/github-dev.gradle'
-
-            //   gradle uploadArchives -Dgithub.password=***
-            //   gradle ghUpload -Dgithub.password=***
-            ghUpload {
-                username = 'enr' // If the code guesses the username wrong: see source for defaults
-                //password = '***' // Or set Java prop 'github.password' or system env 'GITHUB_PASS'
-                repo = 'clap'
-            }
-        }
-
-        createReleaseTag.dependsOn uploadArchives
 
         configurations {
             compile.transitive = true
@@ -69,16 +58,6 @@ subprojects {
 
         sourceCompatibility = 1.6
         targetCompatibility = 1.6
-        
-        task sourceJar(type: Jar) {
-            from sourceSets.main.allSource
-            classifier = 'sources'
-        }
-
-        task javadocJar(type: Jar, dependsOn: 'javadoc') {
-            from javadoc.destinationDir
-            classifier = 'javadoc'
-        }
 
         jar {
             manifest {
@@ -86,10 +65,6 @@ subprojects {
                             "Implementation-Version": version,
                             "Project":project.name)
             }
-        }
-
-        artifacts {
-            archives sourceJar, javadocJar
         }
         
         eclipse {
@@ -101,6 +76,37 @@ subprojects {
                 downloadJavadoc = true
                 downloadSources = true
             }
+        }
+    }
+    
+    if (project.path in uploadableModules) {
+        
+        if (java7) {
+            apply from:'http://gradle.smokejumperit.com/github-dev.gradle'
+
+            //   gradle uploadArchives -Dgithub.password=***
+            //   gradle ghUpload -Dgithub.password=***
+            ghUpload {
+                username = 'enr' // If the code guesses the username wrong: see source for defaults
+                //password = '***' // Or set Java prop 'github.password' or system env 'GITHUB_PASS'
+                repo = 'clap'
+            }
+        }
+
+        createReleaseTag.dependsOn uploadArchives
+        
+        task sourceJar(type: Jar) {
+            from sourceSets.main.allSource
+            classifier = 'sources'
+        }
+
+        task javadocJar(type: Jar, dependsOn: 'javadoc') {
+            from javadoc.destinationDir
+            classifier = 'javadoc'
+        }
+
+        artifacts {
+            archives sourceJar, javadocJar
         }
     }
 }
