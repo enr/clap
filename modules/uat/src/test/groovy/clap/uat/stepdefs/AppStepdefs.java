@@ -13,9 +13,9 @@ import com.github.enr.clap.util.ClasspathUtil;
 import com.google.common.base.Joiner;
 import com.google.inject.Module;
 
-import cucumber.annotation.en.Given;
-import cucumber.annotation.en.Then;
-import cucumber.annotation.en.When;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 
 public class AppStepdefs {
     
