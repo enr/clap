@@ -5,6 +5,8 @@ Java library to easily create command-line apps.
 
 Based on Guice and JCommander.
 
+[![Build Status](https://secure.travis-ci.org/enr/clap.png?branch=master)](http://travis-ci.org/enr/clap)
+
 
 What you get using Clap
 -----------------------
@@ -32,7 +34,14 @@ By the way, note for the future...
 Declare dependency:
 
 ```javascript
-    compile 'com.github.enr:clap-core:0.3.0-SNAPSHOT'
+compile 'com.github.enr:clap-core:0.3.0-SNAPSHOT'
+```
+
+Probably you should declare Guice and JCommander dependencies too:
+
+```javascript
+compile 'com.google.inject:guice:3.0',
+        'com.beust:jcommander:1.29'
 ```
 
 To automatically download Clap, declare a repository:

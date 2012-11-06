@@ -23,6 +23,11 @@ Feature: Default functionalities
     And it should at least show "-g, --get"
     And it should at least show "-l, --list"
 
+  Scenario: Run config no args
+    When I run app with "config" args
+    Then output line "0" should be equal to "Not a valid call. Try with --files, --get, --list"
+    Then it should exit with value "1"
+
   Scenario: Run config --files
     When I run app with "config --files" args
     Then output line "0" should be equal to "Configuration files:"
