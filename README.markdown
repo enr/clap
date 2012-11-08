@@ -27,6 +27,17 @@ Testability, using Clap components.
 Add Clap to your project
 ------------------------
 
+If you want last stable version (maybe some feature described in this readme is not yet present)
+
+Declare a repository:
+
+```groovy
+add(new org.apache.ivy.plugins.resolver.URLResolver()) {
+    name = 'GitHub/Clap'
+    addArtifactPattern 'http://cloud.github.com/downloads/enr/clap/[module]-[revision].[ext]'
+    addIvyPattern 'http://cloud.github.com/downloads/enr/clap/[module]-[revision].pom'
+}
+```
 Declare dependency:
 
 ```groovy
@@ -40,15 +51,10 @@ compile 'com.google.inject:guice:3.0',
         'com.beust:jcommander:1.29'
 ```
 
-To automatically download Clap, declare a repository:
+If you are ok with snapshot version, sometimes I upload a new artifact to the repo described above.
 
-```groovy
-add(new org.apache.ivy.plugins.resolver.URLResolver()) {
-    name = 'GitHub/Clap'
-    addArtifactPattern 'http://cloud.github.com/downloads/enr/clap/[module]-[revision].[ext]'
-    addIvyPattern 'http://cloud.github.com/downloads/enr/clap/[module]-[revision].pom'
-}
-```
+If you want to try the absolutely last version you can clone this repo, run tests with `./gradlew check` and install 
+to your local Maven repository with `./gradlew install`.
 
 
 Usage
@@ -123,9 +129,11 @@ If you don't like to hardcode version in a class, you can use `com.github.enr.cl
 
 This way you can create a properties file with the proper meta keys and put it in the classpath.
 
-    clap.meta.name=YetAnotherClapApp
-    clap.meta.version=3.4.5
-    clap.meta.displayname=Yet another Clap application
+```groovy
+clap.meta.name=YetAnotherClapApp
+clap.meta.version=3.4.5
+clap.meta.displayname=Yet another Clap application
+```
 
 Create your Guice module, adding your commands and your metadata:
 
@@ -242,7 +250,7 @@ You can run your app using the utility method:
 
 
 ```java
-    RunResult result = Clap.runReviewableApp(args, this.sutHome, testModule);
+    RunResult result = Clap.runReviewableApp(args, this.sutHome, new MyAppModule());
     this.sutExitValue = result.getExitValue();
     this.sutOutput = result.getOutput();
 ```
@@ -293,7 +301,7 @@ You can see at [OverApp](https://github.com/enr/clap/tree/master/modules/uat/src
 
 To replicate, you need to:
 
-Write a Parameter class implementing `CommonArgsAware` and setting the args keys (well, you could hardcode the reporting levels)
+Write a Parameter class implementing `CommonArgsAware` and setting the args keys (well, you could hardcode the reporting levels):
 
 ```java
 @Parameters
