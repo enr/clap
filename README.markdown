@@ -27,26 +27,22 @@ Testability, using Clap components.
 Add Clap to your project
 ------------------------
 
-#### At the moment, the best way to add Clap, is clone this repo.
-
-By the way, note for the future...
-
 Declare dependency:
 
-```javascript
-compile 'com.github.enr:clap-core:0.3.0-SNAPSHOT'
+```groovy
+compile 'com.github.enr:clap-core:0.3.0'
 ```
 
 Probably you should declare Guice and JCommander dependencies too:
 
-```javascript
+```groovy
 compile 'com.google.inject:guice:3.0',
         'com.beust:jcommander:1.29'
 ```
 
 To automatically download Clap, declare a repository:
 
-```javascript
+```groovy
 add(new org.apache.ivy.plugins.resolver.URLResolver()) {
     name = 'GitHub/Clap'
     addArtifactPattern 'http://cloud.github.com/downloads/enr/clap/[module]-[revision].[ext]'
@@ -123,6 +119,14 @@ public class HelloMeta implements AppMeta {
 }
 ```
 
+If you don't like to hardcode version in a class, you can use `com.github.enr.clap.impl.PropertiesBackedAppMeta`.
+
+This way you can create a properties file with the proper meta keys and put it in the classpath.
+
+    clap.meta.name=YetAnotherClapApp
+    clap.meta.version=3.4.5
+    clap.meta.displayname=Yet another Clap application
+
 Create your Guice module, adding your commands and your metadata:
 
 ```java
@@ -131,7 +135,12 @@ public class MyAppModule extends AbstractModule
     @Override
     protected void configure ()
     {
+        // if you like the metadata class
         bind( AppMeta.class ).to( HelloMeta.class );
+        // if you like properties:
+        bind( AppMeta.class ).toInstance( PropertiesBackedAppMeta.from("your-metadata.properties") );
+        
+        // register your commands
         bind( Command.class ).annotatedWith(Names.named("command.echo")).to( EchoCommand.class );
     }
 }
