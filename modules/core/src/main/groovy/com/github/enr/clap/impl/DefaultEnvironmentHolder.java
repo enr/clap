@@ -70,7 +70,8 @@ public class DefaultEnvironmentHolder implements EnvironmentHolder {
     @Override
     public File userConfigurationDirectory() {
         StringBuilder sb = new StringBuilder().append(System.getProperty("user.home")).append(File.separator)
-                .append(".").append(meta.name()).append(File.separator).append(meta.version());
+                .append(".").append(meta.name());
+        //.append(File.separator).append(meta.version());
         return new File(sb.toString());
     }
 
