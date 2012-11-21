@@ -33,7 +33,6 @@ allprojects { project ->
             url 'https://oss.sonatype.org/content/repositories/releases/'
         }
     }
-
 }
 
 subprojects {
@@ -112,5 +111,5 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.2'
+    gradleVersion = '1.3'
 }
