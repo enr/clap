@@ -11,17 +11,17 @@ Based on Guice and JCommander.
 What you get using Clap
 -----------------------
 
-A ready structure for a command line app using options and command (such as `app run --port 9090`).
+- A ready structure for a command line app using options and command (such as `app run --port 9090`).
 
-Some common fuctionality such as `app --help` and `app --version`.
+- Some common fuctionality such as `app --help` and `app --version`.
 
-Configuration management:
+- Configuration management:
   * built-in configuration object reading groovy files in a system dir (based on os), user home dir and installation dir.
   * configuration command `app config --files` `app config --list` `app config --get <key>` 
 
-A built-in Guice based dependency injection.
+- A built-in Guice based dependency injection.
 
-Testability, using Clap components.
+- Testability, using Clap components.
 
 
 Add Clap to your project
@@ -48,7 +48,7 @@ Probably you should declare Guice and JCommander dependencies too:
 
 ```groovy
 compile 'com.google.inject:guice:3.0',
-        'com.beust:jcommander:1.29'
+        'com.beust:jcommander:1.30'
 ```
 
 If you are ok with snapshot version, sometimes I upload a new artifact to the repo described above.
@@ -276,19 +276,23 @@ public class AcceptanceTestsModule extends AbstractModule
 Then, run the app programmatically using something like:
 
 ```java
-Injector injector = Guice.createInjector(Modules.override(new ClapModule()).with(new AcceptanceTestsModule()));
-EnvironmentHolder environment = injector.getInstance(EnvironmentHolder.class);
-environment.forceApplicationHome(this.sutHome);
-Reporter reporter = injector.getInstance(Reporter.class);
-ClapApp app = injector.getInstance(ClapApp.class);
-app.setAvailableCommands(Bindings.getAllCommands(injector));
-app.run(argsAsString.split("\\s"));
-this.sutExitValue = app.getExitValue();
-if (reporter instanceof OutputRetainingReporter) {
-    this.sutOutput = ((OutputRetainingReporter) reporter).getOutput().trim();
-} else {
-    this.sutOutput = null;
-}
+    // [...]
+
+    Injector injector = Guice.createInjector(Modules.override(new ClapModule()).with(new AcceptanceTestsModule()));
+    EnvironmentHolder environment = injector.getInstance(EnvironmentHolder.class);
+    environment.forceApplicationHome(this.sutHome);
+    Reporter reporter = injector.getInstance(Reporter.class);
+    ClapApp app = injector.getInstance(ClapApp.class);
+    app.setAvailableCommands(Bindings.getAllCommands(injector));
+    app.run(argsAsString.split("\\s"));
+    this.sutExitValue = app.getExitValue();
+    if (reporter instanceof OutputRetainingReporter) {
+        this.sutOutput = ((OutputRetainingReporter) reporter).getOutput().trim();
+    } else {
+        this.sutOutput = null;
+    }
+
+    // [...]
 ```
 
 Now you can check the app behaviour, its output (in the snippet `this.sutOutput`) and its exit value (`this.sutExitValue`).
