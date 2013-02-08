@@ -7,6 +7,6 @@ jdk:
   - openjdk7
   - openjdk6
 
-install: gradle -q assemble
+install: ./gradlew -q assemble
 
-script: gradle -q check
+script: ./gradlew -q check
