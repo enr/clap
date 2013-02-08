@@ -54,7 +54,7 @@ subprojects {
                     'com.google.inject:guice:3.0'
         }
 
-        archivesBaseName = "clap-${project.name}"
+        //archivesBaseName = "clap-${project.name}"
 
         sourceCompatibility = 1.6
         targetCompatibility = 1.6
@@ -81,16 +81,23 @@ subprojects {
     
     if (project.path in uploadableModules) {
         
-        if (java7) {
-            apply from:'http://gradle.smokejumperit.com/github-dev.gradle'
-
-            //   gradle uploadArchives -Dgithub.password=***
-            //   gradle ghUpload -Dgithub.password=***
-            ghUpload {
-                username = 'enr' // If the code guesses the username wrong: see source for defaults
-                //password = '***' // Or set Java prop 'github.password' or system env 'GITHUB_PASS'
-                repo = 'clap'
-            }
+        //apply from:'/home/enrico/Projects/incub-gradle/bintray-maven.gradle'
+        
+        ext.pomPath = "${buildDir}/${project.name}-${project.version}.pom"
+        
+        task writeNewPom << {
+            pom {
+                project {
+                    inceptionYear '2013'
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
+                    }
+                }
+            }.writeTo(pomPath)
         }
 
         createReleaseTag.dependsOn uploadArchives
@@ -106,8 +113,10 @@ subprojects {
         }
 
         artifacts {
-            archives sourceJar, javadocJar
+            archives sourceJar, javadocJar, file(pomPath)
         }
+
+        uploadArchives.dependsOn writeNewPom
     }
 }
 
