@@ -152,14 +152,6 @@ public class GroovierFlattenConfigurationReader implements ConfigurationReader {
         return (T) reference;
     }
 
-    /*
-     * class specific method (not in ConfigurationReader) maybe a
-     * EnvironmentAwareConfigurationReader interface?
-     */
-    public void setEnviroment(String enviroment) {
-        this.enviroment = enviroment;
-    }
-
     @Override
     public Map<String, Object> getAllProperties() {
         return properties;

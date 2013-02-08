@@ -11,48 +11,50 @@ Based on Guice and JCommander.
 What you get using Clap
 -----------------------
 
-A ready structure for a command line app using options and command (such as `app run --port 9090`).
+- A ready structure for a command line app using options and command (such as `app run --port 9090`).
 
-Some common fuctionality such as `app --help` and `app --version`.
+- Some common fuctionality such as `app --help` and `app --version`.
 
-Configuration management:
+- Configuration management:
   * built-in configuration object reading groovy files in a system dir (based on os), user home dir and installation dir.
   * configuration command `app config --files` `app config --list` `app config --get <key>` 
 
-A built-in Guice based dependency injection.
+- A built-in Guice based dependency injection.
 
-Testability, using Clap components.
+- Testability, using Clap components.
 
 
 Add Clap to your project
 ------------------------
 
-#### At the moment, the best way to add Clap, is clone this repo.
+If you want last stable version (maybe some feature described in this readme is not yet present)
 
-By the way, note for the future...
+Declare a repository:
 
-Declare dependency:
-
-```javascript
-compile 'com.github.enr:clap-core:0.3.0-SNAPSHOT'
-```
-
-Probably you should declare Guice and JCommander dependencies too:
-
-```javascript
-compile 'com.google.inject:guice:3.0',
-        'com.beust:jcommander:1.29'
-```
-
-To automatically download Clap, declare a repository:
-
-```javascript
+```groovy
 add(new org.apache.ivy.plugins.resolver.URLResolver()) {
     name = 'GitHub/Clap'
     addArtifactPattern 'http://cloud.github.com/downloads/enr/clap/[module]-[revision].[ext]'
     addIvyPattern 'http://cloud.github.com/downloads/enr/clap/[module]-[revision].pom'
 }
 ```
+Declare dependency:
+
+```groovy
+compile 'com.github.enr:clap-core:0.3.0'
+```
+
+Probably you should declare Guice and JCommander dependencies too:
+
+```groovy
+compile 'com.google.inject:guice:3.0',
+        'com.beust:jcommander:1.30'
+```
+
+If you are ok with snapshot version, sometimes I upload a new artifact to the repo described above.
+
+If you want to try the absolutely last version you can clone this repo, run tests with `./gradlew check` and install 
+to your local Maven repository with `./gradlew install`.
 
 
 Usage
@@ -123,6 +125,16 @@ public class HelloMeta implements AppMeta {
 }
 ```
 
+If you don't like to hardcode version in a class, you can use `com.github.enr.clap.impl.PropertiesBackedAppMeta`.
+
+This way you can create a properties file with the proper meta keys and put it in the classpath.
+
+```groovy
+clap.meta.name=YetAnotherClapApp
+clap.meta.version=3.4.5
+clap.meta.displayname=Yet another Clap application
+```
+
 Create your Guice module, adding your commands and your metadata:
 
 ```java
@@ -131,7 +143,12 @@ public class MyAppModule extends AbstractModule
     @Override
     protected void configure ()
     {
+        // if you like the metadata class
         bind( AppMeta.class ).to( HelloMeta.class );
+        // if you like properties:
+        bind( AppMeta.class ).toInstance( PropertiesBackedAppMeta.from("your-metadata.properties") );
+        
+        // register your commands
         bind( Command.class ).annotatedWith(Names.named("command.echo")).to( EchoCommand.class );
     }
 }
@@ -233,7 +250,7 @@ You can run your app using the utility method:
 
 
 ```java
-    RunResult result = Clap.runReviewableApp(args, this.sutHome, testModule);
+    RunResult result = Clap.runReviewableApp(args, this.sutHome, new MyAppModule());
     this.sutExitValue = result.getExitValue();
     this.sutOutput = result.getOutput();
 ```
@@ -259,19 +276,23 @@ public class AcceptanceTestsModule extends AbstractModule
 Then, run the app programmatically using something like:
 
 ```java
-Injector injector = Guice.createInjector(Modules.override(new ClapModule()).with(new AcceptanceTestsModule()));
-EnvironmentHolder environment = injector.getInstance(EnvironmentHolder.class);
-environment.forceApplicationHome(this.sutHome);
-Reporter reporter = injector.getInstance(Reporter.class);
-ClapApp app = injector.getInstance(ClapApp.class);
-app.setAvailableCommands(Bindings.getAllCommands(injector));
-app.run(argsAsString.split("\\s"));
-this.sutExitValue = app.getExitValue();
-if (reporter instanceof OutputRetainingReporter) {
-    this.sutOutput = ((OutputRetainingReporter) reporter).getOutput().trim();
-} else {
-    this.sutOutput = null;
-}
+    // [...]
+
+    Injector injector = Guice.createInjector(Modules.override(new ClapModule()).with(new AcceptanceTestsModule()));
+    EnvironmentHolder environment = injector.getInstance(EnvironmentHolder.class);
+    environment.forceApplicationHome(this.sutHome);
+    Reporter reporter = injector.getInstance(Reporter.class);
+    ClapApp app = injector.getInstance(ClapApp.class);
+    app.setAvailableCommands(Bindings.getAllCommands(injector));
+    app.run(argsAsString.split("\\s"));
+    this.sutExitValue = app.getExitValue();
+    if (reporter instanceof OutputRetainingReporter) {
+        this.sutOutput = ((OutputRetainingReporter) reporter).getOutput().trim();
+    } else {
+        this.sutOutput = null;
+    }
+
+    // [...]
 ```
 
 Now you can check the app behaviour, its output (in the snippet `this.sutOutput`) and its exit value (`this.sutExitValue`).
@@ -284,7 +305,7 @@ You can see at [OverApp](https://github.com/enr/clap/tree/master/modules/uat/src
 
 To replicate, you need to:
 
-Write a Parameter class implementing `CommonArgsAware` and setting the args keys (well, you could hardcode the reporting levels)
+Write a Parameter class implementing `CommonArgsAware` and setting the args keys (well, you could hardcode the reporting levels):
 
 ```java
 @Parameters
