@@ -91,4 +91,15 @@ public class ConsoleReporter implements Reporter {
     private String safe(String text) {
         return ((text == null) ? "" : text);
     }
+    
+    /**
+     * Returns if console is "ANSI" enabled, ie it supports coloured output.
+     * Console is considered Ansi enabled if operating system is not Windows, or if
+     * there is an env var named "ANSICON".
+     */
+    public static boolean isAnsiEnabled() {
+        boolean isWindows = (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0);
+        String ansicon = System.getenv("ANSICON");
+        return (!isWindows || (ansicon != null && !ansicon.isEmpty()));
+    }
 }
