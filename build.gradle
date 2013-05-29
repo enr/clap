@@ -14,7 +14,6 @@ allprojects { project ->
     group = 'com.github.enr.clap'
     
     repositories {
-        mavenLocal()
         mavenCentral()    
         maven {
             url 'https://oss.sonatype.org/content/repositories/releases/'
