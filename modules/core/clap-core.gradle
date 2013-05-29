@@ -1,10 +1,10 @@
 
 dependencies {
-    compile 'com.google.guava:guava:13.0',
+    compile 'com.google.guava:guava:14.0.1',
             'com.beust:jcommander:1.30'
             
-    testCompile 'org.testng:testng:6.8',
-                'org.easytesting:fest-assert-core:2.0M8'
+    testCompile 'org.testng:testng:6.8.5',
+                'org.easytesting:fest-assert-core:2.0M10'
 }
 
 test {
