@@ -14,6 +14,8 @@ dependencies {
 
 test {
     testLogging.showStandardStreams = true
+    reports.html.enabled = false
+    reports.junitXml.enabled = false
 }
 
 // minimal work around to fail the build if cucumber tests fail.
