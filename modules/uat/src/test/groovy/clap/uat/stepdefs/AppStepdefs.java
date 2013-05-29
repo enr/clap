@@ -71,14 +71,18 @@ public class AppStepdefs {
     
     @Then("^output line \"([^\"]*)\" should contain \"([^\"]*)\"$")
     public void output_line_should_contain(int lineIndex, String expectedLineContent) {
+        assertTrue("Output should not be null", this.sutOutput != null);
         String[] lines = this.sutOutput.split("\n");
+        assertTrue("Output does not have line "+lineIndex, lines.length > lineIndex);
         String actualLine = lines[lineIndex];
         assertTrue(actualLine.contains(expectedLineContent));
     }
     
     @Then("^output line \"([^\"]*)\" should be equal to \"([^\"]*)\"$")
     public void output_line_should_be_equal_to(int lineIndex, String expectedLineContent) {
+        assertTrue("Output should not be null", this.sutOutput != null);
         String[] lines = this.sutOutput.split("\n");
+        assertTrue("Output does not have line "+lineIndex, lines.length > lineIndex);
         String actualLine = lines[lineIndex];
         assertEquals(expectedLineContent, actualLine);
     }
