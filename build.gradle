@@ -34,7 +34,6 @@ subprojects {
         }
 
         dependencies {
-            groovy "org.codehaus.groovy:groovy-all:$groovyVersion"
             compile "org.codehaus.groovy:groovy-all:$groovyVersion",
                     'com.google.inject:guice:3.0'
         }
