@@ -27,34 +27,11 @@ What you get using Clap
 Add Clap to your project
 ------------------------
 
-If you want last stable version (maybe some feature described in this readme is not yet present)
+The actual publication is work in progress.
 
-Declare a repository:
+You can use Clap through
 
-```groovy
-add(new org.apache.ivy.plugins.resolver.URLResolver()) {
-    name = 'GitHub/Clap'
-    addArtifactPattern 'http://cloud.github.com/downloads/enr/clap/[module]-[revision].[ext]'
-    addIvyPattern 'http://cloud.github.com/downloads/enr/clap/[module]-[revision].pom'
-}
-```
-Declare dependency:
-
-```groovy
-compile 'com.github.enr:clap-core:0.3.0'
-```
-
-Probably you should declare Guice and JCommander dependencies too:
-
-```groovy
-compile 'com.google.inject:guice:3.0',
-        'com.beust:jcommander:1.30'
-```
-
-If you are ok with snapshot version, sometimes I upload a new artifact to the repo described above.
-
-If you want to try the absolutely last version you can clone this repo, run tests with `./gradlew check` and install 
-to your local Maven repository with `./gradlew install`.
+    ./gradlew publishToMavenLocal
 
 
 Usage

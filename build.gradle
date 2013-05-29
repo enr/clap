@@ -61,11 +61,8 @@ subprojects {
         }
 
         publishing {
-
             publications {
-
                 mvnPublication(MavenPublication) {
-                    artifactId = "clap-${project.name}"
                     from components.java
                     artifact sourceJar {
                         classifier "sources"
