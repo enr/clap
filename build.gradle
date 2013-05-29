@@ -11,7 +11,7 @@ ext {
 }
 
 allprojects { project ->
-    group = 'com.github.enr'
+    group = 'com.github.enr.clap'
     
     repositories {
         mavenLocal()
@@ -26,7 +26,7 @@ subprojects {
 
     if (project.path in javaModules) {
         apply plugin: 'groovy'
-        apply plugin: 'maven'
+        apply plugin: 'maven-publish'
 
         configurations {
             compile.transitive = true
@@ -37,8 +37,6 @@ subprojects {
             compile "org.codehaus.groovy:groovy-all:$groovyVersion",
                     'com.google.inject:guice:3.0'
         }
-
-        //archivesBaseName = "clap-${project.name}"
 
         sourceCompatibility = 1.6
         targetCompatibility = 1.6
@@ -53,39 +51,34 @@ subprojects {
     }
     
     if (project.path in uploadableModules) {
-
-        ext.pomPath = "${buildDir}/${project.name}-${project.version}.pom"
-        
-        task writeNewPom << {
-            pom {
-                project {
-                    inceptionYear '2013'
-                    licenses {
-                        license {
-                            name 'The Apache Software License, Version 2.0'
-                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                            distribution 'repo'
-                        }
-                    }
-                }
-            }.writeTo(pomPath)
-        }
         
         task sourceJar(type: Jar) {
             from sourceSets.main.allSource
-            classifier = 'sources'
         }
 
         task javadocJar(type: Jar, dependsOn: 'javadoc') {
             from javadoc.destinationDir
-            classifier = 'javadoc'
         }
 
-        artifacts {
-            archives sourceJar, javadocJar, file(pomPath)
-        }
+        publishing {
 
-        uploadArchives.dependsOn writeNewPom
+            publications {
+
+                mvnPublication(MavenPublication) {
+                    artifactId = "clap-${project.name}"
+                    from components.java
+                    artifact sourceJar {
+                        classifier "sources"
+                    }
+                    artifact javadocJar {
+                        classifier "javadoc"
+                    }
+                    pom.withXml {
+                        asNode().appendNode('description', 'Library to easily create command-line apps')
+                    }
+                }
+            }
+        }
     }
 }
 
