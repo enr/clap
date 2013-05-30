@@ -9,7 +9,7 @@ buildscript {
    }
 }
 apply plugin: 'release'
-//createReleaseTag.dependsOn publish
+createReleaseTag.dependsOn ':modules:core:publish'
 
 def projProp = { String key ->
     if(project.hasProperty(key)) return project[key]
