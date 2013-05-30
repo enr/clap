@@ -9,7 +9,12 @@ buildscript {
    }
 }
 apply plugin: 'release'
-createReleaseTag.dependsOn publish
+//createReleaseTag.dependsOn publish
+
+def projProp = { String key ->
+    if(project.hasProperty(key)) return project[key]
+    return null
+}
 
 ext {
     groovyVersion = '2.0.5'
@@ -91,8 +96,8 @@ subprojects {
                 maven {
                     url 'https://api.bintray.com/maven/enrico/maven/clap'
                     credentials {
-                        username = project.getProperty("bintray.username")
-                        password = project.getProperty("bintray.apikey")
+                        username = projProp("bintray.username")
+                        password = projProp("bintray.apikey")
                     }
                 }
             }
