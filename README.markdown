@@ -27,11 +27,23 @@ What you get using Clap
 Add Clap to your project
 ------------------------
 
-The actual publication is work in progress.
+To use the last released version, add to your build file:
 
-You can use Clap through
+- repository: `http://dl.bintray.com/enrico/maven`
 
-    ./gradlew publishToMavenLocal
+- dependency group: `com.github.enr.clap` module: `core` version: `0.5`
+
+
+Example for a Gradle build:
+
+```groovy
+repositories {
+    maven { url 'http://dl.bintray.com/enrico/maven' }
+}
+dependencies {
+    compile 'com.github.enr.clap:core:0.5'
+}
+```
 
 
 Usage
@@ -373,11 +385,21 @@ Now, if you command is ran using noop switch, it will outputs the string returne
 Development
 -----------
 
+**Build**
+
+    ./gradlew check
+
+**Installation in local Maven repo**
+
+    ./gradlew publishToMavenLocal
+
 **Release**
 
 Ensure you have no uncommitted files or local changes to push, then:
 
-    ./gradlew release
+    ./gradlew release -Pbintray.username=*** -Pbintray.apikey=***
+
+Bintray data are needed because the release task depends on artifacts publishing.
 
 **Publishing**
 
