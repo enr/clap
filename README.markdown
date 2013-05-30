@@ -370,6 +370,22 @@ Create your command extending `AbstractNoopAwareCommand`
 Now, if you command is ran using noop switch, it will outputs the string returned from its method `explain()`
 
 
+Development
+-----------
+
+**Release**
+
+Ensure you have no uncommitted files or local changes to push, then:
+
+    ./gradlew release
+
+**Publishing**
+
+Ensure version is not a SNAPSHOT, then:
+
+    ./gradlew publish -Pbintray.username=*** -Pbintray.apikey=***
+
+
 Licensing
 ---------
 
