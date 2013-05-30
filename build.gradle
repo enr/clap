@@ -74,6 +74,16 @@ subprojects {
                     }
                 }
             }
+
+            repositories {
+                maven {
+                    url 'https://api.bintray.com/maven/enrico/maven/clap'
+                    credentials {
+                        username = project.getProperty("bintray.username")
+                        password = project.getProperty("bintray.apikey")
+                    }
+                }
+            }
         }
     }
 }
