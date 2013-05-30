@@ -1,4 +1,16 @@
 
+buildscript {
+   repositories {
+      mavenCentral()
+      maven { url "https://oss.sonatype.org/content/groups/public"}
+   }
+   dependencies {
+      classpath 'com.github.townsfolk:gradle-release:1.2'
+   }
+}
+apply plugin: 'release'
+createReleaseTag.dependsOn publish
+
 ext {
     groovyVersion = '2.0.5'
     javaModules = [
