@@ -3,7 +3,7 @@ Clap
 
 Java library to easily create command-line apps.
 
-Based on Guice and JCommander.
+Based on [Guice](http://code.google.com/p/google-guice/) and [JCommander](http://jcommander.org/).
 
 [![Build Status](https://secure.travis-ci.org/enr/clap.png?branch=master)](http://travis-ci.org/enr/clap)
 
@@ -51,7 +51,123 @@ Usage
 
 Code shown here is largely taken from the actual Clap tests.
 
-Create your commands, implementing `com.github.enr.clap.api.Command`:
+At minimum, a Clap app contains:
+
+- metadata describing name and version of the app
+
+- a Guice module registering components
+
+- an entrypoint, ie a class mith a `main` method
+
+**Create metadata**
+
+You can set metadata in two ways.
+
+Creating an app metadata class (implementing `com.github.enr.clap.api.AppMeta`):
+
+```java
+public class HelloMeta implements AppMeta {
+    @Override
+    public String name() {
+        return "hello";
+    }
+    @Override
+    public String version() {
+        return "0.1-SNAPSHOT";
+    }
+    @Override
+    public String displayName() {
+        return "Hello";
+    }
+}
+```
+
+If you don't like to hardcode version in a class, you can use `com.github.enr.clap.impl.PropertiesBackedAppMeta`.
+
+This way you can create a properties file with the proper meta keys and put it in the classpath.
+
+```groovy
+clap.meta.name=YetAnotherClapApp
+clap.meta.version=3.4.5
+clap.meta.displayname=Yet another Clap application
+```
+
+**Create a Guice module**
+
+Create a Guice module, adding your metadata (and other used components):
+
+```java
+public class MyAppModule extends AbstractModule
+{
+    @Override
+    protected void configure ()
+    {
+        // if you like the metadata class
+        bind( AppMeta.class ).to( HelloMeta.class );
+        // if you like properties:
+        bind( AppMeta.class ).toInstance( PropertiesBackedAppMeta.from("your-metadata.properties") );
+        // more components...
+    }
+}
+```
+
+The minimal requirement for a Clap app are components implementing:
+
+  * `com.github.enr.clap.api.EnvironmentHolder`
+  * `com.github.enr.clap.api.Reporter`
+  * `com.github.enr.clap.api.Configuration`
+  * `com.github.enr.clap.api.ConfigurationReader`
+
+Of course, you can overwrite the default components binding these interfaces to your classes in the app Guice module;
+components registered here overwrite the default ones.
+
+**Create the entrypoint**
+
+Create a main class using the utility method:
+
+```java
+public class Main {
+    public static void main(String[] args) throws Exception {
+        Clap.runConventionalApp(args, new MyAppModule())
+    }
+}
+```
+
+or, if you need some customization, something like:
+
+```java
+public class Main {
+    public static void main(String[] args) throws Exception {
+        Injector injector = Guice.createInjector(Modules.override(new ClapModule()).with(new MyAppModule()));
+        ClapApp app = injector.getInstance(ClapApp.class);
+        app.setAvailableCommands(Bindings.getAllCommands(injector));
+        app.run(args);
+    }
+}
+```
+
+Now you have a working app, responding to some default command, but not so interesting.
+
+You have to add functionalities, and you can do it thorough commands.
+
+In a Clap based app, the actual logic of your software lives in "commands".
+
+As example, if you want that your app will be callable as
+
+    $>theapp echo -m "the best message ever"
+
+you'll have to:
+
+- create an "echo" command
+
+- create a class acting as container for the command parameters (the `-m` part)
+
+- bind the call to "echo" to the actual class
+
+
+**Create command**
+
+Commands have to implement `com.github.enr.clap.api.Command`:
 
 ```java
 public class EchoCommand implements Command {
@@ -85,7 +201,9 @@ public class EchoCommand implements Command {
 }
 ```
 
-Create command parameters (class annotated with `com.beust.jcommander.Parameters`):
+**Create parameters class**
+
+Command parameters classes are annotated with `com.beust.jcommander.Parameters`:
 
 ```java
 @Parameters(commandDescription = "Echo messages")
@@ -95,36 +213,9 @@ public class EchoCommandArgs {
 }
 ```
 
-Create an app metadata class (implementing `com.github.enr.clap.api.AppMeta`):
+**Register command**
 
-```java
-public class HelloMeta implements AppMeta {
-	@Override
-	public String name() {
-		return "hello";
-	}
-	@Override
-	public String version() {
-		return "0.1-SNAPSHOT";
-	}
-	@Override
-	public String displayName() {
-		return "Hello";
-	}
-}
-```
-
-If you don't like to hardcode version in a class, you can use `com.github.enr.clap.impl.PropertiesBackedAppMeta`.
-
-This way you can create a properties file with the proper meta keys and put it in the classpath.
-
-```groovy
-clap.meta.name=YetAnotherClapApp
-clap.meta.version=3.4.5
-clap.meta.displayname=Yet another Clap application
-```
-
-Create your Guice module, adding your commands and your metadata:
+Add command to your module.
 
 ```java
 public class MyAppModule extends AbstractModule
@@ -132,49 +223,13 @@ public class MyAppModule extends AbstractModule
     @Override
     protected void configure ()
     {
-        // if you like the metadata class
-        bind( AppMeta.class ).to( HelloMeta.class );
-        // if you like properties:
-        bind( AppMeta.class ).toInstance( PropertiesBackedAppMeta.from("your-metadata.properties") );
-        
+        // ... other components...
         // register your commands
         bind( Command.class ).annotatedWith(Names.named("command.echo")).to( EchoCommand.class );
     }
 }
 ```
 
-Of course, you can overwrite the default components.
-
-The minimal requirement for a Clap app are components implementing:
-
-  * `com.github.enr.clap.api.EnvironmentHolder`
-  * `com.github.enr.clap.api.Reporter`
-  * `com.github.enr.clap.api.Configuration`
-  * `com.github.enr.clap.api.ConfigurationReader`
-
-
-Create a main class using the utility method:
-
-```java
-public class Main {
-    public static void main(String[] args) throws Exception {
-        Clap.runConventionalApp(args, new MyAppModule())
-    }
-}
-```
-
-or, if you need some customization, something like:
-
-```java
-public class Main {
-    public static void main(String[] args) throws Exception {
-        Injector injector = Guice.createInjector(Modules.override(new ClapModule()).with(new MyAppModule()));
-        ClapApp app = injector.getInstance(ClapApp.class);
-        app.setAvailableCommands(Bindings.getAllCommands(injector));
-        app.run(args);
-    }
-}
-```
 
 Now, you can run your app, and see something similar to:
 
@@ -233,7 +288,7 @@ Clap try to help you in developing acceptance tests.
 
 You can look at [user acceptance test module](https://github.com/enr/clap/tree/master/modules/uat) to see the actual tests for Clap (using Cucumber JVM).
 
-By the way, to write your own test using the framework you prefer:
+By the way, you can write your own test using the framework you prefer.
 
 You can run your app using the utility method:
 
