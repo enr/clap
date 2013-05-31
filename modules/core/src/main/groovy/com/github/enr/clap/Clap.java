@@ -50,8 +50,8 @@ public class Clap {
     }
     
     /**
-     * Run a Clap app which doen't call System.exit, keep the exit value and the output 
-     * for a later check, force app home to a given directory.
+     * Run a Clap app which doesn't call System.exit, keeps the exit value and the output 
+     * for a later check and forces app home to a given directory.
      * Useful for testing (see uat module for example of an actual usage).
      * 
      * @param args user args

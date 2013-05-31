@@ -1,7 +1,7 @@
 package com.github.enr.clap.api;
 
 /**
- * Interface for Clap commands
+ * Interface for Clap commands.
  */
 public interface Command {
 

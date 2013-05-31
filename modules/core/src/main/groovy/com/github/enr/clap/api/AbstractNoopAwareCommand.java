@@ -1,7 +1,7 @@
 package com.github.enr.clap.api;
 
 /**
- * Base class for commands allowing a noop option
+ * Base class for commands allowing a noop option.
  */
 public abstract class AbstractNoopAwareCommand implements Command {
 

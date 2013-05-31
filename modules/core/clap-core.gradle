@@ -1,6 +1,4 @@
 
-apply plugin: 'jacoco'
-
 dependencies {
     compile 'com.google.guava:guava:14.0.1',
             'com.beust:jcommander:1.30'
@@ -11,8 +9,4 @@ dependencies {
 
 test {
     useTestNG()
-}
-
-jacoco {
-    toolVersion = "0.6.2.201302030002"
 }

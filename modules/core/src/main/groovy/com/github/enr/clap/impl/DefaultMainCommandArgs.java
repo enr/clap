@@ -4,14 +4,14 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.beust.jcommander.ParametersDelegate;
 
-/*
- * parameters for main command.
+/**
+ * Parameters for main command.
  */
 @Parameters
 public class DefaultMainCommandArgs implements CommonArgsAware {
 
     @Parameter(names = { "-v", "--version" }, description = "Print version")
-    private boolean version;
+    public boolean version;
 
     /*
      * @Parameter(names = { "-h", "--help" }, description = "Print help")

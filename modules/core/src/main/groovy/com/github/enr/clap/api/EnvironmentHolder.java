@@ -6,31 +6,31 @@ public interface EnvironmentHolder {
 
     File applicationHome();
     
-    /*
-     * sometimes we need to force the application home to a given dir
+    /**
+     * Forces the application home to a given dir; sometimes we need this, ie in tests.
      */
     void forceApplicationHome(File home);
 
-    /*
-     * directory containing configuration files in the installation (ie the
+    /**
+     * @return the directory containing configuration files in the installation (ie the
      * config/ dir into application home).
      */
     File installationConfigurationDirectory();
 
-    /*
-     * directory containing configuration files in the current system.
-     * the actual path depends from the os.
+    /**
+     * @return the directory containing configuration files in the current system.
+     * The actual path depends from the os.
      */
     File systemConfigurationDirectory();
 
-    /*
-     * directory containing configuration files for the user launching app.
+    /**
+     * @return directory containing configuration files for the user launching app.
      */
     File userConfigurationDirectory();
 
-    /*
-     * if the current process can call System.exit probably it will be true for
-     * the actual application and false in acceptance tests.
+    /**
+     * @return if the current process can call System.exit.
+     * Probably it will be true for the actual application and false in tests.
      */
     boolean canExit();
 

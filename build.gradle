@@ -43,6 +43,7 @@ subprojects {
     if (project.path in javaModules) {
         apply plugin: 'groovy'
         apply plugin: 'maven-publish'
+        apply plugin: 'jacoco'
 
         configurations {
             compile.transitive = true
@@ -64,6 +65,14 @@ subprojects {
                             "Project":project.name)
             }
         }
+        
+        jacoco {
+            toolVersion = "0.6.2.201302030002"
+        }
+
+        task reports << {}
+        reports.description = 'Generate reports and docs'
+        reports.dependsOn(jacocoTestReport, check, javadoc)
     }
     
     if (project.path in uploadableModules) {

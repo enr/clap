@@ -3,7 +3,7 @@ package com.github.enr.clap.api;
 import java.util.List;
 
 /**
- * Interface for the actual Clap application
+ * Interface for the actual Clap application.
  */
 public interface ClapApp {
 

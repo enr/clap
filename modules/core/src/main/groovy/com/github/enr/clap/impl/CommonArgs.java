@@ -3,8 +3,9 @@ package com.github.enr.clap.impl;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
-/*
- * common parameters, usable with every command, before the command itself.
+/**
+ * Container for common parameters.
+ * These params are usable with every command, before the command itself.
  */
 @Parameters
 public class CommonArgs {

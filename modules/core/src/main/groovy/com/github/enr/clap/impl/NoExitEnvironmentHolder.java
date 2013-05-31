@@ -7,8 +7,8 @@ import com.github.enr.clap.api.Reporter;
 import com.github.enr.clap.impl.DefaultEnvironmentHolder;
 
 
-/*
- * Environment holder settled to avoid the System.exit in a Clap app.
+/**
+ * Environment holder set to avoid the System.exit in a Clap app.
  * Useful for automated executions or tests.
  */
 public class NoExitEnvironmentHolder extends DefaultEnvironmentHolder {

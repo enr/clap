@@ -1,7 +1,7 @@
 package com.github.enr.clap.api;
 
 /**
- * Base class for commands, with some common functionality
+ * Base class for commands, with some common functionality.
  */
 public abstract class AbstractCommand implements Command {
 

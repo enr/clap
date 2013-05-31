@@ -75,7 +75,6 @@ public class DefaultClapApp implements ClapApp {
 
         String commandId = jc.getParsedCommand();
         reporter.debug("commandId %s", commandId);
-
         reporter.debug("starting %s with home %s", meta.name(), environment.applicationHome());
 
         if ((args.length == 0) || (mainArgs.isHelp())) {
@@ -132,9 +131,9 @@ public class DefaultClapApp implements ClapApp {
         reporter.out(sb.toString());
     }
 
-    /*
-     * system exit, but only if environment allowed. probably, this is true in
-     * the actual running and false in the acceptance test phase.
+    /**
+     * Trig a system exit, but only if environment allows it.
+     * Probably, this is true in the actual running and false in the test phase.
      */
     private void systemExit(int value) {
         setExitValue(value);
@@ -145,7 +144,6 @@ public class DefaultClapApp implements ClapApp {
     }
 
     private CommandResult executeCommand(String commandId) {
-        reporter.debug("command       %s", commandId);
         Command command = null;
         if (commandId == null) {
             command = mainCommand;

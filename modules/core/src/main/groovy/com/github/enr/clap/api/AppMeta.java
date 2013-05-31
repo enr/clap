@@ -1,7 +1,7 @@
 package com.github.enr.clap.api;
 
 /**
- * Main container for application metadata, such as name and version
+ * Main container for application metadata, such as name and version.
  */
 public interface AppMeta {
 
