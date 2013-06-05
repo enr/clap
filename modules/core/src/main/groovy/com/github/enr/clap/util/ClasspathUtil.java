@@ -8,8 +8,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.base.Preconditions;
-import com.google.common.base.Throwables;
+import com.github.enr.clap.vendor.guava_14_0_1.base.Preconditions;
+import com.github.enr.clap.vendor.guava_14_0_1.base.Throwables;
 
 /*
  * Utility methods pertaining classpath.

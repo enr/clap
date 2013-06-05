@@ -3,18 +3,18 @@ package com.github.enr.clap.test;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.github.enr.clap.util.Casts;
-import com.google.common.collect.Maps;
 
 @Test(suiteName = "Util package")
 public class CastsTest {
 
-    Map<String, Object> objects = Maps.newHashMap();
+    Map<String, Object> objects = new HashMap<String, Object>();
 
     @BeforeClass
     public void initData() {

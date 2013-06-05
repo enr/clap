@@ -1,16 +1,16 @@
 package clap.uat.stepdefs;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
 import com.github.enr.clap.Clap;
 import com.github.enr.clap.Clap.RunResult;
 import com.github.enr.clap.util.ClasspathUtil;
-import com.google.common.base.Joiner;
+import com.github.enr.clap.vendor.guava_14_0_1.base.Joiner;
 import com.google.inject.Module;
 
 import cucumber.api.java.en.Given;

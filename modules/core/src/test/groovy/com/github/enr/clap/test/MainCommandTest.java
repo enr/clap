@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 import com.github.enr.clap.api.AppMeta;
 import com.github.enr.clap.api.Command;
 import com.github.enr.clap.api.CommandResult;
-import com.github.enr.clap.api.Reporter;
 import com.github.enr.clap.impl.DefaultMainCommandArgs;
 import com.github.enr.clap.impl.DefaultOutputRetainingReporter;
 import com.github.enr.clap.impl.MainCommand;

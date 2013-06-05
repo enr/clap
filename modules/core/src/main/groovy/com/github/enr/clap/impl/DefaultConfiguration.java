@@ -2,6 +2,7 @@ package com.github.enr.clap.impl;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -11,10 +12,9 @@ import com.github.enr.clap.api.Configuration;
 import com.github.enr.clap.api.ConfigurationReader;
 import com.github.enr.clap.api.EnvironmentHolder;
 import com.github.enr.clap.api.Reporter;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import com.google.common.base.Throwables;
-import com.google.common.collect.Maps;
+import com.github.enr.clap.vendor.guava_14_0_1.base.Preconditions;
+import com.github.enr.clap.vendor.guava_14_0_1.base.Strings;
+import com.github.enr.clap.vendor.guava_14_0_1.base.Throwables;
 
 public class DefaultConfiguration implements Configuration {
 
@@ -28,7 +28,7 @@ public class DefaultConfiguration implements Configuration {
      * A map with keys configuration files paths and value a boolean indicating
      * if the file has been loaded, which configuration has attemped to load
      */
-    Map<String, Boolean> paths = Maps.newLinkedHashMap();
+    Map<String, Boolean> paths = new LinkedHashMap<String, Boolean>();
 
     @Inject
     public DefaultConfiguration(AppMeta meta, EnvironmentHolder environment, ConfigurationReader configurationReader,

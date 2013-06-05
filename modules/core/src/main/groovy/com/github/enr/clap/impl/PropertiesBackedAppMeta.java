@@ -1,15 +1,14 @@
 package com.github.enr.clap.impl;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
 import com.github.enr.clap.api.AppMeta;
 import com.github.enr.clap.api.Constants;
-import com.google.common.base.Throwables;
-import com.google.common.io.InputSupplier;
-import com.google.common.io.Resources;
+import com.github.enr.clap.util.ResourcesLoader;
+import com.github.enr.clap.vendor.guava_14_0_1.base.Throwables;
+import com.github.enr.clap.vendor.guava_14_0_1.io.Closeables;
 
 public class PropertiesBackedAppMeta implements AppMeta {
     
@@ -20,13 +19,19 @@ public class PropertiesBackedAppMeta implements AppMeta {
     private static final String PROPERTY_DISPLAYNAME_KEY = "clap.meta.displayname";
     
     public static PropertiesBackedAppMeta from(String filename) {
-        URL url = Resources.getResource(filename);
-        InputSupplier<InputStream> inputSupplier = Resources.newInputStreamSupplier(url);
+        URL url = ResourcesLoader.getResource(filename);
+        //InputSupplier<InputStream> inputSupplier = Resources.newInputStreamSupplier(url);
+        //Closer closer = Closer.create();
+        InputStream in = null;
         Properties properties = new Properties();
         try {
-            properties.load(inputSupplier.getInput());
-        } catch (IOException e) {
-            Throwables.propagate(e);
+            //is = url.openStream();
+            in = url.openStream();
+            properties.load(in);
+        } catch (Throwable e) {
+        	Throwables.propagate(e);
+        } finally {
+            Closeables.closeQuietly(in);
         }
         return new PropertiesBackedAppMeta(properties);
     }
@@ -50,5 +55,4 @@ public class PropertiesBackedAppMeta implements AppMeta {
     public String displayName() {
         return properties.getProperty(PROPERTY_DISPLAYNAME_KEY, Constants.DEFAULT_META_DISPLAYNAME);
     }
-
 }

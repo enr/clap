@@ -9,7 +9,7 @@ import com.github.enr.clap.api.CommandResult;
 import com.github.enr.clap.api.Configuration;
 import com.github.enr.clap.api.Constants;
 import com.github.enr.clap.api.Reporter;
-import com.google.common.base.Strings;
+import com.github.enr.clap.vendor.guava_14_0_1.base.Strings;
 
 public class ConfigurationCommand implements Command {
 

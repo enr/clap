@@ -1,6 +1,6 @@
 
 dependencies {
-    compile 'com.google.guava:guava:14.0.1',
+    compile 'com.google.code.findbugs:annotations:2.0.1',
             'com.beust:jcommander:1.30'
             
     testCompile 'org.testng:testng:6.8.5',

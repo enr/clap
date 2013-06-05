@@ -12,7 +12,7 @@ import org.testng.annotations.Test;
 
 import com.github.enr.clap.api.ConfigurationReader;
 import com.github.enr.clap.impl.GroovierFlattenConfigurationReader;
-import com.google.common.io.Resources;
+import com.github.enr.clap.util.ResourcesLoader;
 
 @Test(suiteName = "Configuration")
 public class GroovyConfigurationTest {
@@ -31,7 +31,7 @@ public class GroovyConfigurationTest {
 
     @Test
     public void testConfigurationBuilding() {
-        URL firstConfig = Resources.getResource(GroovyConfigurationTest.class, "/groovy-config-1.groovy");
+        URL firstConfig = ResourcesLoader.getResource(GroovyConfigurationTest.class, "/groovy-config-1.groovy");
         assertThat(firstConfig).as("configuration url").isNotNull();
         configuration.addConfiguration(firstConfig);
         configuration.addBinding("binded", "xxx");
@@ -45,7 +45,7 @@ public class GroovyConfigurationTest {
 
     @Test
     public void testBinding() {
-        URL firstConfig = Resources.getResource(GroovyConfigurationTest.class, "/groovy-config-1.groovy");
+        URL firstConfig = ResourcesLoader.getResource(GroovyConfigurationTest.class, "/groovy-config-1.groovy");
         assertThat(firstConfig).as("configuration url").isNotNull();
         configuration.addConfiguration(firstConfig);
         configuration.addBinding("binded", "B");
@@ -56,7 +56,7 @@ public class GroovyConfigurationTest {
 
     @Test
     public void testGroovyString() {
-        URL firstConfig = Resources.getResource(GroovyConfigurationTest.class, "/groovy-config-1.groovy");
+        URL firstConfig = ResourcesLoader.getResource(GroovyConfigurationTest.class, "/groovy-config-1.groovy");
         assertThat(firstConfig).as("configuration url").isNotNull();
         configuration.addConfiguration(firstConfig);
         configuration.addBinding("binded", "B");
@@ -68,9 +68,9 @@ public class GroovyConfigurationTest {
     @Test
     public void testConfigurationMerging() {
         String enviroment = "production";
-        URL firstConfig = Resources.getResource(GroovyConfigurationTest.class, "/first-config.groovy");
+        URL firstConfig = ResourcesLoader.getResource(GroovyConfigurationTest.class, "/first-config.groovy");
         assertThat(firstConfig).as("first configuration url").isNotNull();
-        URL secondConfig = Resources.getResource(GroovyConfigurationTest.class, "/second-config.groovy");
+        URL secondConfig = ResourcesLoader.getResource(GroovyConfigurationTest.class, "/second-config.groovy");
         assertThat(secondConfig).as("second configuration url").isNotNull();
         configuration.addConfiguration(firstConfig);
         configuration.addConfiguration(secondConfig);
@@ -83,9 +83,9 @@ public class GroovyConfigurationTest {
 
     @Test
     public void testBulk() {
-        URL firstConfig = Resources.getResource(GroovyConfigurationTest.class, "/first-config.groovy");
+        URL firstConfig = ResourcesLoader.getResource(GroovyConfigurationTest.class, "/first-config.groovy");
         assertThat(firstConfig).as("first configuration url").isNotNull();
-        URL secondConfig = Resources.getResource(GroovyConfigurationTest.class, "/second-config.groovy");
+        URL secondConfig = ResourcesLoader.getResource(GroovyConfigurationTest.class, "/second-config.groovy");
         assertThat(secondConfig).as("second configuration url").isNotNull();
         configuration.addConfiguration(firstConfig);
         configuration.addConfiguration(secondConfig);
@@ -102,7 +102,7 @@ public class GroovyConfigurationTest {
             assertConfigurationStringEqualsTo(configurationKey, key.replace(".", "_"), "bulk value " + key);
         }
     }
-
+    
     /*
     @Test
     public void testDedicatedInstance() {
