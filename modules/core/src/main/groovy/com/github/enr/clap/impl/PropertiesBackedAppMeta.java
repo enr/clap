@@ -1,14 +1,11 @@
 package com.github.enr.clap.impl;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.Properties;
 
 import com.github.enr.clap.api.AppMeta;
 import com.github.enr.clap.api.Constants;
-import com.github.enr.clap.util.ResourcesLoader;
+import com.github.enr.clap.util.PropertiesLoader;
 import com.github.enr.clap.vendor.guava_14_0_1.base.Throwables;
-import com.github.enr.clap.vendor.guava_14_0_1.io.Closeables;
 
 public class PropertiesBackedAppMeta implements AppMeta {
     
@@ -18,20 +15,16 @@ public class PropertiesBackedAppMeta implements AppMeta {
     private static final String PROPERTY_VERSION_KEY = "clap.meta.version";
     private static final String PROPERTY_DISPLAYNAME_KEY = "clap.meta.displayname";
     
-    public static PropertiesBackedAppMeta from(String filename) {
-        URL url = ResourcesLoader.getResource(filename);
-        //InputSupplier<InputStream> inputSupplier = Resources.newInputStreamSupplier(url);
-        //Closer closer = Closer.create();
-        InputStream in = null;
-        Properties properties = new Properties();
+    /**
+     * Factory method: it creates a AppMeta loading properties from a classpath resource.
+     * 
+     */
+    public static AppMeta from(String resourceName) {
+        Properties properties = null;
         try {
-            //is = url.openStream();
-            in = url.openStream();
-            properties.load(in);
+        	properties = getPropertiesLoader().fromResource(resourceName);
         } catch (Throwable e) {
         	Throwables.propagate(e);
-        } finally {
-            Closeables.closeQuietly(in);
         }
         return new PropertiesBackedAppMeta(properties);
     }
@@ -39,6 +32,10 @@ public class PropertiesBackedAppMeta implements AppMeta {
     private PropertiesBackedAppMeta(Properties properties) {
         super();
         this.properties = properties;
+    }
+    
+    private static PropertiesLoader getPropertiesLoader() {
+    	return new PropertiesLoader(); 
     }
 
     @Override
