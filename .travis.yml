@@ -7,6 +7,10 @@ jdk:
   - openjdk7
   - openjdk6
 
+branches:
+  only:
+    - master
+
 install: ./gradlew -q assemble
 
 script: ./gradlew -q check
