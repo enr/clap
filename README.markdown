@@ -462,6 +462,14 @@ Ensure version is not a SNAPSHOT, then:
 
     ./gradlew publish -Pbintray.username=*** -Pbintray.apikey=***
 
+**Code coverage**
+
+To create Jacoco reports:
+
+    ./gradlew coverage
+
+Reports are written in `modules/[core|uat]/build/reports/jacoco`.
+
 
 Licensing
 ---------
