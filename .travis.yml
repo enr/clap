@@ -11,6 +11,6 @@ branches:
   only:
     - master
 
-install: ./gradlew -q assemble
+install: ./gradlew -q clean assemble
 
 script: ./gradlew -q check
