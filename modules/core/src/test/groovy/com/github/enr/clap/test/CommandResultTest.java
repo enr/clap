@@ -28,4 +28,13 @@ public class CommandResultTest {
     	assertThat(result).hasExitValue(1);
     	assertThat(result).hasNoFailureMessage();
     }
+
+    @Test(description="failWithMessage() factory method should create a failing result with a failing message")
+    public void failWithMessage() {
+    	CommandResult result = CommandResult.successful();
+    	result.failWithMessage("oh no!");
+    	assertThat(result).isFailure();
+    	assertThat(result).hasExitValue(1);
+    	assertThat(result).hasFailureMessage("oh no!");
+    }
 }
