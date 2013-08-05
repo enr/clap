@@ -25,6 +25,9 @@ ext {
     uploadableModules = [
         ':modules:core'
     ]
+    uatModules = [
+        ':modules:uat'
+    ]
 }
 
 allprojects { project ->
@@ -65,16 +68,12 @@ subprojects {
                             "Project":project.name)
             }
         }
-        
-        jacoco {
-            toolVersion = "0.6.2.201302030002"
-        }
 
-        task reports << {}
-        reports.description = 'Generate reports and docs'
-        reports.dependsOn(jacocoTestReport, check, javadoc)
+        task coverage << {}
+        coverage.dependsOn test
+
     }
-    
+
     if (project.path in uploadableModules) {
         
         task sourceJar(type: Jar) {
@@ -114,8 +113,9 @@ subprojects {
 
         publish.dependsOn assemble
     }
+    
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.7-20130528220024+0000'
+    gradleVersion = '1.7-rc-2'
 }

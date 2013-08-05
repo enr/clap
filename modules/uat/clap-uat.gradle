@@ -1,4 +1,4 @@
-    
+
 dependencies {
 
     compile     project(':modules:core')
@@ -15,3 +15,11 @@ test {
     reports.html.enabled = false
     reports.junitXml.enabled = false
 }
+
+task uatCodeCoverageReport(type:JacocoReport){
+    executionData test
+    sourceSets project(':modules:core').sourceSets.main
+    additionalSourceDirs = files(project(':modules:core').sourceSets.main.allJava.srcDirs)
+}
+
+coverage.dependsOn uatCodeCoverageReport

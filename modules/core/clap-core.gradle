@@ -10,3 +10,11 @@ dependencies {
 test {
     useTestNG()
 }
+
+task coreCodeCoverageReport(type:JacocoReport){
+    executionData test
+    sourceSets project.sourceSets.main
+    additionalSourceDirs = files(project.sourceSets.main.allJava.srcDirs)
+}
+
+coverage.dependsOn coreCodeCoverageReport
