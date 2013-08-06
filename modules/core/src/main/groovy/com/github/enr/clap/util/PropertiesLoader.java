@@ -16,18 +16,20 @@ public class PropertiesLoader {
 
     public Properties fromFilename(String filename) throws IOException {
 		FileInputStream is = new FileInputStream(filename);
-		return fromInputStream(is);
+		Properties properties = fromInputStream(is);
+		is.close();
+		return properties;
     }
 	
 	/**
 	 * Returns properties from InputStream.
-	 * The stream is closed, after the loading.
+	 * Caller is responsible for closing the stream.
 	 */
     public Properties fromInputStream(InputStream is) throws IOException {
         final Properties props = new Properties();
         //FileInputStream fis = new FileInputStream(filename);
         props.load(is);
-        is.close();
+        //is.close();
         return props;
     }
 
@@ -59,7 +61,10 @@ public class PropertiesLoader {
      * @throws IOException
      */
     public Properties fromFile(File propsFile) throws IOException {
-    	return fromInputStream( new FileInputStream(propsFile));
+    	FileInputStream is = new FileInputStream(propsFile);
+		Properties properties = fromInputStream(is);
+		is.close();
+		return properties;
     }
 
     public Properties fromResourceBundle(ResourceBundle bundle) {
