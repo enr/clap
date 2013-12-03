@@ -6,6 +6,7 @@ buildscript {
    }
    dependencies {
       classpath 'com.github.townsfolk:gradle-release:1.2'
+      classpath 'com.github.ben-manes:gradle-versions-plugin:0.4'
    }
 }
 apply plugin: 'release'
@@ -47,6 +48,7 @@ subprojects {
         apply plugin: 'groovy'
         apply plugin: 'maven-publish'
         apply plugin: 'jacoco'
+        apply plugin: 'versions'
 
         configurations {
             compile.transitive = true
@@ -86,7 +88,7 @@ subprojects {
 
         publishing {
             publications {
-                mvnPublication(MavenPublication) {
+                coreModule(MavenPublication) {
                     from components.java
                     artifact sourceJar {
                         classifier "sources"
@@ -99,7 +101,6 @@ subprojects {
                     }
                 }
             }
-
             repositories {
                 maven {
                     url 'https://api.bintray.com/maven/enrico/maven/clap'
@@ -117,5 +118,5 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.7'
+    gradleVersion = '1.9'
 }
