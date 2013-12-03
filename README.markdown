@@ -138,7 +138,9 @@ or, if you need some customization, something like:
 ```java
 public class Main {
     public static void main(String[] args) throws Exception {
-        Injector injector = Guice.createInjector(Modules.override(new ClapModule()).with(new MyAppModule()));
+        Injector injector = Guice.createInjector(Modules
+                                                .override(new ClapModule())
+                                                .with(new MyAppModule()));
         ClapApp app = injector.getInstance(ClapApp.class);
         app.setAvailableCommands(Bindings.getAllCommands(injector));
         app.run(args);
@@ -322,7 +324,9 @@ Then, run the app programmatically using something like:
 ```java
     // [...]
 
-    Injector injector = Guice.createInjector(Modules.override(new ClapModule()).with(new AcceptanceTestsModule()));
+    Injector injector = Guice.createInjector(Modules
+                                            .override(new ClapModule())
+                                            .with(new AcceptanceTestsModule()));
     EnvironmentHolder environment = injector.getInstance(EnvironmentHolder.class);
     environment.forceApplicationHome(this.sutHome);
     Reporter reporter = injector.getInstance(Reporter.class);
@@ -362,7 +366,7 @@ public class OverMainCommandArgs implements CommonArgsAware {
     public boolean debug = false;
     @Parameter(names = { "-h", "--hinfo" }, description = "Set output level to info")
     public boolean info = false;
-    @Parameter(names = { "-z", "--ztacktrace" }, description = "Show stacktrace if an exception is thrown")
+    @Parameter(names = { "-z", "--ztacktrace" }, description = "Show stacktrace")
     public boolean stacktrace = false;
     public boolean isVersion() {
         return version;
@@ -416,14 +420,16 @@ public class OverMainCommand implements Command {
 Bind your command class to `Constants.MAIN_COMMAND_BIND_NAME` in your Guice module:
 
 ```java
-    bind(Command.class).annotatedWith(Names.named(Constants.MAIN_COMMAND_BIND_NAME)).to(OverMainCommand.class);
+    bind(Command.class).annotatedWith(Names
+                                        .named(Constants.MAIN_COMMAND_BIND_NAME))
+                                        .to(OverMainCommand.class);
 ```
 
 
 Noop switch
 -----------
 
-If you need a no-operation switch:
+If your command needs a no-operation switch:
 
 Add to your Parameter class the option (named as you want, in this case `-n | --noop`):
 
