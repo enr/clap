@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.enr.clap.vendor.guava_14_0_1.base;
+package com.github.enr.clap.vendor.guava.base;
 
-import static com.github.enr.clap.vendor.guava_14_0_1.base.Preconditions.checkArgument;
-import static com.github.enr.clap.vendor.guava_14_0_1.base.Preconditions.checkNotNull;
+import static com.github.enr.clap.vendor.guava.base.Preconditions.checkArgument;
+import static com.github.enr.clap.vendor.guava.base.Preconditions.checkNotNull;
+
+import com.github.enr.clap.vendor.guava.annotations.GwtCompatible;
+import com.github.enr.clap.vendor.guava.annotations.VisibleForTesting;
+
+//Google Guava version 15.0
 
 import java.util.Formatter;
 
 import javax.annotation.Nullable;
-
-import com.github.enr.clap.vendor.guava_14_0_1.annotations.GwtCompatible;
-import com.github.enr.clap.vendor.guava_14_0_1.annotations.VisibleForTesting;
 
 /**
  * Static utility methods pertaining to {@code String} or {@code CharSequence}

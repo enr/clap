@@ -5,7 +5,7 @@ import java.util.Properties;
 import com.github.enr.clap.api.AppMeta;
 import com.github.enr.clap.api.Constants;
 import com.github.enr.clap.util.PropertiesLoader;
-import com.github.enr.clap.vendor.guava_14_0_1.base.Throwables;
+import com.github.enr.clap.vendor.guava.base.Throwables;
 
 public class PropertiesBackedAppMeta implements AppMeta {
     

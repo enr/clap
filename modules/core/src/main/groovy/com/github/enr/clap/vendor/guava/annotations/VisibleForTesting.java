@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.enr.clap.vendor.guava_14_0_1.annotations;
+package com.github.enr.clap.vendor.guava.annotations;
+
+//Google Guava version 15.0
 
 /**
  * Annotates a program element that exists, or is more widely visible than
@@ -25,3 +27,4 @@ package com.github.enr.clap.vendor.guava_14_0_1.annotations;
 @GwtCompatible
 public @interface VisibleForTesting {
 }
+

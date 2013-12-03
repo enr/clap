@@ -1,6 +1,6 @@
 package com.github.enr.clap.util;
 
-import static com.github.enr.clap.vendor.guava_14_0_1.base.Preconditions.checkArgument;
+import static com.github.enr.clap.vendor.guava.base.Preconditions.checkArgument;
 
 import java.net.URL;
 

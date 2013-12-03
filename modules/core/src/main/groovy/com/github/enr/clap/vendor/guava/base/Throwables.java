@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-package com.github.enr.clap.vendor.guava_14_0_1.base;
+package com.github.enr.clap.vendor.guava.base;
 
-import static com.github.enr.clap.vendor.guava_14_0_1.base.Preconditions.checkNotNull;
+
+import static com.github.enr.clap.vendor.guava.base.Preconditions.checkNotNull;
+
+import com.github.enr.clap.vendor.guava.annotations.Beta;
+
+//Google Guava version 15.0
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -25,8 +30,6 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nullable;
-
-import com.github.enr.clap.vendor.guava_14_0_1.annotations.Beta;
 
 /**
  * Static utility methods pertaining to instances of {@link Throwable}.

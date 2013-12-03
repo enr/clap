@@ -10,7 +10,7 @@ import java.io.File;
 import com.github.enr.clap.Clap;
 import com.github.enr.clap.Clap.RunResult;
 import com.github.enr.clap.util.ClasspathUtil;
-import com.github.enr.clap.vendor.guava_14_0_1.base.Joiner;
+import com.github.enr.clap.vendor.guava.base.Joiner;
 import com.google.inject.Module;
 
 import cucumber.api.java.en.Given;

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.enr.clap.vendor.guava_14_0_1.annotations;
+package com.github.enr.clap.vendor.guava.annotations;
+
+// Google Guava version 15.0
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

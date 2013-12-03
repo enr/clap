@@ -14,28 +14,31 @@
  * limitations under the License.
  */
 
-package com.github.enr.clap.vendor.guava_14_0_1.base;
+package com.github.enr.clap.vendor.guava.base;
+
+import com.github.enr.clap.vendor.guava.annotations.GwtCompatible;
+import com.github.enr.clap.vendor.guava.annotations.VisibleForTesting;
+
+//Google Guava version 15.0
 
 import java.util.NoSuchElementException;
 
 import javax.annotation.Nullable;
 
-import com.github.enr.clap.vendor.guava_14_0_1.annotations.GwtCompatible;
-import com.github.enr.clap.vendor.guava_14_0_1.annotations.VisibleForTesting;
-
 /**
  * Simple static methods to be called at the start of your own methods to verify
  * correct arguments and state. This allows constructs such as
- * <pre>
- *     if (count <= 0) {
- *       throw new IllegalArgumentException("must be positive: " + count);
- *     }</pre>
  *
- * to be replaced with the more compact
- * <pre>
- *     checkArgument(count > 0, "must be positive: %s", count);</pre>
+ * <pre>   {@code
+ *   if (count <= 0) {
+ *     throw new IllegalArgumentException("must be positive: " + count);
+ *   }}</pre>
  *
- * Note that the sense of the expression is inverted; with {@code Preconditions}
+ * <p>to be replaced with the more compact
+ * <pre>   {@code
+ *   checkArgument(count > 0, "must be positive: %s", count);}</pre>
+ *
+ * <p>Note that the sense of the expression is inverted; with {@code Preconditions}
  * you declare what you expect to be <i>true</i>, just as you do with an
  * <a href="http://java.sun.com/j2se/1.5.0/docs/guide/language/assert.html">
  * {@code assert}</a> or a JUnit {@code assertTrue} call.

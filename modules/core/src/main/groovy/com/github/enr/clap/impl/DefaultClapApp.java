@@ -16,8 +16,8 @@ import com.github.enr.clap.api.EnvironmentHolder;
 import com.github.enr.clap.api.Reporter;
 import com.github.enr.clap.api.Reporter.Level;
 import com.github.enr.clap.util.Casts;
-import com.github.enr.clap.vendor.guava_14_0_1.base.Preconditions;
-import com.github.enr.clap.vendor.guava_14_0_1.base.Throwables;
+import com.github.enr.clap.vendor.guava.base.Preconditions;
+import com.github.enr.clap.vendor.guava.base.Throwables;
 
 public class DefaultClapApp implements ClapApp {
 

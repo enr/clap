@@ -12,7 +12,7 @@ import java.util.Map;
 import org.codehaus.groovy.runtime.GStringImpl;
 
 import com.github.enr.clap.api.ConfigurationReader;
-import com.github.enr.clap.vendor.guava_14_0_1.base.Preconditions;
+import com.github.enr.clap.vendor.guava.base.Preconditions;
 
 /**
  * Default configuration reader component.
