@@ -4,7 +4,7 @@ dependencies {
             'com.beust:jcommander:1.30'
             
     testCompile 'org.testng:testng:6.8.5',
-                'org.easytesting:fest-assert-core:2.0M10'
+                'org.assertj:assertj-core:1.5.0'
 }
 
 test {

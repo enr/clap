@@ -1,6 +1,6 @@
 package com.github.enr.clap.test;
 
-import org.fest.assertions.api.Assertions;
+import org.assertj.core.api.Assertions;
 
 import com.github.enr.clap.api.CommandResult;
 

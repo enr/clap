@@ -1,11 +1,11 @@
 package com.github.enr.clap.test;
 
-import static org.fest.assertions.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.URL;
 import java.util.Map;
 
-import org.fest.assertions.api.MapAssert;
+import org.assertj.core.api.MapAssert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -13,7 +13,6 @@ import org.testng.annotations.Test;
 import com.github.enr.clap.api.ConfigurationReader;
 import com.github.enr.clap.impl.GroovierFlattenConfigurationReader;
 import com.github.enr.clap.util.ResourcesLoader;
-
 @Test(suiteName = "Configuration")
 public class GroovyConfigurationTest {
 
