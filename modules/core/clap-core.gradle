@@ -1,9 +1,9 @@
 
 dependencies {
-    compile 'com.google.code.findbugs:annotations:2.0.1',
-            'com.beust:jcommander:1.30'
+    compile 'com.google.code.findbugs:annotations:2.0.2',
+            'com.beust:jcommander:1.32'
             
-    testCompile 'org.testng:testng:6.8.5',
+    testCompile 'org.testng:testng:6.8.7',
                 'org.assertj:assertj-core:1.5.0'
 }
 

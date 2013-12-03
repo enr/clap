@@ -18,7 +18,7 @@ def projProp = { String key ->
 }
 
 ext {
-    groovyVersion = '2.1.6'
+    groovyVersion = '2.2.1'
     javaModules = [
         ':modules:core',
         ':modules:uat'
