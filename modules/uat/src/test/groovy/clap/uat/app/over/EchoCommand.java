@@ -2,9 +2,9 @@ package clap.uat.app.over;
 
 import javax.inject.Inject;
 
-import com.github.enr.clap.api.Command;
-import com.github.enr.clap.api.CommandResult;
-import com.github.enr.clap.api.Reporter;
+import com.atoito.clap.api.Command;
+import com.atoito.clap.api.CommandResult;
+import com.atoito.clap.api.Reporter;
 
 /*
  * echo messages

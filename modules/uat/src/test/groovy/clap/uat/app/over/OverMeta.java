@@ -1,6 +1,6 @@
 package clap.uat.app.over;
 
-import com.github.enr.clap.api.AppMeta;
+import com.atoito.clap.api.AppMeta;
 
 public class OverMeta implements AppMeta {
 

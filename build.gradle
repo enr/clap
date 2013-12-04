@@ -32,7 +32,7 @@ ext {
 }
 
 allprojects { project ->
-    group = 'com.github.enr.clap'
+    group = 'com.atoito.clap'
     
     repositories {
         mavenCentral()    

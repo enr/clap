@@ -2,11 +2,11 @@ package clap.uat.app.over;
 
 import javax.inject.Inject;
 
-import com.github.enr.clap.api.AppMeta;
-import com.github.enr.clap.api.Command;
-import com.github.enr.clap.api.CommandResult;
-import com.github.enr.clap.api.Constants;
-import com.github.enr.clap.api.Reporter;
+import com.atoito.clap.api.AppMeta;
+import com.atoito.clap.api.Command;
+import com.atoito.clap.api.CommandResult;
+import com.atoito.clap.api.Constants;
+import com.atoito.clap.api.Reporter;
 
 /*
  * default command, executed if no command id is passed to Clap app

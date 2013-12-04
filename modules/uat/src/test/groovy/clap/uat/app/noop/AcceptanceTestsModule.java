@@ -1,7 +1,7 @@
 package clap.uat.app.noop;
 
-import com.github.enr.clap.api.AppMeta;
-import com.github.enr.clap.api.Command;
+import com.atoito.clap.api.AppMeta;
+import com.atoito.clap.api.Command;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 

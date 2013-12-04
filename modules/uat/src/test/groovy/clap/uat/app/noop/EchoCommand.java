@@ -2,9 +2,9 @@ package clap.uat.app.noop;
 
 import javax.inject.Inject;
 
-import com.github.enr.clap.api.AbstractNoopAwareCommand;
-import com.github.enr.clap.api.CommandResult;
-import com.github.enr.clap.api.Reporter;
+import com.atoito.clap.api.AbstractNoopAwareCommand;
+import com.atoito.clap.api.CommandResult;
+import com.atoito.clap.api.Reporter;
 
 /*
  * echo messages

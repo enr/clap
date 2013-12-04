@@ -1,6 +1,6 @@
 package clap.uat.app.noop;
 
-import com.github.enr.clap.api.AppMeta;
+import com.atoito.clap.api.AppMeta;
 
 public class NoopMeta implements AppMeta {
 

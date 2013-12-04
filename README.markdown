@@ -31,7 +31,7 @@ To use the last released version, add to your build file:
 
 - repository: `http://dl.bintray.com/enrico/maven`
 
-- dependency group: `com.github.enr.clap` module: `core` version: `0.5`
+- dependency group: `com.atoito.clap` module: `core` version: `0.5`
 
 
 Example for a Gradle build:
@@ -41,9 +41,11 @@ repositories {
     maven { url 'http://dl.bintray.com/enrico/maven' }
 }
 dependencies {
-    compile 'com.github.enr.clap:core:0.5'
+    compile 'com.atoito.clap:core:0.5'
 }
 ```
+
+For the very last version, clone this repo, then run `./gradlew publishToMavenLocal`.
 
 
 Usage
@@ -63,7 +65,7 @@ At minimum, a Clap app contains:
 
 You can set metadata in two ways.
 
-Creating an app metadata class (implementing `com.github.enr.clap.api.AppMeta`):
+Creating an app metadata class (implementing `com.atoito.clap.api.AppMeta`):
 
 ```java
 public class HelloMeta implements AppMeta {
@@ -82,7 +84,7 @@ public class HelloMeta implements AppMeta {
 }
 ```
 
-If you don't like to hardcode version in a class, you can use `com.github.enr.clap.impl.PropertiesBackedAppMeta`.
+If you don't like to hardcode version in a class, you can use `com.atoito.clap.impl.PropertiesBackedAppMeta`.
 
 This way you can create a properties file with the proper meta keys and put it in the classpath.
 
@@ -113,10 +115,10 @@ public class MyAppModule extends AbstractModule
 
 The minimal requirement for a Clap app are components implementing:
 
-  * `com.github.enr.clap.api.EnvironmentHolder`
-  * `com.github.enr.clap.api.Reporter`
-  * `com.github.enr.clap.api.Configuration`
-  * `com.github.enr.clap.api.ConfigurationReader`
+  * `com.atoito.clap.api.EnvironmentHolder`
+  * `com.atoito.clap.api.Reporter`
+  * `com.atoito.clap.api.Configuration`
+  * `com.atoito.clap.api.ConfigurationReader`
 
 Of course, you can overwrite the default components binding these interfaces to your classes in the app Guice module;
 components registered here overwrite the default ones.
@@ -169,7 +171,7 @@ you'll have to:
 
 **Create command**
 
-Commands have to implement `com.github.enr.clap.api.Command`:
+Commands have to implement `com.atoito.clap.api.Command`:
 
 ```java
 public class EchoCommand implements Command {

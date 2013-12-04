@@ -1,6 +1,6 @@
 package clap.uat.app.hello;
 
-import com.github.enr.clap.api.AppMeta;
+import com.atoito.clap.api.AppMeta;
 
 public class HelloMeta implements AppMeta {
 

@@ -1,8 +1,8 @@
 package clap.uat.app.propsmeta;
 
-import com.github.enr.clap.api.AppMeta;
-import com.github.enr.clap.api.Command;
-import com.github.enr.clap.impl.PropertiesBackedAppMeta;
+import com.atoito.clap.api.AppMeta;
+import com.atoito.clap.api.Command;
+import com.atoito.clap.impl.PropertiesBackedAppMeta;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 

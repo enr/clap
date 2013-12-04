@@ -7,10 +7,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import com.github.enr.clap.Clap;
-import com.github.enr.clap.Clap.RunResult;
-import com.github.enr.clap.util.ClasspathUtil;
-import com.github.enr.clap.vendor.guava.base.Joiner;
+import com.atoito.clap.Clap;
+import com.atoito.clap.Clap.RunResult;
+import com.atoito.clap.util.ClasspathUtil;
+import com.atoito.clap.vendor.guava.base.Joiner;
 import com.google.inject.Module;
 
 import cucumber.api.java.en.Given;

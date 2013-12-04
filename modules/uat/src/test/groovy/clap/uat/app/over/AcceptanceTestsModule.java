@@ -1,8 +1,8 @@
 package clap.uat.app.over;
 
-import com.github.enr.clap.api.AppMeta;
-import com.github.enr.clap.api.Command;
-import com.github.enr.clap.api.Constants;
+import com.atoito.clap.api.AppMeta;
+import com.atoito.clap.api.Command;
+import com.atoito.clap.api.Constants;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 
