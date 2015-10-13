@@ -1,6 +1,7 @@
 include 'modules:core',
-        'modules:uat'
-        
+        'modules:uat',
+        'website'
+
 rootProject.name = 'clap'
 
 def setBuildFile(project) {
@@ -13,4 +14,3 @@ def setBuildFile(project) {
 rootProject.children.each {
 	setBuildFile(it)
 }
-

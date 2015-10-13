@@ -18,13 +18,13 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 public class AppStepdefs {
-    
+
     private String sutName;
-    
+
     private File sutHome;
-    
+
     private String sutOutput;
-    
+
     private int sutExitValue;
 
     @Given("^I am the user of app \"([^\"]*)\"$")
@@ -68,7 +68,7 @@ public class AppStepdefs {
     public void output_line_should_show_os_path(int lineIndex, String expectedLineContent) {
         output_line_should_contain(lineIndex, expectedLineContent.replace('/', File.separatorChar));
     }
-    
+
     @Then("^output line \"([^\"]*)\" should contain \"([^\"]*)\"$")
     public void output_line_should_contain(int lineIndex, String expectedLineContent) {
         assertTrue("Output should not be null", this.sutOutput != null);
@@ -77,7 +77,7 @@ public class AppStepdefs {
         String actualLine = lines[lineIndex];
         assertTrue(actualLine.contains(expectedLineContent));
     }
-    
+
     @Then("^output line \"([^\"]*)\" should be equal to \"([^\"]*)\"$")
     public void output_line_should_be_equal_to(int lineIndex, String expectedLineContent) {
         assertTrue("Output should not be null", this.sutOutput != null);

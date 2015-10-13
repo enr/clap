@@ -1,0 +1,27 @@
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
+        classpath 'org.asciidoctor:asciidoctorj:1.5.2'
+    	//classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.4'
+    	classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.8'
+    }
+}
+
+apply plugin: 'org.asciidoctor.convert'
+
+asciidoctorj {
+	version = '1.5.2'
+}
+
+asciidoctor {
+	backends    'html5','pdf'
+	attributes	'project-url': 'http://enr.github.io/clap',
+				'source-highlighter' : 'coderay',
+				'imagesdir': './images',
+				'toc':'left',
+				'icons': 'font'
+}
