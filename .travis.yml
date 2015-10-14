@@ -8,6 +8,10 @@ branches:
   only:
     - master
 
+env:
+  global:
+  - secure: "YxVsgJ74ZYO2YqcdQ+XYz0LoV7O5yNKmFqaPAnynSt55zZ3ucwHh9R6vT5QKaYS9F6xGyYrGSdtt0QC0wqSqm3a900gvorU/2/LHXqdUcc9FUlEZSCwoyuLxs3IOZgLtdu+8ig8tgwfV3+PJ7DbwurSmNzfitIlut7/xPm8pqMc="
+
 install: ./gradlew -q clean assemble
 
-script: ./gradlew -q check
+script: ./gradlew -q check publishGhPages
