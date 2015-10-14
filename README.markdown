@@ -7,6 +7,7 @@ Based on [Guice](http://code.google.com/p/google-guice/) and [JCommander](http:/
 
 [![Build Status](https://secure.travis-ci.org/enr/clap.png?branch=master)](http://travis-ci.org/enr/clap)
 
+[Docs WIP](http://enr.github.io/clap/)
 
 What you get using Clap
 -----------------------
@@ -17,7 +18,7 @@ What you get using Clap
 
 - Configuration management:
   * built-in configuration object reading groovy files in a system dir (based on os), user home dir and installation dir.
-  * configuration command `app config --files` `app config --list` `app config --get <key>` 
+  * configuration command `app config --files` `app config --list` `app config --get <key>`
 
 - A built-in Guice based dependency injection.
 
@@ -177,11 +178,11 @@ Commands have to implement `com.atoito.clap.api.Command`:
 public class EchoCommand implements Command {
 
 	private static final String COMMAND_ID = "echo";
-	
+
 	private Reporter reporter;
 
 	private EchoCommandArgs args = new EchoCommandArgs();
-	
+
 	@Inject
 	public EchoCommand(Reporter reporter) {
 		this.reporter = reporter;
@@ -497,6 +498,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 See the License for the specific language governing permissions and
 limitations under the License.
-
-
-
