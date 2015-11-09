@@ -15,7 +15,7 @@ cache:
 
 env:
   global:
-  - secure: "YxVsgJ74ZYO2YqcdQ+XYz0LoV7O5yNKmFqaPAnynSt55zZ3ucwHh9R6vT5QKaYS9F6xGyYrGSdtt0QC0wqSqm3a900gvorU/2/LHXqdUcc9FUlEZSCwoyuLxs3IOZgLtdu+8ig8tgwfV3+PJ7DbwurSmNzfitIlut7/xPm8pqMc="
+  - secure: "RXbWkpN3Ks+Egp4swZFL20jaruEkXrk2+tNoaTXSn7SY7BW8nlsBFfy7gFiVr/Uz5WP7VT25EwVbPqLbnYoW1dR6Ql6wE9uv+EI8bIwjSfGp2Qtmh1/KXA3EL3yVWiYrxqEyMYXioVXQXXRGSC+8lK+ve1yW4YVEjUhB4s9mB/E="
 
 install: ./gradlew -q clean assemble
 
