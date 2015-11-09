@@ -1,35 +1,48 @@
-
 buildscript {
     repositories {
         jcenter()
         mavenCentral()
     }
-    dependencies {
+	dependencies {
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
-        classpath 'org.asciidoctor:asciidoctorj:1.5.2'
-    	//classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.4'
-    	classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.8'
-        classpath 'org.ajoberstar:gradle-git:1.3.1'
-    }
+		classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.5'
+		classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.10'
+        classpath 'org.asciidoctor:asciidoctorj:1.5.3.2'
+    	classpath 'org.ajoberstar:gradle-git:1.3.2'
+	}
 }
 
-
 apply plugin: 'org.asciidoctor.convert'
-
 apply plugin: 'org.ajoberstar.github-pages'
 
 asciidoctorj {
-	version = '1.5.2'
+	version = '1.5.3.2'
 }
 
 asciidoctor {
-	backends    'html5','pdf'
+	backends    'html5', 'pdf', 'epub3'
+    sources {
+        include 'index.adoc'
+    }
 	attributes	'project-url': 'http://enr.github.io/clap',
 				'source-highlighter' : 'coderay',
 				'imagesdir': './images',
 				'toc':'left',
 				'icons': 'font'
 }
+
+task websiteManual(type: Copy) {
+    //from asciidoctor.outputs
+    from 'build/asciidoc'
+    into 'build/website/manual'
+}
+websiteManual.dependsOn(asciidoctor)
+
+task website(type: Copy) {
+    from 'src/site'
+    into 'build/website'
+}
+website.dependsOn(websiteManual)
 
 githubPages {
     repoUri = 'https://github.com/enr/clap'
@@ -38,10 +51,17 @@ githubPages {
       password = ''
     }
     pages {
-        from 'src/gh-pages'
+        from 'build/website'
     }
 }
-//publishGhPages.dependsOn(asciidoctor)
+publishGhPages.doFirst {
+    def ghToken = System.getenv('GH_TOKEN')
+    if (!ghToken) {
+        throw new GradleException('Task publishGhPages needs the GH_TOKEN environment variable set')
+    }
+
+}
+publishGhPages.dependsOn(website)
 
 /*
 githubPages {
