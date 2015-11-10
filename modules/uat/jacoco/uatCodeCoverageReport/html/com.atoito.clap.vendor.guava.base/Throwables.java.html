@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Throwables.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">uat</a> &gt; <a href="index.source.html" class="el_package">com.atoito.clap.vendor.guava.base</a> &gt; <span class="el_source">Throwables.java</span></div><h1>Throwables.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2007 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.atoito.clap.vendor.guava.base;
+
+
+import static com.atoito.clap.vendor.guava.base.Preconditions.checkNotNull;
+
+import com.atoito.clap.vendor.guava.annotations.Beta;
+
+//Google Guava version 15.0
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.annotation.Nullable;
+
+/**
+ * Static utility methods pertaining to instances of {@link Throwable}.
+ *
+ * &lt;p&gt;See the Guava User Guide entry on &lt;a href=
+ * &quot;http://code.google.com/p/guava-libraries/wiki/ThrowablesExplained&quot;&gt;
+ * Throwables&lt;/a&gt;.
+ *
+ * @author Kevin Bourrillion
+ * @author Ben Yu
+ * @since 1.0
+ */
+public final class Throwables {
+<span class="nc" id="L46">  private Throwables() {}</span>
+
+  /**
+   * Propagates {@code throwable} exactly as-is, if and only if it is an
+   * instance of {@code declaredType}.  Example usage:
+   * &lt;pre&gt;
+   *   try {
+   *     someMethodThatCouldThrowAnything();
+   *   } catch (IKnowWhatToDoWithThisException e) {
+   *     handle(e);
+   *   } catch (Throwable t) {
+   *     Throwables.propagateIfInstanceOf(t, IOException.class);
+   *     Throwables.propagateIfInstanceOf(t, SQLException.class);
+   *     throw Throwables.propagate(t);
+   *   }
+   * &lt;/pre&gt;
+   */
+  public static &lt;X extends Throwable&gt; void propagateIfInstanceOf(
+      @Nullable Throwable throwable, Class&lt;X&gt; declaredType) throws X {
+    // Check for null is needed to avoid frequent JNI calls to isInstance().
+<span class="nc bnc" id="L66" title="All 4 branches missed.">    if (throwable != null &amp;&amp; declaredType.isInstance(throwable)) {</span>
+<span class="nc" id="L67">      throw declaredType.cast(throwable);</span>
+    }
+<span class="nc" id="L69">  }</span>
+
+  /**
+   * Propagates {@code throwable} exactly as-is, if and only if it is an
+   * instance of {@link RuntimeException} or {@link Error}.  Example usage:
+   * &lt;pre&gt;
+   *   try {
+   *     someMethodThatCouldThrowAnything();
+   *   } catch (IKnowWhatToDoWithThisException e) {
+   *     handle(e);
+   *   } catch (Throwable t) {
+   *     Throwables.propagateIfPossible(t);
+   *     throw new RuntimeException(&quot;unexpected&quot;, t);
+   *   }
+   * &lt;/pre&gt;
+   */
+  public static void propagateIfPossible(@Nullable Throwable throwable) {
+<span class="nc" id="L86">    propagateIfInstanceOf(throwable, Error.class);</span>
+<span class="nc" id="L87">    propagateIfInstanceOf(throwable, RuntimeException.class);</span>
+<span class="nc" id="L88">  }</span>
+
+  /**
+   * Propagates {@code throwable} exactly as-is, if and only if it is an
+   * instance of {@link RuntimeException}, {@link Error}, or
+   * {@code declaredType}. Example usage:
+   * &lt;pre&gt;
+   *   try {
+   *     someMethodThatCouldThrowAnything();
+   *   } catch (IKnowWhatToDoWithThisException e) {
+   *     handle(e);
+   *   } catch (Throwable t) {
+   *     Throwables.propagateIfPossible(t, OtherException.class);
+   *     throw new RuntimeException(&quot;unexpected&quot;, t);
+   *   }
+   * &lt;/pre&gt;
+   *
+   * @param throwable the Throwable to possibly propagate
+   * @param declaredType the single checked exception type declared by the
+   *     calling method
+   */
+  public static &lt;X extends Throwable&gt; void propagateIfPossible(
+      @Nullable Throwable throwable, Class&lt;X&gt; declaredType) throws X {
+<span class="nc" id="L111">    propagateIfInstanceOf(throwable, declaredType);</span>
+<span class="nc" id="L112">    propagateIfPossible(throwable);</span>
+<span class="nc" id="L113">  }</span>
+
+  /**
+   * Propagates {@code throwable} exactly as-is, if and only if it is an
+   * instance of {@link RuntimeException}, {@link Error}, {@code declaredType1},
+   * or {@code declaredType2}.  In the unlikely case that you have three or more
+   * declared checked exception types, you can handle them all by invoking these
+   * methods repeatedly. See usage example in {@link
+   * #propagateIfPossible(Throwable, Class)}.
+   *
+   * @param throwable the Throwable to possibly propagate
+   * @param declaredType1 any checked exception type declared by the calling
+   *     method
+   * @param declaredType2 any other checked exception type declared by the
+   *     calling method
+   */
+  public static &lt;X1 extends Throwable, X2 extends Throwable&gt;
+      void propagateIfPossible(@Nullable Throwable throwable,
+          Class&lt;X1&gt; declaredType1, Class&lt;X2&gt; declaredType2) throws X1, X2 {
+<span class="nc" id="L132">    checkNotNull(declaredType2);</span>
+<span class="nc" id="L133">    propagateIfInstanceOf(throwable, declaredType1);</span>
+<span class="nc" id="L134">    propagateIfPossible(throwable, declaredType2);</span>
+<span class="nc" id="L135">  }</span>
+
+  /**
+   * Propagates {@code throwable} as-is if it is an instance of
+   * {@link RuntimeException} or {@link Error}, or else as a last resort, wraps
+   * it in a {@code RuntimeException} then propagates.
+   * &lt;p&gt;
+   * This method always throws an exception. The {@code RuntimeException} return
+   * type is only for client code to make Java type system happy in case a
+   * return value is required by the enclosing method. Example usage:
+   * &lt;pre&gt;
+   *   T doSomething() {
+   *     try {
+   *       return someMethodThatCouldThrowAnything();
+   *     } catch (IKnowWhatToDoWithThisException e) {
+   *       return handle(e);
+   *     } catch (Throwable t) {
+   *       throw Throwables.propagate(t);
+   *     }
+   *   }
+   * &lt;/pre&gt;
+   *
+   * @param throwable the Throwable to propagate
+   * @return nothing will ever be returned; this return type is only for your
+   *     convenience, as illustrated in the example above
+   */
+  public static RuntimeException propagate(Throwable throwable) {
+<span class="nc" id="L162">    propagateIfPossible(checkNotNull(throwable));</span>
+<span class="nc" id="L163">    throw new RuntimeException(throwable);</span>
+  }
+
+  /**
+   * Returns the innermost cause of {@code throwable}. The first throwable in a
+   * chain provides context from when the error or exception was initially
+   * detected. Example usage:
+   * &lt;pre&gt;
+   *   assertEquals(&quot;Unable to assign a customer id&quot;,
+   *       Throwables.getRootCause(e).getMessage());
+   * &lt;/pre&gt;
+   */
+  public static Throwable getRootCause(Throwable throwable) {
+    Throwable cause;
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">    while ((cause = throwable.getCause()) != null) {</span>
+<span class="nc" id="L178">      throwable = cause;</span>
+    }
+<span class="fc" id="L180">    return throwable;</span>
+  }
+
+  /**
+   * Gets a {@code Throwable} cause chain as a list.  The first entry in the
+   * list will be {@code throwable} followed by its cause hierarchy.  Note
+   * that this is a snapshot of the cause chain and will not reflect
+   * any subsequent changes to the cause chain.
+   *
+   * &lt;p&gt;Here's an example of how it can be used to find specific types
+   * of exceptions in the cause chain:
+   *
+   * &lt;pre&gt;
+   * Iterables.filter(Throwables.getCausalChain(e), IOException.class));
+   * &lt;/pre&gt;
+   *
+   * @param throwable the non-null {@code Throwable} to extract causes from
+   * @return an unmodifiable list containing the cause chain starting with
+   *     {@code throwable}
+   */
+  @Beta // TODO(kevinb): decide best return type
+  public static List&lt;Throwable&gt; getCausalChain(Throwable throwable) {
+<span class="nc" id="L202">    checkNotNull(throwable);</span>
+<span class="nc" id="L203">    List&lt;Throwable&gt; causes = new ArrayList&lt;Throwable&gt;(4);</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">    while (throwable != null) {</span>
+<span class="nc" id="L205">      causes.add(throwable);</span>
+<span class="nc" id="L206">      throwable = throwable.getCause();</span>
+    }
+<span class="nc" id="L208">    return Collections.unmodifiableList(causes);</span>
+  }
+
+  /**
+   * Returns a string containing the result of
+   * {@link Throwable#toString() toString()}, followed by the full, recursive
+   * stack trace of {@code throwable}. Note that you probably should not be
+   * parsing the resulting string; if you need programmatic access to the stack
+   * frames, you can call {@link Throwable#getStackTrace()}.
+   */
+  public static String getStackTraceAsString(Throwable throwable) {
+<span class="nc" id="L219">    StringWriter stringWriter = new StringWriter();</span>
+<span class="nc" id="L220">    throwable.printStackTrace(new PrintWriter(stringWriter));</span>
+<span class="nc" id="L221">    return stringWriter.toString();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

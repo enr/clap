@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DefaultOutputRetainingReporter.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">uat</a> &gt; <a href="index.source.html" class="el_package">com.atoito.clap.impl</a> &gt; <span class="el_source">DefaultOutputRetainingReporter.java</span></div><h1>DefaultOutputRetainingReporter.java</h1><pre class="source lang-java linenums">package com.atoito.clap.impl;
+
+import com.atoito.clap.api.OutputRetainingReporter;
+
+/**
+ * Base implementation of OutputRetainingReporter.
+ * 
+ */
+<span class="fc" id="L9">public class DefaultOutputRetainingReporter implements OutputRetainingReporter {</span>
+
+<span class="fc" id="L11">    Level level = Level.WARN;</span>
+    
+    private static final String EOL = &quot;\n&quot;;
+    
+<span class="fc" id="L15">    StringBuffer output = new StringBuffer();</span>
+    
+    /*
+     * this method replace the printing of the output, saving it in a StringBuffer
+     */
+    private void save(String str) {
+<span class="fc" id="L21">        output.append(str);</span>
+<span class="fc" id="L22">        output.append(EOL);</span>
+<span class="fc" id="L23">    }</span>
+    
+    @Override
+    public String getOutput() {
+<span class="fc" id="L27">        return output.toString();</span>
+    }
+
+    @Override
+    public void debug(String message) {
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        if (isDebugEnabled()) {</span>
+<span class="nc" id="L33">            print(message);</span>
+        }
+<span class="nc" id="L35">    }</span>
+
+    @Override
+    public void debug(String template, Object... args) {
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">        if (isDebugEnabled()) {</span>
+<span class="nc" id="L40">            save(format(template, args));</span>
+        }
+<span class="fc" id="L42">    }</span>
+
+    @Override
+    public void info(String message) {
+<span class="pc bpc" id="L46" title="1 of 2 branches missed.">        if (isInfoEnabled()) {</span>
+<span class="nc" id="L47">            print(message);</span>
+        }
+<span class="fc" id="L49">    }</span>
+
+    @Override
+    public void info(String template, Object... args) {
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (isInfoEnabled()) {</span>
+<span class="fc" id="L54">            save(format(template, args));</span>
+        }
+<span class="fc" id="L56">    }</span>
+
+    @Override
+    public void warn(String message) {
+<span class="fc" id="L60">        print(message);</span>
+<span class="fc" id="L61">    }</span>
+
+    @Override
+    public void warn(String template, Object... args) {
+<span class="fc" id="L65">        save(format(template, args));</span>
+<span class="fc" id="L66">    }</span>
+
+    @Override
+    public void out(String message) {
+<span class="fc" id="L70">        print(message);</span>
+<span class="fc" id="L71">    }</span>
+
+    @Override
+    public void out(String template, Object... args) {
+<span class="fc" id="L75">        save(format(template, args));</span>
+<span class="fc" id="L76">    }</span>
+
+    @Override
+    public void err(String message) {
+<span class="nc" id="L80">        System.err.println(String.format(safe(message)));</span>
+<span class="nc" id="L81">    }</span>
+
+    @Override
+    public void err(String template, Object... args) {
+<span class="nc" id="L85">        System.err.println(format(template, args));</span>
+<span class="nc" id="L86">    }</span>
+
+    private static String format(String template, Object... args) {
+<span class="fc" id="L89">        return String.format(template, args);</span>
+    }
+
+    private boolean isDebugEnabled() {
+<span class="fc" id="L93">        return (level.equals(Level.DEBUG));</span>
+    }
+
+    private boolean isInfoEnabled() {
+<span class="pc bpc" id="L97" title="1 of 4 branches missed.">        return ((level.equals(Level.DEBUG)) || (level.equals(Level.INFO)));</span>
+    }
+
+    @Override
+    public void setLevel(Level level) {
+<span class="fc" id="L102">        this.level = level;</span>
+<span class="fc" id="L103">    }</span>
+
+    private void print(String message) {
+<span class="fc" id="L106">        save(String.format(safe(message)));</span>
+<span class="fc" id="L107">    }</span>
+
+    private String safe(String text) {
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        return ((text == null) ? &quot;&quot; : text);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

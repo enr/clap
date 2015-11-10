@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Clap.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">uat</a> &gt; <a href="index.source.html" class="el_package">com.atoito.clap</a> &gt; <span class="el_source">Clap.java</span></div><h1>Clap.java</h1><pre class="source lang-java linenums">package com.atoito.clap;
+
+import java.io.File;
+
+import com.atoito.clap.api.ClapApp;
+import com.atoito.clap.api.EnvironmentHolder;
+import com.atoito.clap.api.OutputRetainingReporter;
+import com.atoito.clap.api.Reporter;
+import com.atoito.clap.inject.Bindings;
+import com.atoito.clap.inject.ConventionalAppModule;
+import com.atoito.clap.inject.ReviewableAppModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Module;
+import com.google.inject.util.Modules;
+
+/**
+ * Utility class with static methods to start Clap apps.
+ */
+<span class="nc" id="L20">public class Clap {</span>
+    
+<span class="pc" id="L22">    public static class RunResult {</span>
+        private int exitValue;
+        private String output;
+        public int getExitValue() {
+<span class="fc" id="L26">            return exitValue;</span>
+        }
+        public void setExitValue(int exitValue) {
+<span class="fc" id="L29">            this.exitValue = exitValue;</span>
+<span class="fc" id="L30">        }</span>
+        public String getOutput() {
+<span class="fc" id="L32">            return output;</span>
+        }
+        public void setOutput(String output) {
+<span class="fc" id="L35">            this.output = output;</span>
+<span class="fc" id="L36">        }</span>
+    }
+
+    /**
+     * Run a Clap app with settings following conventions.
+     * 
+     * @param args user args
+     * @param module Guice module defining the app custom components
+     */
+    public static void runConventionalApp(String[] args, Module module) {
+<span class="nc" id="L46">        Injector injector = Guice.createInjector(Modules.override(new ConventionalAppModule()).with(module));</span>
+<span class="nc" id="L47">        ClapApp app = injector.getInstance(ClapApp.class);</span>
+<span class="nc" id="L48">        app.setAvailableCommands(Bindings.getAllCommands(injector));</span>
+<span class="nc" id="L49">        app.run(args);</span>
+<span class="nc" id="L50">    }</span>
+    
+    /**
+     * Run a Clap app which doesn't call System.exit, keeps the exit value and the output 
+     * for a later check and forces app home to a given directory.
+     * Useful for testing (see uat module for example of an actual usage).
+     * 
+     * @param args user args
+     * @param appHome app home directory
+     * @param module module Guice module defining the app custom components
+     * @return an object containing the exit value and the output
+     */
+    public static RunResult runReviewableApp(String[] args, File appHome, Module module) {
+<span class="fc" id="L63">        RunResult result = new RunResult();        </span>
+<span class="fc" id="L64">        Injector injector = Guice.createInjector(Modules.override(new ReviewableAppModule()).with(module));</span>
+<span class="fc" id="L65">        EnvironmentHolder environment = injector.getInstance(EnvironmentHolder.class);</span>
+<span class="fc" id="L66">        environment.forceApplicationHome(appHome);</span>
+<span class="fc" id="L67">        Reporter reporter = injector.getInstance(Reporter.class);</span>
+<span class="fc" id="L68">        ClapApp app = injector.getInstance(ClapApp.class);</span>
+<span class="fc" id="L69">        app.setAvailableCommands(Bindings.getAllCommands(injector));</span>
+<span class="fc" id="L70">        app.run(args);</span>
+<span class="fc" id="L71">        result.setExitValue(app.getExitValue());</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">        if (reporter instanceof OutputRetainingReporter) {</span>
+<span class="fc" id="L73">            result.setOutput(((OutputRetainingReporter) reporter).getOutput().trim());</span>
+        } else {
+<span class="nc" id="L75">            result.setOutput(null);</span>
+        }
+<span class="fc" id="L77">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

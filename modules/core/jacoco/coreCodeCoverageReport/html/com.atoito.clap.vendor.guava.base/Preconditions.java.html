@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Preconditions.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.atoito.clap.vendor.guava.base</a> &gt; <span class="el_source">Preconditions.java</span></div><h1>Preconditions.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2007 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.atoito.clap.vendor.guava.base;
+
+import com.atoito.clap.vendor.guava.annotations.GwtCompatible;
+import com.atoito.clap.vendor.guava.annotations.VisibleForTesting;
+
+//Google Guava version 15.0
+
+import java.util.NoSuchElementException;
+
+import javax.annotation.Nullable;
+
+/**
+ * Simple static methods to be called at the start of your own methods to verify
+ * correct arguments and state. This allows constructs such as
+ *
+ * &lt;pre&gt;   {@code
+ *   if (count &lt;= 0) {
+ *     throw new IllegalArgumentException(&quot;must be positive: &quot; + count);
+ *   }}&lt;/pre&gt;
+ *
+ * &lt;p&gt;to be replaced with the more compact
+ * &lt;pre&gt;   {@code
+ *   checkArgument(count &gt; 0, &quot;must be positive: %s&quot;, count);}&lt;/pre&gt;
+ *
+ * &lt;p&gt;Note that the sense of the expression is inverted; with {@code Preconditions}
+ * you declare what you expect to be &lt;i&gt;true&lt;/i&gt;, just as you do with an
+ * &lt;a href=&quot;http://java.sun.com/j2se/1.5.0/docs/guide/language/assert.html&quot;&gt;
+ * {@code assert}&lt;/a&gt; or a JUnit {@code assertTrue} call.
+ *
+ * &lt;p&gt;&lt;b&gt;Warning:&lt;/b&gt; only the {@code &quot;%s&quot;} specifier is recognized as a
+ * placeholder in these messages, not the full range of {@link
+ * String#format(String, Object[])} specifiers.
+ *
+ * &lt;p&gt;Take care not to confuse precondition checking with other similar types
+ * of checks! Precondition exceptions -- including those provided here, but also
+ * {@link IndexOutOfBoundsException}, {@link NoSuchElementException}, {@link
+ * UnsupportedOperationException} and others -- are used to signal that the
+ * &lt;i&gt;calling method&lt;/i&gt; has made an error. This tells the caller that it should
+ * not have invoked the method when it did, with the arguments it did, or
+ * perhaps ever. Postcondition or other invariant failures should not throw
+ * these types of exceptions.
+ *
+ * &lt;p&gt;See the Guava User Guide on &lt;a href=
+ * &quot;http://code.google.com/p/guava-libraries/wiki/PreconditionsExplained&quot;&gt;
+ * using {@code Preconditions}&lt;/a&gt;.
+ *
+ * @author Kevin Bourrillion
+ * @since 2.0 (imported from Google Collections Library)
+ */
+@GwtCompatible
+public final class Preconditions {
+<span class="nc" id="L68">  private Preconditions() {}</span>
+
+  /**
+   * Ensures the truth of an expression involving one or more parameters to the
+   * calling method.
+   *
+   * @param expression a boolean expression
+   * @throws IllegalArgumentException if {@code expression} is false
+   */
+  public static void checkArgument(boolean expression) {
+<span class="nc bnc" id="L78" title="All 2 branches missed.">    if (!expression) {</span>
+<span class="nc" id="L79">      throw new IllegalArgumentException();</span>
+    }
+<span class="nc" id="L81">  }</span>
+
+  /**
+   * Ensures the truth of an expression involving one or more parameters to the
+   * calling method.
+   *
+   * @param expression a boolean expression
+   * @param errorMessage the exception message to use if the check fails; will
+   *     be converted to a string using {@link String#valueOf(Object)}
+   * @throws IllegalArgumentException if {@code expression} is false
+   */
+  public static void checkArgument(
+      boolean expression, @Nullable Object errorMessage) {
+<span class="nc bnc" id="L94" title="All 2 branches missed.">    if (!expression) {</span>
+<span class="nc" id="L95">      throw new IllegalArgumentException(String.valueOf(errorMessage));</span>
+    }
+<span class="nc" id="L97">  }</span>
+
+  /**
+   * Ensures the truth of an expression involving one or more parameters to the
+   * calling method.
+   *
+   * @param expression a boolean expression
+   * @param errorMessageTemplate a template for the exception message should the
+   *     check fail. The message is formed by replacing each {@code %s}
+   *     placeholder in the template with an argument. These are matched by
+   *     position - the first {@code %s} gets {@code errorMessageArgs[0]}, etc.
+   *     Unmatched arguments will be appended to the formatted message in square
+   *     braces. Unmatched placeholders will be left as-is.
+   * @param errorMessageArgs the arguments to be substituted into the message
+   *     template. Arguments are converted to strings using
+   *     {@link String#valueOf(Object)}.
+   * @throws IllegalArgumentException if {@code expression} is false
+   * @throws NullPointerException if the check fails and either {@code
+   *     errorMessageTemplate} or {@code errorMessageArgs} is null (don't let
+   *     this happen)
+   */
+  public static void checkArgument(boolean expression,
+      @Nullable String errorMessageTemplate,
+      @Nullable Object... errorMessageArgs) {
+<span class="pc bpc" id="L121" title="1 of 2 branches missed.">    if (!expression) {</span>
+<span class="nc" id="L122">      throw new IllegalArgumentException(</span>
+<span class="nc" id="L123">          format(errorMessageTemplate, errorMessageArgs));</span>
+    }
+<span class="fc" id="L125">  }</span>
+
+  /**
+   * Ensures the truth of an expression involving the state of the calling
+   * instance, but not involving any parameters to the calling method.
+   *
+   * @param expression a boolean expression
+   * @throws IllegalStateException if {@code expression} is false
+   */
+  public static void checkState(boolean expression) {
+<span class="nc bnc" id="L135" title="All 2 branches missed.">    if (!expression) {</span>
+<span class="nc" id="L136">      throw new IllegalStateException();</span>
+    }
+<span class="nc" id="L138">  }</span>
+
+  /**
+   * Ensures the truth of an expression involving the state of the calling
+   * instance, but not involving any parameters to the calling method.
+   *
+   * @param expression a boolean expression
+   * @param errorMessage the exception message to use if the check fails; will
+   *     be converted to a string using {@link String#valueOf(Object)}
+   * @throws IllegalStateException if {@code expression} is false
+   */
+  public static void checkState(
+      boolean expression, @Nullable Object errorMessage) {
+<span class="nc bnc" id="L151" title="All 2 branches missed.">    if (!expression) {</span>
+<span class="nc" id="L152">      throw new IllegalStateException(String.valueOf(errorMessage));</span>
+    }
+<span class="nc" id="L154">  }</span>
+
+  /**
+   * Ensures the truth of an expression involving the state of the calling
+   * instance, but not involving any parameters to the calling method.
+   *
+   * @param expression a boolean expression
+   * @param errorMessageTemplate a template for the exception message should the
+   *     check fail. The message is formed by replacing each {@code %s}
+   *     placeholder in the template with an argument. These are matched by
+   *     position - the first {@code %s} gets {@code errorMessageArgs[0]}, etc.
+   *     Unmatched arguments will be appended to the formatted message in square
+   *     braces. Unmatched placeholders will be left as-is.
+   * @param errorMessageArgs the arguments to be substituted into the message
+   *     template. Arguments are converted to strings using
+   *     {@link String#valueOf(Object)}.
+   * @throws IllegalStateException if {@code expression} is false
+   * @throws NullPointerException if the check fails and either {@code
+   *     errorMessageTemplate} or {@code errorMessageArgs} is null (don't let
+   *     this happen)
+   */
+  public static void checkState(boolean expression,
+      @Nullable String errorMessageTemplate,
+      @Nullable Object... errorMessageArgs) {
+<span class="nc bnc" id="L178" title="All 2 branches missed.">    if (!expression) {</span>
+<span class="nc" id="L179">      throw new IllegalStateException(</span>
+<span class="nc" id="L180">          format(errorMessageTemplate, errorMessageArgs));</span>
+    }
+<span class="nc" id="L182">  }</span>
+
+  /**
+   * Ensures that an object reference passed as a parameter to the calling
+   * method is not null.
+   *
+   * @param reference an object reference
+   * @return the non-null reference that was validated
+   * @throws NullPointerException if {@code reference} is null
+   */
+  public static &lt;T&gt; T checkNotNull(T reference) {
+<span class="pc bpc" id="L193" title="1 of 2 branches missed.">    if (reference == null) {</span>
+<span class="nc" id="L194">      throw new NullPointerException();</span>
+    }
+<span class="fc" id="L196">    return reference;</span>
+  }
+
+  /**
+   * Ensures that an object reference passed as a parameter to the calling
+   * method is not null.
+   *
+   * @param reference an object reference
+   * @param errorMessage the exception message to use if the check fails; will
+   *     be converted to a string using {@link String#valueOf(Object)}
+   * @return the non-null reference that was validated
+   * @throws NullPointerException if {@code reference} is null
+   */
+  public static &lt;T&gt; T checkNotNull(T reference, @Nullable Object errorMessage) {
+<span class="nc bnc" id="L210" title="All 2 branches missed.">    if (reference == null) {</span>
+<span class="nc" id="L211">      throw new NullPointerException(String.valueOf(errorMessage));</span>
+    }
+<span class="nc" id="L213">    return reference;</span>
+  }
+
+  /**
+   * Ensures that an object reference passed as a parameter to the calling
+   * method is not null.
+   *
+   * @param reference an object reference
+   * @param errorMessageTemplate a template for the exception message should the
+   *     check fail. The message is formed by replacing each {@code %s}
+   *     placeholder in the template with an argument. These are matched by
+   *     position - the first {@code %s} gets {@code errorMessageArgs[0]}, etc.
+   *     Unmatched arguments will be appended to the formatted message in square
+   *     braces. Unmatched placeholders will be left as-is.
+   * @param errorMessageArgs the arguments to be substituted into the message
+   *     template. Arguments are converted to strings using
+   *     {@link String#valueOf(Object)}.
+   * @return the non-null reference that was validated
+   * @throws NullPointerException if {@code reference} is null
+   */
+  public static &lt;T&gt; T checkNotNull(T reference,
+      @Nullable String errorMessageTemplate,
+      @Nullable Object... errorMessageArgs) {
+<span class="nc bnc" id="L236" title="All 2 branches missed.">    if (reference == null) {</span>
+      // If either of these parameters is null, the right thing happens anyway
+<span class="nc" id="L238">      throw new NullPointerException(</span>
+<span class="nc" id="L239">          format(errorMessageTemplate, errorMessageArgs));</span>
+    }
+<span class="nc" id="L241">    return reference;</span>
+  }
+
+  /*
+   * All recent hotspots (as of 2009) *really* like to have the natural code
+   *
+   * if (guardExpression) {
+   *    throw new BadException(messageExpression);
+   * }
+   *
+   * refactored so that messageExpression is moved to a separate
+   * String-returning method.
+   *
+   * if (guardExpression) {
+   *    throw new BadException(badMsg(...));
+   * }
+   *
+   * The alternative natural refactorings into void or Exception-returning
+   * methods are much slower.  This is a big deal - we're talking factors of
+   * 2-8 in microbenchmarks, not just 10-20%.  (This is a hotspot optimizer
+   * bug, which should be fixed, but that's a separate, big project).
+   *
+   * The coding pattern above is heavily used in java.util, e.g. in ArrayList.
+   * There is a RangeCheckMicroBenchmark in the JDK that was used to test this.
+   *
+   * But the methods in this class want to throw different exceptions,
+   * depending on the args, so it appears that this pattern is not directly
+   * applicable.  But we can use the ridiculous, devious trick of throwing an
+   * exception in the middle of the construction of another exception.
+   * Hotspot is fine with that.
+   */
+
+  /**
+   * Ensures that {@code index} specifies a valid &lt;i&gt;element&lt;/i&gt; in an array,
+   * list or string of size {@code size}. An element index may range from zero,
+   * inclusive, to {@code size}, exclusive.
+   *
+   * @param index a user-supplied index identifying an element of an array, list
+   *     or string
+   * @param size the size of that array, list or string
+   * @return the value of {@code index}
+   * @throws IndexOutOfBoundsException if {@code index} is negative or is not
+   *     less than {@code size}
+   * @throws IllegalArgumentException if {@code size} is negative
+   */
+  public static int checkElementIndex(int index, int size) {
+<span class="nc" id="L287">    return checkElementIndex(index, size, &quot;index&quot;);</span>
+  }
+
+  /**
+   * Ensures that {@code index} specifies a valid &lt;i&gt;element&lt;/i&gt; in an array,
+   * list or string of size {@code size}. An element index may range from zero,
+   * inclusive, to {@code size}, exclusive.
+   *
+   * @param index a user-supplied index identifying an element of an array, list
+   *     or string
+   * @param size the size of that array, list or string
+   * @param desc the text to use to describe this index in an error message
+   * @return the value of {@code index}
+   * @throws IndexOutOfBoundsException if {@code index} is negative or is not
+   *     less than {@code size}
+   * @throws IllegalArgumentException if {@code size} is negative
+   */
+  public static int checkElementIndex(
+      int index, int size, @Nullable String desc) {
+    // Carefully optimized for execution by hotspot (explanatory comment above)
+<span class="nc bnc" id="L307" title="All 4 branches missed.">    if (index &lt; 0 || index &gt;= size) {</span>
+<span class="nc" id="L308">      throw new IndexOutOfBoundsException(badElementIndex(index, size, desc));</span>
+    }
+<span class="nc" id="L310">    return index;</span>
+  }
+
+  private static String badElementIndex(int index, int size, String desc) {
+<span class="nc bnc" id="L314" title="All 2 branches missed.">    if (index &lt; 0) {</span>
+<span class="nc" id="L315">      return format(&quot;%s (%s) must not be negative&quot;, desc, index);</span>
+<span class="nc bnc" id="L316" title="All 2 branches missed.">    } else if (size &lt; 0) {</span>
+<span class="nc" id="L317">      throw new IllegalArgumentException(&quot;negative size: &quot; + size);</span>
+    } else { // index &gt;= size
+<span class="nc" id="L319">      return format(&quot;%s (%s) must be less than size (%s)&quot;, desc, index, size);</span>
+    }
+  }
+
+  /**
+   * Ensures that {@code index} specifies a valid &lt;i&gt;position&lt;/i&gt; in an array,
+   * list or string of size {@code size}. A position index may range from zero
+   * to {@code size}, inclusive.
+   *
+   * @param index a user-supplied index identifying a position in an array, list
+   *     or string
+   * @param size the size of that array, list or string
+   * @return the value of {@code index}
+   * @throws IndexOutOfBoundsException if {@code index} is negative or is
+   *     greater than {@code size}
+   * @throws IllegalArgumentException if {@code size} is negative
+   */
+  public static int checkPositionIndex(int index, int size) {
+<span class="nc" id="L337">    return checkPositionIndex(index, size, &quot;index&quot;);</span>
+  }
+
+  /**
+   * Ensures that {@code index} specifies a valid &lt;i&gt;position&lt;/i&gt; in an array,
+   * list or string of size {@code size}. A position index may range from zero
+   * to {@code size}, inclusive.
+   *
+   * @param index a user-supplied index identifying a position in an array, list
+   *     or string
+   * @param size the size of that array, list or string
+   * @param desc the text to use to describe this index in an error message
+   * @return the value of {@code index}
+   * @throws IndexOutOfBoundsException if {@code index} is negative or is
+   *     greater than {@code size}
+   * @throws IllegalArgumentException if {@code size} is negative
+   */
+  public static int checkPositionIndex(
+      int index, int size, @Nullable String desc) {
+    // Carefully optimized for execution by hotspot (explanatory comment above)
+<span class="nc bnc" id="L357" title="All 4 branches missed.">    if (index &lt; 0 || index &gt; size) {</span>
+<span class="nc" id="L358">      throw new IndexOutOfBoundsException(badPositionIndex(index, size, desc));</span>
+    }
+<span class="nc" id="L360">    return index;</span>
+  }
+
+  private static String badPositionIndex(int index, int size, String desc) {
+<span class="nc bnc" id="L364" title="All 2 branches missed.">    if (index &lt; 0) {</span>
+<span class="nc" id="L365">      return format(&quot;%s (%s) must not be negative&quot;, desc, index);</span>
+<span class="nc bnc" id="L366" title="All 2 branches missed.">    } else if (size &lt; 0) {</span>
+<span class="nc" id="L367">      throw new IllegalArgumentException(&quot;negative size: &quot; + size);</span>
+    } else { // index &gt; size
+<span class="nc" id="L369">      return format(&quot;%s (%s) must not be greater than size (%s)&quot;,</span>
+<span class="nc" id="L370">                    desc, index, size);</span>
+    }
+  }
+
+  /**
+   * Ensures that {@code start} and {@code end} specify a valid &lt;i&gt;positions&lt;/i&gt;
+   * in an array, list or string of size {@code size}, and are in order. A
+   * position index may range from zero to {@code size}, inclusive.
+   *
+   * @param start a user-supplied index identifying a starting position in an
+   *     array, list or string
+   * @param end a user-supplied index identifying a ending position in an array,
+   *     list or string
+   * @param size the size of that array, list or string
+   * @throws IndexOutOfBoundsException if either index is negative or is
+   *     greater than {@code size}, or if {@code end} is less than {@code start}
+   * @throws IllegalArgumentException if {@code size} is negative
+   */
+  public static void checkPositionIndexes(int start, int end, int size) {
+    // Carefully optimized for execution by hotspot (explanatory comment above)
+<span class="nc bnc" id="L390" title="All 6 branches missed.">    if (start &lt; 0 || end &lt; start || end &gt; size) {</span>
+<span class="nc" id="L391">      throw new IndexOutOfBoundsException(badPositionIndexes(start, end, size));</span>
+    }
+<span class="nc" id="L393">  }</span>
+
+  private static String badPositionIndexes(int start, int end, int size) {
+<span class="nc bnc" id="L396" title="All 4 branches missed.">    if (start &lt; 0 || start &gt; size) {</span>
+<span class="nc" id="L397">      return badPositionIndex(start, size, &quot;start index&quot;);</span>
+    }
+<span class="nc bnc" id="L399" title="All 4 branches missed.">    if (end &lt; 0 || end &gt; size) {</span>
+<span class="nc" id="L400">      return badPositionIndex(end, size, &quot;end index&quot;);</span>
+    }
+    // end &lt; start
+<span class="nc" id="L403">    return format(&quot;end index (%s) must not be less than start index (%s)&quot;,</span>
+<span class="nc" id="L404">                  end, start);</span>
+  }
+
+  /**
+   * Substitutes each {@code %s} in {@code template} with an argument. These
+   * are matched by position - the first {@code %s} gets {@code args[0]}, etc.
+   * If there are more arguments than placeholders, the unmatched arguments will
+   * be appended to the end of the formatted message in square braces.
+   *
+   * @param template a non-null string containing 0 or more {@code %s}
+   *     placeholders.
+   * @param args the arguments to be substituted into the message
+   *     template. Arguments are converted to strings using
+   *     {@link String#valueOf(Object)}. Arguments can be null.
+   */
+  @VisibleForTesting static String format(String template,
+      @Nullable Object... args) {
+<span class="nc" id="L421">    template = String.valueOf(template); // null -&gt; &quot;null&quot;</span>
+
+    // start substituting the arguments into the '%s' placeholders
+<span class="nc" id="L424">    StringBuilder builder = new StringBuilder(</span>
+<span class="nc" id="L425">        template.length() + 16 * args.length);</span>
+<span class="nc" id="L426">    int templateStart = 0;</span>
+<span class="nc" id="L427">    int i = 0;</span>
+<span class="nc bnc" id="L428" title="All 2 branches missed.">    while (i &lt; args.length) {</span>
+<span class="nc" id="L429">      int placeholderStart = template.indexOf(&quot;%s&quot;, templateStart);</span>
+<span class="nc bnc" id="L430" title="All 2 branches missed.">      if (placeholderStart == -1) {</span>
+<span class="nc" id="L431">        break;</span>
+      }
+<span class="nc" id="L433">      builder.append(template.substring(templateStart, placeholderStart));</span>
+<span class="nc" id="L434">      builder.append(args[i++]);</span>
+<span class="nc" id="L435">      templateStart = placeholderStart + 2;</span>
+<span class="nc" id="L436">    }</span>
+<span class="nc" id="L437">    builder.append(template.substring(templateStart));</span>
+
+    // if we run out of placeholders, append the extra args in square braces
+<span class="nc bnc" id="L440" title="All 2 branches missed.">    if (i &lt; args.length) {</span>
+<span class="nc" id="L441">      builder.append(&quot; [&quot;);</span>
+<span class="nc" id="L442">      builder.append(args[i++]);</span>
+<span class="nc bnc" id="L443" title="All 2 branches missed.">      while (i &lt; args.length) {</span>
+<span class="nc" id="L444">        builder.append(&quot;, &quot;);</span>
+<span class="nc" id="L445">        builder.append(args[i++]);</span>
+      }
+<span class="nc" id="L447">      builder.append(']');</span>
+    }
+
+<span class="nc" id="L450">    return builder.toString();</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PropertiesBackedAppMeta.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.atoito.clap.impl</a> &gt; <span class="el_source">PropertiesBackedAppMeta.java</span></div><h1>PropertiesBackedAppMeta.java</h1><pre class="source lang-java linenums">package com.atoito.clap.impl;
+
+import java.util.Properties;
+
+import com.atoito.clap.api.AppMeta;
+import com.atoito.clap.api.Constants;
+import com.atoito.clap.util.PropertiesLoader;
+import com.atoito.clap.vendor.guava.base.Throwables;
+
+public class PropertiesBackedAppMeta implements AppMeta {
+    
+<span class="fc" id="L12">    private Properties properties = new Properties();</span>
+    
+    private static final String PROPERTY_NAME_KEY = &quot;clap.meta.name&quot;;
+    private static final String PROPERTY_VERSION_KEY = &quot;clap.meta.version&quot;;
+    private static final String PROPERTY_DISPLAYNAME_KEY = &quot;clap.meta.displayname&quot;;
+    
+    /**
+     * Factory method: it creates a AppMeta loading properties from a classpath resource.
+     * 
+     */
+    public static AppMeta from(String resourceName) {
+<span class="fc" id="L23">        Properties properties = null;</span>
+        try {
+<span class="fc" id="L25">        	properties = getPropertiesLoader().fromResource(resourceName);</span>
+<span class="nc" id="L26">        } catch (Throwable e) {</span>
+<span class="nc" id="L27">        	Throwables.propagate(e);</span>
+<span class="fc" id="L28">        }</span>
+<span class="fc" id="L29">        return new PropertiesBackedAppMeta(properties);</span>
+    }
+    
+    private PropertiesBackedAppMeta(Properties properties) {
+<span class="fc" id="L33">        super();</span>
+<span class="fc" id="L34">        this.properties = properties;</span>
+<span class="fc" id="L35">    }</span>
+    
+    private static PropertiesLoader getPropertiesLoader() {
+<span class="fc" id="L38">    	return new PropertiesLoader(); </span>
+    }
+
+    @Override
+    public String name() {
+<span class="fc" id="L43">        return properties.getProperty(PROPERTY_NAME_KEY, Constants.DEFAULT_META_NAME);</span>
+    }
+
+    @Override
+    public String version() {
+<span class="fc" id="L48">        return properties.getProperty(PROPERTY_VERSION_KEY, Constants.DEFAULT_META_VERSION);</span>
+    }
+
+    @Override
+    public String displayName() {
+<span class="fc" id="L53">        return properties.getProperty(PROPERTY_DISPLAYNAME_KEY, Constants.DEFAULT_META_DISPLAYNAME);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
