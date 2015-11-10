@@ -18,3 +18,7 @@ task coreCodeCoverageReport(type:JacocoReport){
 }
 
 coverage.dependsOn coreCodeCoverageReport
+
+javadoc {
+    failOnError = false
+}
