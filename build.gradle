@@ -8,8 +8,11 @@ buildscript {
    dependencies {
       classpath 'com.github.townsfolk:gradle-release:1.2'
       classpath 'com.github.ben-manes:gradle-versions-plugin:0.4'
+      classpath 'org.ajoberstar:gradle-git:1.3.2'
    }
 }
+
+apply plugin: 'org.ajoberstar.github-pages'
 
 apply plugin: 'release'
 createReleaseTag.dependsOn ':modules:core:publish'
@@ -75,7 +78,6 @@ subprojects {
 
         task coverage << {}
         coverage.dependsOn test
-
     }
 
     if (project.path in uploadableModules) {
@@ -124,11 +126,47 @@ subprojects {
                 }
             }
         }
-
         publish.dependsOn assemble
+    }
+}
+
+task buildWebsiteCore(type: Copy) {
+    from 'modules/core/build/docs'
+    from 'modules/core/build/reports'
+    into 'build/website/modules/core'
+}
+buildWebsiteCore.dependsOn ':modules:core:javadoc', ':modules:core:coverage'
+task buildWebsiteUat(type: Copy) {
+    from 'modules/uat/build/reports'
+    into 'build/website/modules/uat'
+}
+buildWebsiteUat.dependsOn ':modules:uat:coverage'
+task buildWebsite(type: Copy) {
+    from 'website/build/website'
+    into 'build/website'
+}
+buildWebsite.dependsOn buildWebsiteCore, buildWebsiteUat, ':website:website'
+
+githubPages {
+    repoUri = 'https://github.com/enr/clap'
+    credentials {
+      username = System.getenv('GH_TOKEN')
+      password = ''
+    }
+    pages {
+        from 'build/website'
+    }
+}
+prepareGhPages.doFirst {
+    def ghToken = System.getenv('GH_TOKEN')
+    if (!ghToken) {
+        throw new GradleException('Task publishGhPages needs the GH_TOKEN environment variable set')
     }
 
 }
+prepareGhPages.dependsOn(buildWebsite)
+
+
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.8'
