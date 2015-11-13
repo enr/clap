@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Casts.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.atoito.clap.util</a> &gt; <span class="el_source">Casts.java</span></div><h1>Casts.java</h1><pre class="source lang-java linenums">package com.atoito.clap.util;
+
+import java.util.Map;
+
+/**
+ * Utility methods to cast objects in a single line of code.
+ */
+<span class="nc" id="L8">public class Casts {</span>
+
+    /**
+     * Casts obj to the inferenced type T, failing with a ClassCastException if obj is null or not instanceable.
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public static &lt;T&gt; T cast(Object o) {
+<span class="fc" id="L15">        return (T) o;</span>
+    }
+
+    /**
+     * Casts obj to the given type, failing with a ClassCastException if obj is null or not instanceable.
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public static &lt;T&gt; T castOrFail(Object obj, Class&lt;T&gt; type) {
+<span class="fc" id="L23">        checkArgumentNotNull(type);</span>
+<span class="pc bpc" id="L24" title="1 of 4 branches missed.">        if ((obj != null) &amp;&amp; (type.isAssignableFrom(obj.getClass()))) {</span>
+<span class="fc" id="L25">            return (T) obj;</span>
+        }
+<span class="fc" id="L27">        throw new ClassCastException(String.format(&quot;error casting %s to class %s&quot;, obj, type.getName()));</span>
+    }
+
+    /**
+     * Casts obj to the given type, returning null if obj is null or not instanceable.
+     */
+    @SuppressWarnings(&quot;unchecked&quot;)
+    public static &lt;T&gt; T castOrNull(Object obj, Class&lt;T&gt; type) {
+<span class="fc" id="L35">        checkArgumentNotNull(type);</span>
+<span class="fc bfc" id="L36" title="All 4 branches covered.">        if ((obj != null) &amp;&amp; (type.isAssignableFrom(obj.getClass()))) {</span>
+<span class="fc" id="L37">            return (T) obj;</span>
+        }
+<span class="fc" id="L39">        return null;</span>
+    }
+
+    /**
+     * Returns, for the specified key, an object casted to the required class, or throws an IllegalArgumentException.
+     * Useful for raw maps.
+     * 
+     */
+    //@SuppressWarnings(&quot;unchecked&quot;)
+    public static &lt;T&gt; T getFromMap(Map&lt;?, ?&gt; m, Object key, Class&lt;T&gt; type) {
+<span class="fc" id="L49">        checkArgumentNotNull(m);</span>
+<span class="fc" id="L50">        checkArgumentNotNull(key);</span>
+        //checkArgumentNotNull(type);
+        
+<span class="fc" id="L53">        Object value = m.get(key);</span>
+        /*
+        if (value == null) {
+            return null;
+        }
+        if (!type.isAssignableFrom(value.getClass())) {
+            throw new IllegalArgumentException(&quot;Incorrect type specified for header '&quot; + key + &quot;'. Expected [&quot; + type
+                    + &quot;] but actual type is [&quot; + value.getClass() + &quot;]&quot;);
+        }
+        return (T) value;
+        */
+<span class="fc" id="L64">        return castOrNull(value, type);</span>
+    }
+    
+    private static void checkArgumentNotNull(Object arg) {
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (arg == null) {</span>
+<span class="fc" id="L69">            throw new IllegalArgumentException(&quot;argument cannot be null&quot;);</span>
+        }
+<span class="fc" id="L71">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Strings.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.atoito.clap.vendor.guava.base</a> &gt; <span class="el_source">Strings.java</span></div><h1>Strings.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2010 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.atoito.clap.vendor.guava.base;
+
+import static com.atoito.clap.vendor.guava.base.Preconditions.checkArgument;
+import static com.atoito.clap.vendor.guava.base.Preconditions.checkNotNull;
+
+import com.atoito.clap.vendor.guava.annotations.GwtCompatible;
+import com.atoito.clap.vendor.guava.annotations.VisibleForTesting;
+
+//Google Guava version 15.0
+
+import java.util.Formatter;
+
+import javax.annotation.Nullable;
+
+/**
+ * Static utility methods pertaining to {@code String} or {@code CharSequence}
+ * instances.
+ *
+ * @author Kevin Bourrillion
+ * @since 3.0
+ */
+@GwtCompatible
+public final class Strings {
+<span class="nc" id="L39">  private Strings() {}</span>
+
+  /**
+   * Returns the given string if it is non-null; the empty string otherwise.
+   *
+   * @param string the string to test and possibly return
+   * @return {@code string} itself if it is non-null; {@code &quot;&quot;} if it is null
+   */
+  public static String nullToEmpty(@Nullable String string) {
+<span class="nc bnc" id="L48" title="All 2 branches missed.">    return (string == null) ? &quot;&quot; : string;</span>
+  }
+
+  /**
+   * Returns the given string if it is nonempty; {@code null} otherwise.
+   *
+   * @param string the string to test and possibly return
+   * @return {@code string} itself if it is nonempty; {@code null} if it is
+   *     empty or null
+   */
+  public static @Nullable String emptyToNull(@Nullable String string) {
+<span class="nc bnc" id="L59" title="All 2 branches missed.">    return isNullOrEmpty(string) ? null : string;</span>
+  }
+
+  /**
+   * Returns {@code true} if the given string is null or is the empty string.
+   *
+   * &lt;p&gt;Consider normalizing your string references with {@link #nullToEmpty}.
+   * If you do, you can use {@link String#isEmpty()} instead of this
+   * method, and you won't need special null-safe forms of methods like {@link
+   * String#toUpperCase} either. Or, if you'd like to normalize &quot;in the other
+   * direction,&quot; converting empty strings to {@code null}, you can use {@link
+   * #emptyToNull}.
+   *
+   * @param string a string reference to check
+   * @return {@code true} if the string is null or is the empty string
+   */
+  public static boolean isNullOrEmpty(@Nullable String string) {
+<span class="nc bnc" id="L76" title="All 4 branches missed.">    return string == null || string.length() == 0; // string.isEmpty() in Java 6</span>
+  }
+
+  /**
+   * Returns a string, of length at least {@code minLength}, consisting of
+   * {@code string} prepended with as many copies of {@code padChar} as are
+   * necessary to reach that length. For example,
+   *
+   * &lt;ul&gt;
+   * &lt;li&gt;{@code padStart(&quot;7&quot;, 3, '0')} returns {@code &quot;007&quot;}
+   * &lt;li&gt;{@code padStart(&quot;2010&quot;, 3, '0')} returns {@code &quot;2010&quot;}
+   * &lt;/ul&gt;
+   *
+   * &lt;p&gt;See {@link Formatter} for a richer set of formatting capabilities.
+   *
+   * @param string the string which should appear at the end of the result
+   * @param minLength the minimum length the resulting string must have. Can be
+   *     zero or negative, in which case the input string is always returned.
+   * @param padChar the character to insert at the beginning of the result until
+   *     the minimum length is reached
+   * @return the padded string
+   */
+  public static String padStart(String string, int minLength, char padChar) {
+<span class="nc" id="L99">    checkNotNull(string);  // eager for GWT.</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">    if (string.length() &gt;= minLength) {</span>
+<span class="nc" id="L101">      return string;</span>
+    }
+<span class="nc" id="L103">    StringBuilder sb = new StringBuilder(minLength);</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">    for (int i = string.length(); i &lt; minLength; i++) {</span>
+<span class="nc" id="L105">      sb.append(padChar);</span>
+    }
+<span class="nc" id="L107">    sb.append(string);</span>
+<span class="nc" id="L108">    return sb.toString();</span>
+  }
+
+  /**
+   * Returns a string, of length at least {@code minLength}, consisting of
+   * {@code string} appended with as many copies of {@code padChar} as are
+   * necessary to reach that length. For example,
+   *
+   * &lt;ul&gt;
+   * &lt;li&gt;{@code padEnd(&quot;4.&quot;, 5, '0')} returns {@code &quot;4.000&quot;}
+   * &lt;li&gt;{@code padEnd(&quot;2010&quot;, 3, '!')} returns {@code &quot;2010&quot;}
+   * &lt;/ul&gt;
+   *
+   * &lt;p&gt;See {@link Formatter} for a richer set of formatting capabilities.
+   *
+   * @param string the string which should appear at the beginning of the result
+   * @param minLength the minimum length the resulting string must have. Can be
+   *     zero or negative, in which case the input string is always returned.
+   * @param padChar the character to append to the end of the result until the
+   *     minimum length is reached
+   * @return the padded string
+   */
+  public static String padEnd(String string, int minLength, char padChar) {
+<span class="nc" id="L131">    checkNotNull(string);  // eager for GWT.</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">    if (string.length() &gt;= minLength) {</span>
+<span class="nc" id="L133">      return string;</span>
+    }
+<span class="nc" id="L135">    StringBuilder sb = new StringBuilder(minLength);</span>
+<span class="nc" id="L136">    sb.append(string);</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">    for (int i = string.length(); i &lt; minLength; i++) {</span>
+<span class="nc" id="L138">      sb.append(padChar);</span>
+    }
+<span class="nc" id="L140">    return sb.toString();</span>
+  }
+
+  /**
+   * Returns a string consisting of a specific number of concatenated copies of
+   * an input string. For example, {@code repeat(&quot;hey&quot;, 3)} returns the string
+   * {@code &quot;heyheyhey&quot;}.
+   *
+   * @param string any non-null string
+   * @param count the number of times to repeat it; a nonnegative integer
+   * @return a string containing {@code string} repeated {@code count} times
+   *     (the empty string if {@code count} is zero)
+   * @throws IllegalArgumentException if {@code count} is negative
+   */
+  public static String repeat(String string, int count) {
+<span class="nc" id="L155">    checkNotNull(string);  // eager for GWT.</span>
+
+<span class="nc bnc" id="L157" title="All 2 branches missed.">    if (count &lt;= 1) {</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">      checkArgument(count &gt;= 0, &quot;invalid count: %s&quot;, count);</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">      return (count == 0) ? &quot;&quot; : string;</span>
+    }
+
+    // IF YOU MODIFY THE CODE HERE, you must update StringsRepeatBenchmark
+<span class="nc" id="L163">    final int len = string.length();</span>
+<span class="nc" id="L164">    final long longSize = (long) len * (long) count;</span>
+<span class="nc" id="L165">    final int size = (int) longSize;</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">    if (size != longSize) {</span>
+<span class="nc" id="L167">      throw new ArrayIndexOutOfBoundsException(&quot;Required array size too large: &quot;</span>
+<span class="nc" id="L168">          + String.valueOf(longSize));</span>
+    }
+
+<span class="nc" id="L171">    final char[] array = new char[size];</span>
+<span class="nc" id="L172">    string.getChars(0, len, array, 0);</span>
+    int n;
+<span class="nc bnc" id="L174" title="All 2 branches missed.">    for (n = len; n &lt; size - n; n &lt;&lt;= 1) {</span>
+<span class="nc" id="L175">      System.arraycopy(array, 0, array, n, n);</span>
+    }
+<span class="nc" id="L177">    System.arraycopy(array, 0, array, n, size - n);</span>
+<span class="nc" id="L178">    return new String(array);</span>
+  }
+
+  /**
+   * Returns the longest string {@code prefix} such that
+   * {@code a.toString().startsWith(prefix) &amp;&amp; b.toString().startsWith(prefix)},
+   * taking care not to split surrogate pairs. If {@code a} and {@code b} have
+   * no common prefix, returns the empty string.
+   *
+   * @since 11.0
+   */
+  public static String commonPrefix(CharSequence a, CharSequence b) {
+<span class="nc" id="L190">    checkNotNull(a);</span>
+<span class="nc" id="L191">    checkNotNull(b);</span>
+
+<span class="nc" id="L193">    int maxPrefixLength = Math.min(a.length(), b.length());</span>
+<span class="nc" id="L194">    int p = 0;</span>
+<span class="nc bnc" id="L195" title="All 4 branches missed.">    while (p &lt; maxPrefixLength &amp;&amp; a.charAt(p) == b.charAt(p)) {</span>
+<span class="nc" id="L196">      p++;</span>
+    }
+<span class="nc bnc" id="L198" title="All 4 branches missed.">    if (validSurrogatePairAt(a, p - 1) || validSurrogatePairAt(b, p - 1)) {</span>
+<span class="nc" id="L199">      p--;</span>
+    }
+<span class="nc" id="L201">    return a.subSequence(0, p).toString();</span>
+  }
+
+  /**
+   * Returns the longest string {@code suffix} such that
+   * {@code a.toString().endsWith(suffix) &amp;&amp; b.toString().endsWith(suffix)},
+   * taking care not to split surrogate pairs. If {@code a} and {@code b} have
+   * no common suffix, returns the empty string.
+   *
+   * @since 11.0
+   */
+  public static String commonSuffix(CharSequence a, CharSequence b) {
+<span class="nc" id="L213">    checkNotNull(a);</span>
+<span class="nc" id="L214">    checkNotNull(b);</span>
+
+<span class="nc" id="L216">    int maxSuffixLength = Math.min(a.length(), b.length());</span>
+<span class="nc" id="L217">    int s = 0;</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">    while (s &lt; maxSuffixLength</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">        &amp;&amp; a.charAt(a.length() - s - 1) == b.charAt(b.length() - s - 1)) {</span>
+<span class="nc" id="L220">      s++;</span>
+    }
+<span class="nc bnc" id="L222" title="All 2 branches missed.">    if (validSurrogatePairAt(a, a.length() - s - 1)</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">        || validSurrogatePairAt(b, b.length() - s - 1)) {</span>
+<span class="nc" id="L224">      s--;</span>
+    }
+<span class="nc" id="L226">    return a.subSequence(a.length() - s, a.length()).toString();</span>
+  }
+
+  /**
+   * True when a valid surrogate pair starts at the given {@code index} in the
+   * given {@code string}. Out-of-range indexes return false.
+   */
+  @VisibleForTesting
+  static boolean validSurrogatePairAt(CharSequence string, int index) {
+<span class="nc bnc" id="L235" title="All 4 branches missed.">    return index &gt;= 0 &amp;&amp; index &lt;= (string.length() - 2)</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">        &amp;&amp; Character.isHighSurrogate(string.charAt(index))</span>
+<span class="nc bnc" id="L237" title="All 2 branches missed.">        &amp;&amp; Character.isLowSurrogate(string.charAt(index + 1));</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

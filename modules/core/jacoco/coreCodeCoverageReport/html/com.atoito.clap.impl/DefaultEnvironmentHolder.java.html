@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DefaultEnvironmentHolder.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.atoito.clap.impl</a> &gt; <span class="el_source">DefaultEnvironmentHolder.java</span></div><h1>DefaultEnvironmentHolder.java</h1><pre class="source lang-java linenums">package com.atoito.clap.impl;
+
+import java.io.File;
+
+import javax.inject.Inject;
+
+import com.atoito.clap.api.AppMeta;
+import com.atoito.clap.api.EnvironmentHolder;
+import com.atoito.clap.api.Reporter;
+import com.atoito.clap.util.ClasspathUtil;
+
+/*
+ * default implementation for environment holder.
+ * this class is used as extension-point from the environment holder used in acceptance tests.
+ */
+public class DefaultEnvironmentHolder implements EnvironmentHolder {
+
+    private Reporter reporter;
+
+    private File home;
+
+    private AppMeta meta;
+
+<span class="nc" id="L24">    private final String os = System.getProperty(&quot;os.name&quot;).toLowerCase();</span>
+
+    @Inject
+<span class="nc" id="L27">    public DefaultEnvironmentHolder(AppMeta meta, Reporter reporter) {</span>
+<span class="nc" id="L28">        this.meta = meta;</span>
+<span class="nc" id="L29">        this.reporter = reporter;</span>
+<span class="nc" id="L30">        File location = ClasspathUtil.getClasspathForClass(meta.getClass()); //DefaultEnvironmentHolder.class);</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">        if (home == null) {</span>
+<span class="nc" id="L32">            home = location.getParentFile().getParentFile();</span>
+        }
+<span class="nc" id="L34">        this.reporter.debug(&quot;home = %s&quot;, home);</span>
+<span class="nc" id="L35">    }</span>
+
+    @Override
+    public File applicationHome() {
+<span class="nc" id="L39">        return home;</span>
+    }
+
+    public boolean isWindows() {
+<span class="nc bnc" id="L43" title="All 2 branches missed.">        return (os.indexOf(&quot;win&quot;) &gt;= 0);</span>
+    }
+
+    public boolean isMac() {
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        return (os.indexOf(&quot;mac&quot;) &gt;= 0);</span>
+    }
+
+    public boolean isUnix() {
+<span class="nc bnc" id="L51" title="All 4 branches missed.">        return (os.indexOf(&quot;nix&quot;) &gt;= 0 || os.indexOf(&quot;nux&quot;) &gt;= 0);</span>
+    }
+
+    @Override
+    public File installationConfigurationDirectory() {
+<span class="nc" id="L56">        return new File(home, &quot;conf&quot;);</span>
+    }
+
+    @Override
+    public File systemConfigurationDirectory() {
+<span class="nc" id="L61">        File directory = null;</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (isWindows()) {</span>
+<span class="nc" id="L63">            directory = new File(&quot;C:/&quot; + meta.name() + &quot;/&quot; + meta.version());</span>
+        } else {
+<span class="nc" id="L65">            directory = new File(&quot;/etc/&quot; + meta.name() + &quot;/&quot; + meta.version());</span>
+        }
+<span class="nc" id="L67">        return directory;</span>
+    }
+
+    @Override
+    public File userConfigurationDirectory() {
+<span class="nc" id="L72">        StringBuilder sb = new StringBuilder().append(System.getProperty(&quot;user.home&quot;)).append(File.separator)</span>
+<span class="nc" id="L73">                .append(&quot;.&quot;).append(meta.name());</span>
+        //.append(File.separator).append(meta.version());
+<span class="nc" id="L75">        return new File(sb.toString());</span>
+    }
+
+    @Override
+    public boolean canExit() {
+<span class="nc" id="L80">        return true;</span>
+    }
+
+    @Override
+    public void forceApplicationHome(File home) {
+<span class="nc" id="L85">        this.home = home;</span>
+<span class="nc" id="L86">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

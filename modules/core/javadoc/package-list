@@ -1,0 +1,8 @@
+com.atoito.clap
+com.atoito.clap.api
+com.atoito.clap.impl
+com.atoito.clap.inject
+com.atoito.clap.util
+com.atoito.clap.vendor.guava.annotations
+com.atoito.clap.vendor.guava.base
+com.atoito.clap.vendor.guava.io

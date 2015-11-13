@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ConventionalAppModule.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">uat</a> &gt; <a href="index.source.html" class="el_package">com.atoito.clap.inject</a> &gt; <span class="el_source">ConventionalAppModule.java</span></div><h1>ConventionalAppModule.java</h1><pre class="source lang-java linenums">package com.atoito.clap.inject;
+
+import com.atoito.clap.api.AppMeta;
+import com.atoito.clap.api.ClapApp;
+import com.atoito.clap.api.Command;
+import com.atoito.clap.api.ComponentsRegistry;
+import com.atoito.clap.api.Configuration;
+import com.atoito.clap.api.ConfigurationReader;
+import com.atoito.clap.api.Constants;
+import com.atoito.clap.api.EnvironmentHolder;
+import com.atoito.clap.api.Reporter;
+import com.atoito.clap.impl.ConfigurationCommand;
+import com.atoito.clap.impl.ConsoleReporter;
+import com.atoito.clap.impl.DefaultAppMeta;
+import com.atoito.clap.impl.DefaultClapApp;
+import com.atoito.clap.impl.DefaultConfiguration;
+import com.atoito.clap.impl.DefaultEnvironmentHolder;
+import com.atoito.clap.impl.GroovierFlattenConfigurationReader;
+import com.atoito.clap.impl.MainCommand;
+import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
+import com.google.inject.name.Names;
+
+/*
+ * Main default module for Clap.
+ * Used in the actual launch of application.
+ * It contains bindings for all components used in Clap.
+ * You can use them or override them, and of course add your own components.
+ */
+<span class="nc" id="L30">public class ConventionalAppModule extends AbstractModule {</span>
+
+    @Override
+    protected void configure() {
+
+        // registry
+<span class="nc" id="L36">        requestStaticInjection(ComponentsRegistry.class);</span>
+        
+        // app
+<span class="nc" id="L39">        bind(ClapApp.class).to(DefaultClapApp.class);</span>
+
+        // configuration
+<span class="nc" id="L42">        bind(AppMeta.class).to(DefaultAppMeta.class);</span>
+<span class="nc" id="L43">        bind(EnvironmentHolder.class).to(DefaultEnvironmentHolder.class).in(Singleton.class);</span>
+<span class="nc" id="L44">        bind(Configuration.class).to(DefaultConfiguration.class).in(Singleton.class);</span>
+<span class="nc" id="L45">        bind(ConfigurationReader.class).to(GroovierFlattenConfigurationReader.class);</span>
+
+        // components
+<span class="nc" id="L48">        bind(Reporter.class).to(ConsoleReporter.class).in(Singleton.class);</span>
+        
+        // commands
+<span class="nc" id="L51">        bind(Command.class).annotatedWith(Names.named(Constants.MAIN_COMMAND_BIND_NAME)).to(MainCommand.class);</span>
+<span class="nc" id="L52">        bind(Command.class).annotatedWith(Names.named(Constants.CONFIG_COMMAND_BIND_NAME)).to(ConfigurationCommand.class);</span>
+        
+<span class="nc" id="L54">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Joiner.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">uat</a> &gt; <a href="index.source.html" class="el_package">com.atoito.clap.vendor.guava.base</a> &gt; <span class="el_source">Joiner.java</span></div><h1>Joiner.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (C) 2008 The Guava Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.atoito.clap.vendor.guava.base;
+
+import static com.atoito.clap.vendor.guava.base.Preconditions.checkNotNull;
+
+import com.atoito.clap.vendor.guava.annotations.Beta;
+import com.atoito.clap.vendor.guava.annotations.GwtCompatible;
+
+//Google Guava version 15.0
+
+import java.io.IOException;
+import java.util.AbstractList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
+
+/**
+ * An object which joins pieces of text (specified as an array, {@link Iterable}, varargs or even a
+ * {@link Map}) with a separator. It either appends the results to an {@link Appendable} or returns
+ * them as a {@link String}. Example: &lt;pre&gt;   {@code
+ *
+ *   Joiner joiner = Joiner.on(&quot;; &quot;).skipNulls();
+ *    . . .
+ *   return joiner.join(&quot;Harry&quot;, null, &quot;Ron&quot;, &quot;Hermione&quot;);}&lt;/pre&gt;
+ *
+ * &lt;p&gt;This returns the string {@code &quot;Harry; Ron; Hermione&quot;}. Note that all input elements are
+ * converted to strings using {@link Object#toString()} before being appended.
+ *
+ * &lt;p&gt;If neither {@link #skipNulls()} nor {@link #useForNull(String)} is specified, the joining
+ * methods will throw {@link NullPointerException} if any given element is null.
+ *
+ * &lt;p&gt;&lt;b&gt;Warning: joiner instances are always immutable&lt;/b&gt;; a configuration method such as {@code
+ * useForNull} has no effect on the instance it is invoked on! You must store and use the new joiner
+ * instance returned by the method. This makes joiners thread-safe, and safe to store as {@code
+ * static final} constants. &lt;pre&gt;   {@code
+ *
+ *   // Bad! Do not do this!
+ *   Joiner joiner = Joiner.on(',');
+ *   joiner.skipNulls(); // does nothing!
+ *   return joiner.join(&quot;wrong&quot;, null, &quot;wrong&quot;);}&lt;/pre&gt;
+ *  
+ * &lt;p&gt;See the Guava User Guide article on &lt;a href=
+ * &quot;http://code.google.com/p/guava-libraries/wiki/StringsExplained#Joiner&quot;&gt;{@code Joiner}&lt;/a&gt;.
+ *
+ * @author Kevin Bourrillion
+ * @since 2.0 (imported from Google Collections Library)
+ */
+@GwtCompatible
+public class Joiner {
+  /**
+   * Returns a joiner which automatically places {@code separator} between consecutive elements.
+   */
+  public static Joiner on(String separator) {
+<span class="nc" id="L73">    return new Joiner(separator);</span>
+  }
+
+  /**
+   * Returns a joiner which automatically places {@code separator} between consecutive elements.
+   */
+  public static Joiner on(char separator) {
+<span class="fc" id="L80">    return new Joiner(String.valueOf(separator));</span>
+  }
+
+  private final String separator;
+
+<span class="fc" id="L85">  private Joiner(String separator) {</span>
+<span class="fc" id="L86">    this.separator = checkNotNull(separator);</span>
+<span class="fc" id="L87">  }</span>
+
+<span class="nc" id="L89">  private Joiner(Joiner prototype) {</span>
+<span class="nc" id="L90">    this.separator = prototype.separator;</span>
+<span class="nc" id="L91">  }</span>
+
+  /**
+   * Appends the string representation of each of {@code parts}, using the previously configured
+   * separator between each, to {@code appendable}.
+   */
+  public &lt;A extends Appendable&gt; A appendTo(A appendable, Iterable&lt;?&gt; parts) throws IOException {
+<span class="nc" id="L98">    return appendTo(appendable, parts.iterator());</span>
+  }
+
+  /**
+   * Appends the string representation of each of {@code parts}, using the previously configured
+   * separator between each, to {@code appendable}.
+   *
+   * @since 11.0
+   */
+  public &lt;A extends Appendable&gt; A appendTo(A appendable, Iterator&lt;?&gt; parts) throws IOException {
+<span class="fc" id="L108">    checkNotNull(appendable);</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">    if (parts.hasNext()) {</span>
+<span class="fc" id="L110">      appendable.append(toString(parts.next()));</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">      while (parts.hasNext()) {</span>
+<span class="fc" id="L112">        appendable.append(separator);</span>
+<span class="fc" id="L113">        appendable.append(toString(parts.next()));</span>
+      }
+    }
+<span class="fc" id="L116">    return appendable;</span>
+  }
+
+  /**
+   * Appends the string representation of each of {@code parts}, using the previously configured
+   * separator between each, to {@code appendable}.
+   */
+  public final &lt;A extends Appendable&gt; A appendTo(A appendable, Object[] parts) throws IOException {
+<span class="nc" id="L124">    return appendTo(appendable, Arrays.asList(parts));</span>
+  }
+
+  /**
+   * Appends to {@code appendable} the string representation of each of the remaining arguments.
+   */
+  public final &lt;A extends Appendable&gt; A appendTo(
+      A appendable, @Nullable Object first, @Nullable Object second, Object... rest)
+          throws IOException {
+<span class="nc" id="L133">    return appendTo(appendable, iterable(first, second, rest));</span>
+  }
+
+  /**
+   * Appends the string representation of each of {@code parts}, using the previously configured
+   * separator between each, to {@code builder}. Identical to {@link #appendTo(Appendable,
+   * Iterable)}, except that it does not throw {@link IOException}.
+   */
+  public final StringBuilder appendTo(StringBuilder builder, Iterable&lt;?&gt; parts) {
+<span class="nc" id="L142">    return appendTo(builder, parts.iterator());</span>
+  }
+
+  /**
+   * Appends the string representation of each of {@code parts}, using the previously configured
+   * separator between each, to {@code builder}. Identical to {@link #appendTo(Appendable,
+   * Iterable)}, except that it does not throw {@link IOException}.
+   *
+   * @since 11.0
+   */
+  public final StringBuilder appendTo(StringBuilder builder, Iterator&lt;?&gt; parts) {
+    try {
+<span class="fc" id="L154">      appendTo((Appendable) builder, parts);</span>
+<span class="nc" id="L155">    } catch (IOException impossible) {</span>
+<span class="nc" id="L156">      throw new AssertionError(impossible);</span>
+<span class="fc" id="L157">    }</span>
+<span class="fc" id="L158">    return builder;</span>
+  }
+
+  /**
+   * Appends the string representation of each of {@code parts}, using the previously configured
+   * separator between each, to {@code builder}. Identical to {@link #appendTo(Appendable,
+   * Iterable)}, except that it does not throw {@link IOException}.
+   */
+  public final StringBuilder appendTo(StringBuilder builder, Object[] parts) {
+<span class="nc" id="L167">    return appendTo(builder, Arrays.asList(parts));</span>
+  }
+
+  /**
+   * Appends to {@code builder} the string representation of each of the remaining arguments.
+   * Identical to {@link #appendTo(Appendable, Object, Object, Object...)}, except that it does not
+   * throw {@link IOException}.
+   */
+  public final StringBuilder appendTo(
+      StringBuilder builder, @Nullable Object first, @Nullable Object second, Object... rest) {
+<span class="nc" id="L177">    return appendTo(builder, iterable(first, second, rest));</span>
+  }
+
+  /**
+   * Returns a string containing the string representation of each of {@code parts}, using the
+   * previously configured separator between each.
+   */
+  public final String join(Iterable&lt;?&gt; parts) {
+<span class="fc" id="L185">    return join(parts.iterator());</span>
+  }
+
+  /**
+   * Returns a string containing the string representation of each of {@code parts}, using the
+   * previously configured separator between each.
+   *
+   * @since 11.0
+   */
+  public final String join(Iterator&lt;?&gt; parts) {
+<span class="fc" id="L195">    return appendTo(new StringBuilder(), parts).toString();</span>
+  }
+
+  /**
+   * Returns a string containing the string representation of each of {@code parts}, using the
+   * previously configured separator between each.
+   */
+  public final String join(Object[] parts) {
+<span class="nc" id="L203">    return join(Arrays.asList(parts));</span>
+  }
+
+  /**
+   * Returns a string containing the string representation of each argument, using the previously
+   * configured separator between each.
+   */
+  public final String join(@Nullable Object first, @Nullable Object second, Object... rest) {
+<span class="fc" id="L211">    return join(iterable(first, second, rest));</span>
+  }
+
+  /**
+   * Returns a joiner with the same behavior as this one, except automatically substituting {@code
+   * nullText} for any provided null elements.
+   */
+  @CheckReturnValue
+  public Joiner useForNull(final String nullText) {
+<span class="nc" id="L220">    checkNotNull(nullText);</span>
+<span class="nc" id="L221">    return new Joiner(this) {</span>
+      @Override CharSequence toString(@Nullable Object part) {
+<span class="nc bnc" id="L223" title="All 2 branches missed.">        return (part == null) ? nullText : Joiner.this.toString(part);</span>
+      }
+
+      @Override public Joiner useForNull(String nullText) {
+<span class="nc" id="L227">        throw new UnsupportedOperationException(&quot;already specified useForNull&quot;);</span>
+      }
+
+      @Override public Joiner skipNulls() {
+<span class="nc" id="L231">        throw new UnsupportedOperationException(&quot;already specified useForNull&quot;);</span>
+      }
+    };
+  }
+
+  /**
+   * Returns a joiner with the same behavior as this joiner, except automatically skipping over any
+   * provided null elements.
+   */
+  @CheckReturnValue
+  public Joiner skipNulls() {
+<span class="nc" id="L242">    return new Joiner(this) {</span>
+      @Override public &lt;A extends Appendable&gt; A appendTo(A appendable, Iterator&lt;?&gt; parts)
+          throws IOException {
+<span class="nc" id="L245">        checkNotNull(appendable, &quot;appendable&quot;);</span>
+<span class="nc" id="L246">        checkNotNull(parts, &quot;parts&quot;);</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">        while (parts.hasNext()) {</span>
+<span class="nc" id="L248">          Object part = parts.next();</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">          if (part != null) {</span>
+<span class="nc" id="L250">            appendable.append(Joiner.this.toString(part));</span>
+<span class="nc" id="L251">            break;</span>
+          }
+<span class="nc" id="L253">        }</span>
+<span class="nc bnc" id="L254" title="All 2 branches missed.">        while (parts.hasNext()) {</span>
+<span class="nc" id="L255">          Object part = parts.next();</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">          if (part != null) {</span>
+<span class="nc" id="L257">            appendable.append(separator);</span>
+<span class="nc" id="L258">            appendable.append(Joiner.this.toString(part));</span>
+          }
+<span class="nc" id="L260">        }</span>
+<span class="nc" id="L261">        return appendable;</span>
+      }
+
+      @Override public Joiner useForNull(String nullText) {
+<span class="nc" id="L265">        throw new UnsupportedOperationException(&quot;already specified skipNulls&quot;);</span>
+      }
+
+      @Override public MapJoiner withKeyValueSeparator(String kvs) {
+<span class="nc" id="L269">        throw new UnsupportedOperationException(&quot;can't use .skipNulls() with maps&quot;);</span>
+      }
+    };
+  }
+
+  /**
+   * Returns a {@code MapJoiner} using the given key-value separator, and the same configuration as
+   * this {@code Joiner} otherwise.
+   */
+  @CheckReturnValue
+  public MapJoiner withKeyValueSeparator(String keyValueSeparator) {
+<span class="nc" id="L280">    return new MapJoiner(this, keyValueSeparator);</span>
+  }
+
+  /**
+   * An object that joins map entries in the same manner as {@code Joiner} joins iterables and
+   * arrays. Like {@code Joiner}, it is thread-safe and immutable.
+   *
+   * &lt;p&gt;In addition to operating on {@code Map} instances, {@code MapJoiner} can operate on {@code
+   * Multimap} entries in two distinct modes:
+   *
+   * &lt;ul&gt;
+   * &lt;li&gt;To output a separate entry for each key-value pair, pass {@code multimap.entries()} to a
+   *     {@code MapJoiner} method that accepts entries as input, and receive output of the form
+   *     {@code key1=A&amp;key1=B&amp;key2=C}.
+   * &lt;li&gt;To output a single entry for each key, pass {@code multimap.asMap()} to a {@code MapJoiner}
+   *     method that accepts a map as input, and receive output of the form {@code
+   *     key1=[A, B]&amp;key2=C}.
+   * &lt;/ul&gt;
+   *
+   * @since 2.0 (imported from Google Collections Library)
+   */
+  public static final class MapJoiner {
+    private final Joiner joiner;
+    private final String keyValueSeparator;
+
+<span class="nc" id="L305">    private MapJoiner(Joiner joiner, String keyValueSeparator) {</span>
+<span class="nc" id="L306">      this.joiner = joiner; // only &quot;this&quot; is ever passed, so don't checkNotNull</span>
+<span class="nc" id="L307">      this.keyValueSeparator = checkNotNull(keyValueSeparator);</span>
+<span class="nc" id="L308">    }</span>
+
+    /**
+     * Appends the string representation of each entry of {@code map}, using the previously
+     * configured separator and key-value separator, to {@code appendable}.
+     */
+    public &lt;A extends Appendable&gt; A appendTo(A appendable, Map&lt;?, ?&gt; map) throws IOException {
+<span class="nc" id="L315">      return appendTo(appendable, map.entrySet());</span>
+    }
+
+    /**
+     * Appends the string representation of each entry of {@code map}, using the previously
+     * configured separator and key-value separator, to {@code builder}. Identical to {@link
+     * #appendTo(Appendable, Map)}, except that it does not throw {@link IOException}.
+     */
+    public StringBuilder appendTo(StringBuilder builder, Map&lt;?, ?&gt; map) {
+<span class="nc" id="L324">      return appendTo(builder, map.entrySet());</span>
+    }
+
+    /**
+     * Returns a string containing the string representation of each entry of {@code map}, using the
+     * previously configured separator and key-value separator.
+     */
+    public String join(Map&lt;?, ?&gt; map) {
+<span class="nc" id="L332">      return join(map.entrySet());</span>
+    }
+
+    /**
+     * Appends the string representation of each entry in {@code entries}, using the previously
+     * configured separator and key-value separator, to {@code appendable}.
+     *
+     * @since 10.0
+     */
+    @Beta
+    public &lt;A extends Appendable&gt; A appendTo(A appendable, Iterable&lt;? extends Entry&lt;?, ?&gt;&gt; entries)
+        throws IOException {
+<span class="nc" id="L344">      return appendTo(appendable, entries.iterator());</span>
+    }
+
+    /**
+     * Appends the string representation of each entry in {@code entries}, using the previously
+     * configured separator and key-value separator, to {@code appendable}.
+     *
+     * @since 11.0
+     */
+    @Beta
+    public &lt;A extends Appendable&gt; A appendTo(A appendable, Iterator&lt;? extends Entry&lt;?, ?&gt;&gt; parts)
+        throws IOException {
+<span class="nc" id="L356">      checkNotNull(appendable);</span>
+<span class="nc bnc" id="L357" title="All 2 branches missed.">      if (parts.hasNext()) {</span>
+<span class="nc" id="L358">        Entry&lt;?, ?&gt; entry = parts.next();</span>
+<span class="nc" id="L359">        appendable.append(joiner.toString(entry.getKey()));</span>
+<span class="nc" id="L360">        appendable.append(keyValueSeparator);</span>
+<span class="nc" id="L361">        appendable.append(joiner.toString(entry.getValue()));</span>
+<span class="nc bnc" id="L362" title="All 2 branches missed.">        while (parts.hasNext()) {</span>
+<span class="nc" id="L363">          appendable.append(joiner.separator);</span>
+<span class="nc" id="L364">          Entry&lt;?, ?&gt; e = parts.next();</span>
+<span class="nc" id="L365">          appendable.append(joiner.toString(e.getKey()));</span>
+<span class="nc" id="L366">          appendable.append(keyValueSeparator);</span>
+<span class="nc" id="L367">          appendable.append(joiner.toString(e.getValue()));</span>
+<span class="nc" id="L368">        }</span>
+      }
+<span class="nc" id="L370">      return appendable;</span>
+    }
+
+    /**
+     * Appends the string representation of each entry in {@code entries}, using the previously
+     * configured separator and key-value separator, to {@code builder}. Identical to {@link
+     * #appendTo(Appendable, Iterable)}, except that it does not throw {@link IOException}.
+     *
+     * @since 10.0
+     */
+    @Beta
+    public StringBuilder appendTo(StringBuilder builder, Iterable&lt;? extends Entry&lt;?, ?&gt;&gt; entries) {
+<span class="nc" id="L382">      return appendTo(builder, entries.iterator());</span>
+    }
+
+    /**
+     * Appends the string representation of each entry in {@code entries}, using the previously
+     * configured separator and key-value separator, to {@code builder}. Identical to {@link
+     * #appendTo(Appendable, Iterable)}, except that it does not throw {@link IOException}.
+     *
+     * @since 11.0
+     */
+    @Beta
+    public StringBuilder appendTo(StringBuilder builder, Iterator&lt;? extends Entry&lt;?, ?&gt;&gt; entries) {
+      try {
+<span class="nc" id="L395">        appendTo((Appendable) builder, entries);</span>
+<span class="nc" id="L396">      } catch (IOException impossible) {</span>
+<span class="nc" id="L397">        throw new AssertionError(impossible);</span>
+<span class="nc" id="L398">      }</span>
+<span class="nc" id="L399">      return builder;</span>
+    }
+
+    /**
+     * Returns a string containing the string representation of each entry in {@code entries}, using
+     * the previously configured separator and key-value separator.
+     *
+     * @since 10.0
+     */
+    @Beta
+    public String join(Iterable&lt;? extends Entry&lt;?, ?&gt;&gt; entries) {
+<span class="nc" id="L410">      return join(entries.iterator());</span>
+    }
+
+    /**
+     * Returns a string containing the string representation of each entry in {@code entries}, using
+     * the previously configured separator and key-value separator.
+     *
+     * @since 11.0
+     */
+    @Beta
+    public String join(Iterator&lt;? extends Entry&lt;?, ?&gt;&gt; entries) {
+<span class="nc" id="L421">      return appendTo(new StringBuilder(), entries).toString();</span>
+    }
+
+    /**
+     * Returns a map joiner with the same behavior as this one, except automatically substituting
+     * {@code nullText} for any provided null keys or values.
+     */
+    @CheckReturnValue
+    public MapJoiner useForNull(String nullText) {
+<span class="nc" id="L430">      return new MapJoiner(joiner.useForNull(nullText), keyValueSeparator);</span>
+    }
+  }
+
+  CharSequence toString(Object part) {
+<span class="fc" id="L435">    checkNotNull(part);  // checkNotNull for GWT (do not optimize).</span>
+<span class="pc bpc" id="L436" title="1 of 2 branches missed.">    return (part instanceof CharSequence) ? (CharSequence) part : part.toString();</span>
+  }
+
+  private static Iterable&lt;Object&gt; iterable(
+      final Object first, final Object second, final Object[] rest) {
+<span class="fc" id="L441">    checkNotNull(rest);</span>
+<span class="fc" id="L442">    return new AbstractList&lt;Object&gt;() {</span>
+      @Override public int size() {
+<span class="fc" id="L444">        return rest.length + 2;</span>
+      }
+
+      @Override public Object get(int index) {
+<span class="fc bfc" id="L448" title="All 3 branches covered.">        switch (index) {</span>
+          case 0:
+<span class="fc" id="L450">            return first;</span>
+          case 1:
+<span class="fc" id="L452">            return second;</span>
+          default:
+<span class="fc" id="L454">            return rest[index - 2];</span>
+        }
+      }
+    };
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>

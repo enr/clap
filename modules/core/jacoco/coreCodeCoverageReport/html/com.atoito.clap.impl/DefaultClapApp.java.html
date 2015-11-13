@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DefaultClapApp.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">core</a> &gt; <a href="index.source.html" class="el_package">com.atoito.clap.impl</a> &gt; <span class="el_source">DefaultClapApp.java</span></div><h1>DefaultClapApp.java</h1><pre class="source lang-java linenums">package com.atoito.clap.impl;
+
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import com.atoito.clap.api.AppMeta;
+import com.atoito.clap.api.ClapApp;
+import com.atoito.clap.api.Command;
+import com.atoito.clap.api.CommandResult;
+import com.atoito.clap.api.Constants;
+import com.atoito.clap.api.EnvironmentHolder;
+import com.atoito.clap.api.Reporter;
+import com.atoito.clap.api.Reporter.Level;
+import com.atoito.clap.util.Casts;
+import com.atoito.clap.vendor.guava.base.Preconditions;
+import com.atoito.clap.vendor.guava.base.Throwables;
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
+
+public class DefaultClapApp implements ClapApp {
+
+    private List&lt;Command&gt; commands;
+
+    // private Configuration configuration;
+    private Reporter reporter;
+    private EnvironmentHolder environment;
+    private AppMeta meta;
+    
+    private boolean exited;
+    
+    private int exitValue;
+
+    /*
+     * The command executed if no command id is given. Usually it contains
+     * --help, --version, --noop args management.
+     */
+    @Inject
+    @Named(Constants.MAIN_COMMAND_BIND_NAME)
+    private Command mainCommand;
+
+    @Inject
+<span class="nc" id="L44">    public DefaultClapApp(AppMeta meta, EnvironmentHolder environment, Reporter reporter) {</span>
+<span class="nc" id="L45">        this.meta = meta;</span>
+<span class="nc" id="L46">        this.environment = environment;</span>
+<span class="nc" id="L47">        this.reporter = reporter;</span>
+<span class="nc" id="L48">    }</span>
+
+    @Override
+    public void run(String[] args) {
+
+<span class="nc" id="L53">        CommonArgsAware mainArgs = Casts.cast(mainCommand.getParametersContainer());</span>
+<span class="nc" id="L54">        JCommander jc = new JCommander(mainArgs);</span>
+<span class="nc" id="L55">        jc.setProgramName(meta.name());</span>
+
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        for (Command command : commands) {</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">            if (!Constants.MAIN_COMMAND_ID.equals(command.getId())) {</span>
+<span class="nc" id="L59">                jc.addCommand(command.getId(), command.getParametersContainer());</span>
+            }
+<span class="nc" id="L61">        }</span>
+        try {
+<span class="nc" id="L63">            jc.parse(args);</span>
+<span class="nc" id="L64">        } catch (ParameterException throwable) {</span>
+<span class="nc" id="L65">            Throwable cause = Throwables.getRootCause(throwable);</span>
+<span class="nc" id="L66">            reporter.warn(&quot;something went wrong. catched %s&quot;, cause.getClass().getName());</span>
+<span class="nc" id="L67">            reporter.warn(cause.getMessage().trim());</span>
+<span class="nc" id="L68">            systemExit(1);</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">            if (exited) {</span>
+<span class="nc" id="L70">                return;</span>
+            }
+<span class="nc" id="L72">        }</span>
+
+<span class="nc" id="L74">        setReportingLevel(reporter, mainArgs);</span>
+
+<span class="nc" id="L76">        String commandId = jc.getParsedCommand();</span>
+<span class="nc" id="L77">        reporter.debug(&quot;commandId %s&quot;, commandId);</span>
+<span class="nc" id="L78">        reporter.debug(&quot;starting %s with home %s&quot;, meta.name(), environment.applicationHome());</span>
+
+<span class="nc bnc" id="L80" title="All 4 branches missed.">        if ((args.length == 0) || (mainArgs.isHelp())) {</span>
+<span class="nc" id="L81">            usageForCommand(jc, commandId);</span>
+<span class="nc" id="L82">            systemExit(0);</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">            if (exited) {</span>
+<span class="nc" id="L84">                return;</span>
+            }
+        }
+
+        try {
+<span class="nc" id="L89">            CommandResult result = executeCommand(commandId);</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            Preconditions.checkState((result != null), &quot;error retrieving result for command '%s'&quot;, commandId);</span>
+<span class="nc" id="L91">            reporter.debug(&quot;result = %s&quot;, result);</span>
+<span class="nc" id="L92">            manageFailure(result);</span>
+<span class="nc" id="L93">            systemExit(result.getExitValue());</span>
+<span class="nc" id="L94">        } catch (Throwable throwable) {</span>
+<span class="nc" id="L95">            Throwable cause = Throwables.getRootCause(throwable);</span>
+<span class="nc" id="L96">            reporter.warn(&quot;something went wrong. catched %s&quot;, cause.getClass().getName());</span>
+<span class="nc" id="L97">            reporter.warn(cause.getMessage());</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">            if (mainArgs.isStacktrace()) {</span>
+<span class="nc" id="L99">                reporter.warn(Throwables.getStackTraceAsString(throwable));</span>
+            }
+<span class="nc" id="L101">            usageForCommand(jc, commandId);</span>
+<span class="nc" id="L102">            systemExit(1);</span>
+<span class="nc" id="L103">        }</span>
+<span class="nc" id="L104">    }</span>
+
+    private void manageFailure(CommandResult result) {
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        if (result.isFailure()) {</span>
+<span class="nc" id="L108">            reporter.warn(&quot;command failure&quot;);</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">            if (result.getFailureMessage() != null) {</span>
+<span class="nc" id="L110">                reporter.warn(&quot;&gt; %s&quot;, result.getFailureMessage());</span>
+            }
+        }
+<span class="nc" id="L113">    }</span>
+
+    private void setReportingLevel(Reporter reporter, CommonArgsAware mainArgs) {
+<span class="nc bnc" id="L116" title="All 2 branches missed.">        if (mainArgs.isInfo()) {</span>
+<span class="nc" id="L117">            reporter.setLevel(Level.INFO);</span>
+        }
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (mainArgs.isDebug()) {</span>
+<span class="nc" id="L120">            reporter.setLevel(Level.DEBUG);</span>
+        }
+<span class="nc" id="L122">    }</span>
+
+    private void usageForCommand(JCommander jc, String commandId) {
+<span class="nc" id="L125">    	StringBuilder sb = new StringBuilder();</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        if (commandId == null) {</span>
+<span class="nc" id="L127">            jc.usage(sb);</span>
+        } else {
+<span class="nc" id="L129">            jc.usage(commandId, sb);</span>
+        }
+<span class="nc" id="L131">        reporter.out(sb.toString());</span>
+<span class="nc" id="L132">    }</span>
+
+    /**
+     * Trig a system exit, but only if environment allows it.
+     * Probably, this is true in the actual running and false in the test phase.
+     */
+    private void systemExit(int value) {
+<span class="nc" id="L139">        setExitValue(value);</span>
+<span class="nc" id="L140">        exited = true;</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        if (environment.canExit()) {</span>
+<span class="nc" id="L142">            System.exit(value);</span>
+        }
+<span class="nc" id="L144">    }</span>
+
+    private CommandResult executeCommand(String commandId) {
+<span class="nc" id="L147">        Command command = null;</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (commandId == null) {</span>
+<span class="nc" id="L149">            command = mainCommand;</span>
+        } else {
+<span class="nc" id="L151">            command = commandFromId(commandId);</span>
+        }
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        if (command == null) {</span>
+<span class="nc" id="L154">            return resultForCommandNotFound();</span>
+        }
+<span class="nc" id="L156">        return command.execute();</span>
+
+    }
+
+    private CommandResult resultForCommandNotFound() {
+<span class="nc" id="L161">        CommandResult result = new CommandResult();</span>
+<span class="nc" id="L162">        return result;</span>
+    }
+
+    @Override
+    public void setAvailableCommands(List&lt;Command&gt; commands) {
+<span class="nc" id="L167">        this.commands = commands;</span>
+<span class="nc" id="L168">    }</span>
+
+    private Command commandFromId(String commandId) {
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        for (Command command : commands) {</span>
+<span class="nc bnc" id="L172" title="All 2 branches missed.">            if (commandId.equals(command.getId())) {</span>
+<span class="nc" id="L173">                return command;</span>
+            }
+<span class="nc" id="L175">        }</span>
+<span class="nc" id="L176">        return null;</span>
+    }
+
+    public int getExitValue() {
+<span class="nc" id="L180">        return exitValue;</span>
+    }
+
+    private void setExitValue(int exitValue) {
+<span class="nc" id="L184">        this.exitValue = exitValue;</span>
+<span class="nc" id="L185">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.1.201405082137</span></div></body></html>
